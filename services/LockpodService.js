@@ -1,6 +1,7 @@
 // subject to changes
-const API_URL = "http://192.168.3.55:3000";
+const API_URL = "http://localhost:3000";
 
+//fetches the current lockpods in the database
 export const fetchLockpods = async () => {
   try {
     const response = await fetch(`${API_URL}/lockpods`);

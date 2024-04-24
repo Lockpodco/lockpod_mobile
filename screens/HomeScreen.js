@@ -3,9 +3,14 @@ import MapViewComponent from "../components/MapViewComponent";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { windowHeight, windowWidth } from "../Constants";
 import { useNavigation } from "@react-navigation/native";
+<<<<<<< HEAD
 
 import { useUserProfileContext } from "../stores/UserProfileContext";
+=======
+>>>>>>> 9076cc6 (stashing)
 
+// MARK: Styling
+// SCANQR Button Styling
 const styles = StyleSheet.create({
   floatingButton: {
     height: windowWidth / 15,
@@ -19,6 +24,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+<<<<<<< HEAD
+=======
+
+// MARK: HomeScreen
+>>>>>>> 9076cc6 (stashing)
 const HomeScreen = () => {
   const { navigate } = useNavigation();
 
@@ -26,7 +36,10 @@ const HomeScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
+<<<<<<< HEAD
       <Text>{userProfile["first_name"] + " " + userProfile["last_name"]}</Text>
+=======
+>>>>>>> 9076cc6 (stashing)
       <MapViewComponent />
       <TouchableOpacity
         activeOpacity={0.7}

@@ -1,38 +1,37 @@
 import React from "react";
 import MapViewComponent from "../components/MapViewComponent";
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { windowHeight, windowWidth } from "../Constants";
-import { useNavigation } from '@react-navigation/native'
-
+import { useNavigation } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   floatingButton: {
     height: windowWidth / 15,
     width: windowWidth / 8,
     borderRadius: windowWidth / 8,
-    backgroundColor: 'pink',
-    position: 'absolute',
-    bottom: '15%',
-    right: '36%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "pink",
+    position: "absolute",
+    bottom: "15%",
+    right: "36%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 const HomeScreen = () => {
-
   const { navigate } = useNavigation();
 
   return (
-    <View style={{flex:1}}>
+    <View style={{ flex: 1 }}>
       <MapViewComponent />
-      <TouchableOpacity 
+      <TouchableOpacity
         activeOpacity={0.7}
-        style={styles.floatingButton} 
-        onPress={() => navigate('ScanQR')}
+        style={styles.floatingButton}
+        onPress={() => navigate("ScanQR")}
       >
         <Text>Scan Pod</Text>
       </TouchableOpacity>
     </View>
-)};
+  );
+};
 
 export default HomeScreen;

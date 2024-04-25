@@ -1,31 +1,32 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { register } from '../services/AuthService';
+import React, { useState } from "react";
+import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { register } from "../services/AuthService";
 
 const RegistrationScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  // MARK: Vars
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleRegister = async () => {
-    if (email === '' || password === '' || confirmPassword === '') {
-      Alert.alert('Error', 'Please fill all the fields.');
+    if (email === "" || password === "" || confirmPassword === "") {
+      Alert.alert("Error", "Please fill all the fields.");
       return;
     }
     if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match.');
+      Alert.alert("Error", "Passwords do not match.");
       return;
     }
 
     try {
       // Call the register function from AuthService
       await register(email, password);
-      Alert.alert('Success', 'Registration Successful', [
-        { text: 'OK', onPress: () => navigation.navigate('SignInScreen') }
+      Alert.alert("Success", "Registration Successful", [
+        { text: "OK", onPress: () => navigation.navigate("SignInScreen") },
       ]);
     } catch (error) {
       // If there's an error (e.g., user already exists), show an alert
-      Alert.alert('Registration Failed', error.message);
+      Alert.alert("Registration Failed", error.message);
     }
   };
 
@@ -61,7 +62,7 @@ const RegistrationScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     padding: 20,
   },
   input: {

@@ -6,15 +6,16 @@ import { createStackNavigator } from "@react-navigation/stack";
 
 const Stack = createStackNavigator();
 
-export default function App() {
+function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: "Welcome" }}
+          options={{ title: "Lockpod" }}
         />
+
         <Stack.Screen
           name="ScanQR"
           component={ScanQR}
@@ -25,3 +26,5 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+export default App

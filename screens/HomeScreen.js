@@ -3,20 +3,25 @@ import MapViewComponent from "../components/MapViewComponent";
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
 import { windowHeight, windowWidth } from "../Constants";
 import { useNavigation } from '@react-navigation/native'
+import { Pressable, Image } from 'react-native';
 
 
 const styles = StyleSheet.create({
-  floatingButton: {
-    height: windowWidth / 15,
-    width: windowWidth / 8,
-    borderRadius: windowWidth / 8,
-    backgroundColor: 'pink',
-    position: 'absolute',
-    bottom: '15%',
-    right: '36%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
+	floatingButton: {
+		height: windowWidth / 15,
+		width: windowWidth / 8,
+		borderRadius: windowWidth / 8,
+		backgroundColor: 'pink',
+		position: 'absolute',
+		bottom: '15%',
+		right: '36%',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	tinyIcon: {
+		width: windowWidth / 15,
+		height: windowWidth / 15,
+	},
 });
 const HomeScreen = () => {
 
@@ -24,6 +29,12 @@ const HomeScreen = () => {
 
   return (
     <View style={{flex:1}}>
+		<Pressable> 
+			<Image
+				style={styles.tinyIcon}
+				source={require('../assets/Default_pfp.svg.png')}	
+			/>
+		</Pressable>
       <MapViewComponent />
       <TouchableOpacity 
         activeOpacity={0.7}

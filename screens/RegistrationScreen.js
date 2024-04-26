@@ -8,28 +8,37 @@ const RegistrationScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleRegister = async () => {
+  function checkFieldCompletion() {
     if (email === "" || password === "" || confirmPassword === "") {
       Alert.alert("Error", "Please fill all the fields.");
-      return;
+      return false;
     }
     if (password !== confirmPassword) {
       Alert.alert("Error", "Passwords do not match.");
+      return false;
+    }
+    return true;
+  }
+
+  // MARK: handleRegister
+  const handleRegister = async () => {
+    if (!checkFieldCompletion) {
       return;
     }
 
     try {
-      // Call the register function from AuthService
-      await register(email, password);
+      const userId = await register(email, password);
+      console.log(userId);
+
       Alert.alert("Success", "Registration Successful", [
-        { text: "OK" /*onPress: () => navigation.navigate("SignInScreen")*/ },
+        { text: "OK", onPress: () => navigation.navigate("Home") },
       ]);
     } catch (error) {
-      // If there's an error (e.g., user already exists), show an alert
       Alert.alert("Registration Failed", error.message);
     }
   };
 
+  // MARK: Body
   return (
     <View style={styles.container}>
       <TextInput

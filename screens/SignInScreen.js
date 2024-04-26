@@ -1,29 +1,32 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { login } from '../services/AuthService';
+import React, { useState } from "react";
+import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
+import { signIn } from "../services/AuthService";
 
 const SignInScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // MARK: Vars
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
+  // MARK: handleSignIn
   const handleSignIn = async () => {
-    if (email === '' || password === '') {
-      Alert.alert('Please enter both email and password.');
+    if (email === "" || password === "") {
+      Alert.alert("Please enter both email and password.");
       return;
     }
 
     try {
-      // Calling the login service with email and password
-      const response = await login(email, password);
-      Alert.alert('Login Successful!');
-      // Here you would navigate to your app's main screen or dashboard
-      navigation.navigate('HomeScreen'); // replace 'HomeScreen' with your home screen's name
+      const userId = await signIn(email, password);
+
+      console.log(userId);
+
+      Alert.alert("Login Successful!");
+      navigation.navigate("Home");
     } catch (error) {
-      // If there's an error (e.g., incorrect credentials), show an alert
-      Alert.alert('Login Failed', error.message);
+      Alert.alert("Login Failed", error.message);
     }
   };
 
+  // MARK: Body
   return (
     <View style={styles.container}>
       <TextInput
@@ -49,7 +52,7 @@ const SignInScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     padding: 20,
   },
   input: {

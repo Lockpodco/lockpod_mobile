@@ -22,7 +22,7 @@ const RegistrationScreen = ({ navigation }) => {
       // Call the register function from AuthService
       await register(email, password);
       Alert.alert("Success", "Registration Successful", [
-        { text: "OK", onPress: () => navigation.navigate("SignInScreen") },
+        { text: "OK" /*onPress: () => navigation.navigate("SignInScreen")*/ },
       ]);
     } catch (error) {
       // If there's an error (e.g., user already exists), show an alert

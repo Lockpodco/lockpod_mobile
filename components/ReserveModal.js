@@ -1,10 +1,27 @@
 import React from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { windowWidth, windowHeight } from "../Constants";
+import { useNavigation } from "@react-navigation/native";
 
 const ReserveModal = ({ lockpod, visible, onModalClose }) => {
+  const { navigate } = useNavigation();
+
   const handleReserve = () => {
     // TODO: Implement reserve functionality (navigate to the reserve screen)
+
+    // Navigate to ReserveScreen with lockpod information
+    navigate("Reserve", { lockpodId: lockpod.id, status: lockpod.status });
+    // Close the modal
+    onModalClose();
+  };
+
+  const handleUnlock = () => {
+    // TODO: Implement reserve functionality (navigate to the reserve screen)
+
+    // Navigate to ReserveScreen with lockpod information
+    navigate("ScanQR");
+    // Close the modal
+    onModalClose();
   };
 
   return (
@@ -21,7 +38,7 @@ const ReserveModal = ({ lockpod, visible, onModalClose }) => {
             <Pressable style={styles.button} onPress={handleReserve}>
               <Text style={styles.buttonText}>Reserve</Text>
             </Pressable>
-            <Pressable style={styles.button}>
+            <Pressable style={styles.button} onPress={handleUnlock}>
               <Text style={styles.buttonText}>Unlock</Text>
             </Pressable>
           </View>

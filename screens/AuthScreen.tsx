@@ -61,7 +61,11 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
         payload: userProfile,
       });
 
-      navigation.navigate("Home");
+      if (userProfile["first_name"] != null) {
+        navigation.navigate("Home");
+      } else {
+        navigation.navigate("ProfileCreation");
+      }
     } catch (error) {
       Alert.alert("Login Failed", (error as Error).message);
     }

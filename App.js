@@ -57,7 +57,7 @@ const MyTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: Constants.darkAccent,
+    primary: Constants.lightAccent,
     background: Constants.baseLight,
   },
 };

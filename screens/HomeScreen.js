@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MapViewComponent from "../components/MapViewComponent";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { windowHeight, windowWidth } from "../Constants";

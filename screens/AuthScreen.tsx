@@ -2,7 +2,13 @@ import React from "react";
 import { useState, useRef, useEffect } from "react";
 import { View, Button, StyleSheet, Text, Alert } from "react-native";
 
-import { register, signIn, getUserProfile } from "../services/AuthService";
+import {
+  register,
+  signIn,
+  getUserProfile,
+  getUserIdLocally,
+  saveUserIdLocally,
+} from "../services/AuthService";
 import { useUserProfileContext } from "../stores/UserProfileContext";
 
 import { Constants } from "../components/constants";
@@ -12,7 +18,6 @@ import { StyledSubmitButton } from "../components/Buttons";
 const AuthScreen = ({ navigation }: { navigation: any }) => {
   // MARK: Vars
   const [signInSection, setSignIn] = useState(true);
-  const [complete, setComplete] = useState(true);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,10 +35,26 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
     return !(email === "" || password === "");
   }
 
+  useEffect(() => {
+    if (userProfile == null) {
+      checkSignInStatus();
+    }
+  });
+
   // MARK: Methods
+  const checkSignInStatus = async () => {
+    const id = await getUserIdLocally();
+    // user is already signed in and their id has been persisted in local storage
+    if (id != 0) {
+      console.log("user already signed in with id: " + id);
+      await postAuthentication(id!);
+    }
+  };
+
   const postAuthentication = async (user_id: Number) => {
     try {
       const userProfile = await getUserProfile(user_id);
+      await saveUserIdLocally(user_id);
 
       profileDispatch({
         type: "loadProfile",
@@ -111,8 +132,6 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
     },
 
     hStack: {
-      maxHeigt: 100,
-      flex: 1,
       flexDirection: "row",
     },
   });
@@ -162,13 +181,23 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
         )}
       </View>
 
-      {/* Toggle between signin and register */}
+      {/* submit button */}
       <View style={styles.bottom}>
+        <StyledSubmitButton
+          title={signInSection ? "login" : "register"}
+          isActive={checkFieldCompletion()}
+          horizontalLayout={false}
+          onSubmit={() => {
+            submit();
+          }}
+        />
+
+        {/* Toggle between signin and register */}
         <View style={styles.hStack}>
           <StyledSubmitButton
             title="register"
             isActive={!signInSection}
-            horizontal={true}
+            horizontalLayout={true}
             onSubmit={() => {
               setSignIn(false);
             }}
@@ -176,23 +205,15 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
           <StyledSubmitButton
             title="log in"
             isActive={signInSection}
-            horizontal={true}
+            horizontalLayout={true}
             onSubmit={() => {
               setSignIn(true);
             }}
           />
         </View>
-
-        {/* submit */}
-        <StyledSubmitButton
-          title={signInSection ? "login" : "register"}
-          isActive={checkFieldCompletion()}
-          horizontal={false}
-          onSubmit={() => {
-            submit();
-          }}
-        />
       </View>
+
+      {/* submit */}
     </View>
   );
 };

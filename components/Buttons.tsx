@@ -6,26 +6,33 @@ import { useState, useRef, useEffect } from "react";
 export const StyledSubmitButton = ({
   title,
   isActive,
-  horizontal,
+  horizontalLayout,
   onSubmit,
 }: {
   title: string;
   isActive: boolean;
-  horizontal: boolean;
+  horizontalLayout: boolean;
   onSubmit: () => void;
 }) => {
   const styles = StyleSheet.create({
+    spacer: {
+      flex: 1,
+    },
+
     primary: {
       backgroundColor: isActive
         ? Constants.lightAccent
         : Constants.secondaryLight,
-      flex: horizontal ? 1 : 0,
-      minHeight: 60,
-      maxHeight: 90,
+
+      flex: horizontalLayout ? 1 : 0,
+      flexDirection: "row",
+      alignItems: "center",
+
+      height: 70,
       justifyContent: "center",
 
       padding: 10,
-      marginHorizontal: 10,
+      marginHorizontal: 5,
       marginVertical: 5,
 
       borderRadius: Constants.defaultCornerRadius,
@@ -35,8 +42,10 @@ export const StyledSubmitButton = ({
   });
 
   return (
-    <rn.View style={styles.primary}>
-      <rn.Button onPress={onSubmit} title={title} color={Constants.baseDark} />
-    </rn.View>
+    <rn.TouchableOpacity onPress={onSubmit} style={styles.primary}>
+      <rn.View style={styles.spacer}></rn.View>
+      <rn.Text>{title}</rn.Text>
+      <rn.View style={styles.spacer}></rn.View>
+    </rn.TouchableOpacity>
   );
 };

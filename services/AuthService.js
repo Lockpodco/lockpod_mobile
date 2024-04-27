@@ -1,5 +1,6 @@
 // MARK: Vars
 const API_URL = "http://localhost:3000";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // MARK: Convenience Functions
 function handleError(title, error) {
@@ -188,3 +189,24 @@ async function getUser(email) {
     handleError("Error Getting user <getUser>", error);
   }
 }
+
+// MARK: Get User_ID Locally
+const localUserIdKey = "localUserIdKey";
+
+export const saveUserIdLocally = async (user_id) => {
+  try {
+    const jsonData = JSON.stringify(user_id);
+    await AsyncStorage.setItem(localUserIdKey, jsonData);
+  } catch (error) {
+    handleError("error storing user_id", error);
+  }
+};
+
+export const getUserIdLocally = async () => {
+  try {
+    const value = await AsyncStorage.getItem(localUserIdKey);
+    return Number(value) ?? 0;
+  } catch (error) {
+    handleError("error retreiving user_id", error);
+  }
+};

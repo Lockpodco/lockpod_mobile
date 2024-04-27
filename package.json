@@ -12,7 +12,7 @@
     "@react-navigation/drawer": "^6.6.15",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/stack": "^6.3.20",
-    "@stripe/stripe-react-native": "0.28.0",
+    "@stripe/stripe-react-native": "^0.28.0",
     "expo": "^49.0.21",
     "expo-barcode-scanner": "~12.5.3",
     "expo-camera": "~13.4.4",

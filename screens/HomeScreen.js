@@ -19,31 +19,28 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	tinyIcon: {
-		width: windowWidth / 15,
-		height: windowWidth / 15,
+		width: windowWidth / 17,
+		height: windowWidth / 17,
+		margin: windowWidth / 70,
 	},
 });
+
 const HomeScreen = () => {
 
   const { navigate } = useNavigation();
 
-  return (
-    <View style={{flex:1}}>
-		<Pressable> 
-			<Image
-				style={styles.tinyIcon}
-				source={require('../assets/Default_pfp.svg.png')}	
-			/>
-		</Pressable>
-      <MapViewComponent />
-      <TouchableOpacity 
-        activeOpacity={0.7}
-        style={styles.floatingButton} 
-        onPress={() => navigate('ScanQR')}
-      >
-        <Text>Scan Pod</Text>
-      </TouchableOpacity>
-    </View>
-)};
+	return (
+		<View style={{flex:1}}>
+			<MapViewComponent />
+			<TouchableOpacity 
+				activeOpacity={0.7}
+				style={styles.floatingButton} 
+				onPress={() => navigate('ScanQR')}
+				>
+				<Text>Scan Pod</Text>
+			</TouchableOpacity>
+		</View>
+	)
+};
 
 export default HomeScreen;

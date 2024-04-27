@@ -48,7 +48,7 @@ export const register = async (email, password) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: email,
+        email: email.toLowerCase(),
         password: password,
       }),
     });
@@ -171,12 +171,15 @@ export const getUserProfile = async (user_id) => {
 // posts a get method to the server for the provided email
 async function getUser(email) {
   try {
-    const response = await fetch(`${API_URL}/users?email=${email}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "applications/json",
-      },
-    });
+    const response = await fetch(
+      `${API_URL}/users?email=${email.toLowerCase()}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "applications/json",
+        },
+      }
+    );
 
     const jsonData = await response.json();
 

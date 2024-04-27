@@ -1,21 +1,28 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, StyleSheet, Alert, Text } from "react-native";
+import { StyledTextField } from "../components/Forms/FormComponents";
+import { StyledSubmitButton } from "../components/Buttons";
 
 import { signIn, getUserProfile } from "../services/AuthService";
 import { useUserProfileContext } from "../stores/UserProfileContext";
 
-const SignInScreen = ({ navigation }) => {
+export const SignInScreen = () => {
   // MARK: Vars
   const [signedIn, setSignedIn] = useState(false);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   // calls useContext on the userProfileStore context that was created globally
   const { userProfile, profileDispatch } = useUserProfileContext();
 
+  function checkFieldCompletion(): boolean {
+    return !(email === "" || password === "");
+  }
+
   // MARK: Post Authentication
   // this function runs once a user is authenticated; regardless of if they signed in or registered
-  const postAuthentication = async (user_id) => {
+  const postAuthentication = async (user_id: Number) => {
     try {
       const userProfile = await getUserProfile(user_id);
 
@@ -26,13 +33,13 @@ const SignInScreen = ({ navigation }) => {
 
       setSignedIn(true);
     } catch (error) {
-      Alert.alert("Login Failed", error.message);
+      Alert.alert("Login Failed", (error as Error).message);
     }
   };
 
   // MARK: handleSignIn
   const handleSignIn = async () => {
-    if (email === "" || password === "") {
+    if (!checkFieldCompletion()) {
       Alert.alert("Please enter both email and password.");
       return;
     }
@@ -42,11 +49,9 @@ const SignInScreen = ({ navigation }) => {
 
       await postAuthentication(user_id);
 
-      Alert.alert("Login Successful!");
-
       // navigation.navigate("Home");
     } catch (error) {
-      Alert.alert("Login Failed", error.message);
+      Alert.alert("Login Failed", (error as Error).message);
     }
   };
 
@@ -56,40 +61,13 @@ const SignInScreen = ({ navigation }) => {
 
   // MARK: Body
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
+    <View>
+      <StyledTextField
         value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
+        placeHolder="email"
+        secureTextEntry={false}
+        setValue={setEmail}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Text>welcome, {getUserId()}</Text>
-      <Button title="Sign In" onPress={handleSignIn} />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    padding: 20,
-  },
-  input: {
-    height: 50,
-    borderBottomWidth: 1,
-    marginBottom: 20,
-    fontSize: 16,
-  },
-});
-
-export default SignInScreen;

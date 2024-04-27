@@ -9,15 +9,16 @@ import RegistrationScreen from "./screens/RegistrationScreen";
 import { UserProfileProvider } from "./stores/UserProfileContext";
 
 // Navigation
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { Constants } from "./components/constants";
 
 const Stack = createStackNavigator();
 
 // MARK: Body
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={MyTheme}>
       <UserProfileProvider>
         <Stack.Navigator initialRouteName="Auth">
           <Stack.Screen
@@ -25,11 +26,11 @@ export default function App() {
             component={AuthScreen}
             options={{ title: "Welcome" }}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="SignIn"
             component={SignInScreen}
             options={{ title: "Welcome" }}
-          />
+          /> */}
           <Stack.Screen
             name="Register"
             component={RegistrationScreen}
@@ -50,3 +51,13 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+// MARK: Styles
+const MyTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: Constants.darkAccent,
+    background: Constants.baseLight,
+  },
+};

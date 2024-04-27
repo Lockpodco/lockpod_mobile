@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Text, Pressable, Image, Animated, TextInput } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, Pressable, Image, Animated, TextInput, Button } from 'react-native';
 
 const Settings = () => {
 	const [oldPass, oldPassword] = React.useState('');
@@ -30,6 +30,10 @@ const Settings = () => {
 					placeholder="Retype New Password"
 					placeholderTextColor={"#808080"}
 					//secureTextEntry={true}
+				/>
+				<Button
+					//onPress={}
+					title="Change Password"
 				/>
 			</View>
         </View>

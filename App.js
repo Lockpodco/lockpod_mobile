@@ -6,6 +6,7 @@ import Wallet from "./screens/Wallet";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { Image } from 'react-native';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -16,7 +17,9 @@ function DrawerNav() {
 			<Drawer.Screen
 				name="Home"
 				component={HomeScreen}
-				options={{ title: "Lockpod" }}
+				options={{ 
+					title: "Lockpod", 
+				}}
 			/>
 			<Drawer.Screen 
 				name="Settings"

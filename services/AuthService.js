@@ -63,7 +63,7 @@ export const register = async (email, password) => {
     } else {
       console.log("registration successful");
 
-      registerNewUserProfile(data["id"]);
+      await registerNewUserProfile(data["id"]);
     }
 
     return data["id"];

@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { fetchLockpods } from "../services/LockpodService";
 import ReserveModal from "./ReserveModal.js";
+import { useIsFocused } from "@react-navigation/native";
 
 const UCSD_REGION = {
   latitude: 32.8801,
@@ -12,9 +13,16 @@ const UCSD_REGION = {
 };
 
 const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
+  const isFocused = useIsFocused();
   const [lockpods, setLockpods] = useState([]);
   const [selectedLockpod, setSelectedLockpod] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (isFocused) {
+      fetchLockpods().then((data) => setLockpods(data)); // Fetch lockpods when navigating back to home screen
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     fetchLockpods().then((data) => setLockpods(data));

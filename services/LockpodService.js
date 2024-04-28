@@ -12,3 +12,22 @@ export const fetchLockpods = async () => {
     throw error;
   }
 };
+
+// updates a lockpod's status in the database
+export const updateLockpodStatus = async (lockpodId, status) => {
+  console.log("Lockpod updated:", lockpodId);
+  console.log("Update status to:", status);
+  try {
+    const response = await fetch(`${API_URL}/lockpods/status/${lockpodId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }), // Send status in the request body
+    });
+    return response;
+  } catch (error) {
+    console.error("Error updating lockpod:", error);
+    throw error;
+  }
+};

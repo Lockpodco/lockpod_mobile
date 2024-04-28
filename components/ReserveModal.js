@@ -7,17 +7,15 @@ const ReserveModal = ({ lockpod, visible, onModalClose }) => {
   const { navigate } = useNavigation();
 
   const handleReserve = () => {
-    // TODO: Implement reserve functionality (navigate to the reserve screen)
-
     // Navigate to ReserveScreen with lockpod information
-    navigate("Reserve", { lockpodId: lockpod.id, status: lockpod.status });
+    navigate("Reserve", {
+      lockpod: lockpod,
+    });
     // Close the modal
     onModalClose();
   };
 
   const handleUnlock = () => {
-    // TODO: Implement reserve functionality (navigate to the reserve screen)
-
     // Navigate to ReserveScreen with lockpod information
     navigate("ScanQR");
     // Close the modal

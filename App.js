@@ -14,34 +14,27 @@ import ScanQR from "./screens/ScanQR";
 
 const Stack = createStackNavigator();
 
-// MARK: Body
+// MARK: Questions for Yudong:
+// Why are we git ignonring .env files, if they are standard for running the backend?
+// ask him about pushing the changes to the remote (more comments, MARKS in all the files, updated README.md)
+
+// MARK: Apps
 export default function App() {
   return (
-    <NavigationContainer theme={MyTheme}>
-      <UserProfileProvider>
-        <Stack.Navigator initialRouteName="Auth">
-          <Stack.Screen
-            name="Auth"
-            component={AuthScreen}
-            options={{ title: "Login" }}
-          />
-          <Stack.Screen
-            name="ProfileCreation"
-            component={ProfileCreationScreen}
-            options={{ title: "Create Profile" }}
-          />
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ title: "Welcome" }}
-          />
-          <Stack.Screen
-            name="ScanQR"
-            component={ScanQR}
-            options={{ title: "Scan Your Pod" }}
-          />
-        </Stack.Navigator>
-      </UserProfileProvider>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: "Welcome" }}
+        />
+        <Stack.Screen
+          name="ScanQR"
+          component={ScanQR}
+          options={{ title: "Scan Your Pod" }}
+        />
+        {/* You can add more screens to the navigator here */}
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }

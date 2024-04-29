@@ -26,7 +26,13 @@ const HomeScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Text>{userProfile["first_name"] + " " + userProfile["last_name"]}</Text>
+      <Text>
+        {userProfile["first_name"] +
+          " " +
+          userProfile["last_name"] +
+          ", with userId: " +
+          userProfile["user_id"]}
+      </Text>
       <MapViewComponent />
       <TouchableOpacity
         activeOpacity={0.7}

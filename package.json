@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@react-navigation/drawer": "^6.6.15",
+    "@react-native-async-storage/async-storage": "1.18.2",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/stack": "^6.3.20",
     "@stripe/stripe-react-native": "^0.28.0",

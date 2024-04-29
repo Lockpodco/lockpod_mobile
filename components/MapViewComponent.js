@@ -5,6 +5,7 @@ import { fetchLockpods } from "../services/LockpodService";
 import ReserveModal from "./ReserveModal.js";
 import { useIsFocused } from "@react-navigation/native";
 
+// default zoom on UCSD
 const UCSD_REGION = {
   latitude: 32.8801,
   longitude: -117.227, // focused display of ucsd campus
@@ -13,16 +14,10 @@ const UCSD_REGION = {
 };
 
 const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
+  // MARK: VARS
+  // create a state variable to store the list of active lockpods
   const isFocused = useIsFocused();
   const [lockpods, setLockpods] = useState([]);
-  const [selectedLockpod, setSelectedLockpod] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-
-  useEffect(() => {
-    if (isFocused) {
-      fetchLockpods().then((data) => setLockpods(data)); // Fetch lockpods when navigating back to home screen
-    }
-  }, [isFocused]);
 
   useEffect(() => {
     fetchLockpods().then((data) => setLockpods(data));
@@ -38,6 +33,7 @@ const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
     setSelectedLockpod(null);
   };
 
+  // MARK: BODY
   return (
     <View style={{ flex: 1 }}>
       <MapView initialRegion={initialRegion} style={{ flex: 1 }}>

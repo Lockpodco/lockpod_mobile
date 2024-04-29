@@ -15,7 +15,11 @@ import ReserveScreen from "./screens/ReserveScreen";
 
 const Stack = createStackNavigator();
 
-// MARK: Body
+// MARK: Questions for Yudong:
+// Why are we git ignonring .env files, if they are standard for running the backend?
+// ask him about pushing the changes to the remote (more comments, MARKS in all the files, updated README.md)
+
+// MARK: Apps
 export default function App() {
   return (
     <NavigationContainer theme={MyTheme}>

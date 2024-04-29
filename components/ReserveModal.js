@@ -4,7 +4,7 @@ import { windowWidth, windowHeight } from "../Constants";
 import { useNavigation } from "@react-navigation/native";
 
 const ReserveModal = ({ lockpod, visible, onModalClose}) => {
-  const [clickable, setClickable] = useState(false);
+  const [clickable, setClickable] = useState(true);
   const { navigate } = useNavigation();
 
   if(lockpod && lockpod.status && lockpod.status == "avaliable"){
@@ -42,7 +42,7 @@ const ReserveModal = ({ lockpod, visible, onModalClose}) => {
             <Pressable 
               style={[styles.button, clickable ? styles.button : styles.nonClickableButton]}
               onPress={handleReserve}
-              disabled={!clickable} // Disable the button if it's not clickable
+              // disabled={!clickable} // Disable the button if it's not clickable
             >
               <Text style={styles.buttonText}>Reserve</Text>
             </Pressable>

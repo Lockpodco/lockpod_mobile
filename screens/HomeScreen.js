@@ -4,6 +4,7 @@ import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { windowHeight, windowWidth } from "../Constants";
 import { useNavigation } from "@react-navigation/native";
 
+import { useUserProfileContext } from "../stores/UserProfileContext";
 // MARK: Styling
 // SCANQR Button Styling
 const styles = StyleSheet.create({
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
 const HomeScreen = () => {
   const { navigate } = useNavigation();
 
-  const { userProfile, profileDispatch } = useUserProfileContext();
+  // const { userProfile, profileDispatch } = useUserProfileContext();
 
   return (
     <View style={{ flex: 1 }}>

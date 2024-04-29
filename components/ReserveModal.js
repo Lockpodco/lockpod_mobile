@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useEffect, useState }from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { windowWidth, windowHeight } from "../Constants";
 import { useNavigation } from "@react-navigation/native";
 
-const ReserveModal = ({ lockpod, visible, onModalClose }) => {
+const ReserveModal = ({ lockpod, visible, onModalClose}) => {
+  const [clickable, setClickable] = useState(false);
   const { navigate } = useNavigation();
 
+  if(lockpod && lockpod.status && lockpod.status == "avaliable"){
+    setClickable(true);
+  }
   const handleReserve = () => {
     // TODO: Implement reserve functionality (navigate to the reserve screen)
 
@@ -13,6 +17,7 @@ const ReserveModal = ({ lockpod, visible, onModalClose }) => {
     navigate("Reserve", { lockpodId: lockpod.id, status: lockpod.status });
     // Close the modal
     onModalClose();
+    
   };
 
   const handleUnlock = () => {
@@ -23,7 +28,6 @@ const ReserveModal = ({ lockpod, visible, onModalClose }) => {
     // Close the modal
     onModalClose();
   };
-
   return (
     <Modal
       animationType="slide"
@@ -35,7 +39,11 @@ const ReserveModal = ({ lockpod, visible, onModalClose }) => {
         <View style={styles.modalContainer}>
           <Text style={styles.modalTitle}>LockPod {lockpod?.id}</Text>
           <View style={styles.buttonContainer}>
-            <Pressable style={styles.button} onPress={handleReserve}>
+            <Pressable 
+              style={[styles.button, clickable ? styles.button : styles.nonClickableButton]}
+              onPress={handleReserve}
+              disabled={!clickable} // Disable the button if it's not clickable
+            >
               <Text style={styles.buttonText}>Reserve</Text>
             </Pressable>
             <Pressable style={styles.button} onPress={handleUnlock}>
@@ -76,6 +84,13 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "grey",
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    marginHorizontal: 5,
+    borderRadius: 5,
+  },
+  nonClickableButton: {
+    backgroundColor: '#ccc',
     paddingVertical: 10,
     paddingHorizontal: 30,
     marginHorizontal: 5,

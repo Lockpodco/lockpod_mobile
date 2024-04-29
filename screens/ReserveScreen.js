@@ -41,7 +41,7 @@ const ReserveScreen = () => {
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#000', // Button background color
+    backgroundColor: '#90EE90', // Button background color
     padding: 20, // Padding around the text
     borderRadius: 5, // Border radius to make it rounded
     marginTop: 12,

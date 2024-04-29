@@ -18,6 +18,8 @@ const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
   // create a state variable to store the list of active lockpods
   const isFocused = useIsFocused();
   const [lockpods, setLockpods] = useState([]);
+  const [selectedLockpod, setSelectedLockpod] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     fetchLockpods().then((data) => setLockpods(data));

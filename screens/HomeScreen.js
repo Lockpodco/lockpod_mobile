@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import MapViewComponent from "../components/MapViewComponent";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { windowHeight, windowWidth } from "../Constants";
 import { useNavigation } from "@react-navigation/native";
 
+import { useUserProfileContext } from "../stores/UserProfileContext";
+// MARK: Styling
+// SCANQR Button Styling
 const styles = StyleSheet.create({
   floatingButton: {
     height: windowWidth / 15,
@@ -17,8 +20,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
 const HomeScreen = () => {
   const { navigate } = useNavigation();
+
+  // const { userProfile, profileDispatch } = useUserProfileContext();
 
   return (
     <View style={{ flex: 1 }}>

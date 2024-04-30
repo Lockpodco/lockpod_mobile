@@ -1,5 +1,40 @@
 # lockpod_mobile
 
+### **GLOBAL STORE**
+
+Global store is a built in react-native way of storing, passing, and updatng data throuhgout the app. Instead of passing stateObjects like a `userProfile` to each Screen / component individually, you can store one copy of it, and then observe changes within the individual Screens that need access to it.
+
+To update the object, you call a dispatch function wiht the type of update you are making along with the associated payload.
+
+### **Example: Reading UserProfile**
+
+(This will only work once the user is authenticated)
+
+in the file you want to access the userProfile through, import the useProfileContext hook from the `UserProfileContext.js` file.
+
+` import { useUserProfileContext } from <path to UserProfileContext.js>";`
+
+at the top of the component you want to use the userProfile, use the `useProfileContext` hook. This is basically a glorified useReducer() method that specifically connects to the userProfile context.
+
+`const { userProfile, profileDispatch } = useUserProfileContext();`
+
+to access specific properties of the userProfile, invoke it using subscript notation, passing the coloumn name for the property you want to access
+
+`const user_id = userProfile["user_id"];`
+
+To update the userProfile
+
+1. make a copy of the current userProfile
+2. perform any modifications to the copy
+3. use the `profileDispatch` function to update the context and the database.
+
+```
+profileDispatch( {
+    type: "loadProfile"
+    payload: newProfile
+} );
+```
+
 ### **INSTALLATION**
 
 #### **Cloning**

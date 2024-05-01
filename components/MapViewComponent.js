@@ -22,6 +22,12 @@ const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
+    if (isFocused) {
+      fetchLockpods().then((data) => setLockpods(data)); // Fetch lockpods when navigating back to home screen
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
     fetchLockpods().then((data) => setLockpods(data));
   }, []);
 

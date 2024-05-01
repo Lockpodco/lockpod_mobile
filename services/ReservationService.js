@@ -25,6 +25,7 @@ export const reserveLockpod = async (req) => {
 };
 
 // MARK: endReservation
+/*
 export const endReservation = async (req) => {
   console.log("data in endReservation: ", JSON.stringify(req));
   try {
@@ -38,6 +39,50 @@ export const endReservation = async (req) => {
     return response;
   } catch (error) {
     console.error("Error ending reservation: ", error);
+    throw error;
+  }
+};
+*/
+
+export const endReservation = async (req) => {
+  console.log("data in endReservation: ", JSON.stringify(req));
+  try {
+    const response = await fetch(`${API_URL}/reservations`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(req),
+    });
+    return response;
+  } catch (error) {
+    console.error("Error ending reservation: ", error);
+    throw error;
+  }
+};
+
+export const checkReservation = async (userId, lockpodId) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/reservations?userId=${userId}&lockpodId=${lockpodId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message);
+    } else {
+      console.log(`Successfully checked reservations by user ${userId}!`);
+    }
+    return data;
+  } catch (error) {
+    console.error("Error checking reservations:", error);
     throw error;
   }
 };

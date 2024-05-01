@@ -9,9 +9,9 @@ import { useNavigation } from "@react-navigation/native";
 const ReserveScreen = () => {
   const route = useRoute();
   const { navigate } = useNavigation();
-  const { lockpod } = route.params; // Extract props from route.params
+  const { lockpod, userId } = route.params; // Extract props from route.params
 
-  const onReservationSelect = (minutes) => {
+  const onReservationSelect = async (minutes) => {
     // Get the current time
     const currentTime = new Date();
 
@@ -19,10 +19,19 @@ const ReserveScreen = () => {
     const startTime = new Date(currentTime.getTime() + minutes * 60000);
 
     // print test
-    console.log("Current time: ",currentTime.getHours(),":", currentTime.getMinutes()," Reserved time: ", startTime.getHours(),":",  startTime.getMinutes())
+    console.log(
+      "Current time: ",
+      currentTime.getHours(),
+      ":",
+      currentTime.getMinutes(),
+      " Reserved time: ",
+      startTime.getHours(),
+      ":",
+      startTime.getMinutes()
+    );
 
-    testUser = {
-      userId: 2,
+    user = {
+      userId: userId,
       lockpodId: lockpod.id,
       status: "unavailable",
       startTime: startTime,
@@ -30,10 +39,10 @@ const ReserveScreen = () => {
     };
 
     try {
-      reserveLockpod(testUser);
+      await reserveLockpod(user);
 
       // Update lockpod status in database to show updated status in map view
-      updateLockpodStatus(lockpod.id, "unavailable");
+      await updateLockpodStatus(lockpod.id, "unavailable");
       navigate("Home");
     } catch (error) {
       // Handle any errors that occur during reservation
@@ -85,7 +94,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   button: {
-    backgroundColor: '#90EE90', // Button background color
+    backgroundColor: "#90EE90", // Button background color
     padding: 20, // Padding around the text
     borderRadius: 5, // Border radius to make it rounded
     marginTop: 12,
@@ -107,7 +116,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
   },
   modalContainer: {
-    width: '80%', // Width of the modal
+    width: "80%", // Width of the modal
     backgroundColor: "white",
     padding: 20,
     borderRadius: 10,

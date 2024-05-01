@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 const ReserveModal = ({ lockpod, visible, onModalClose}) => {
   const [clickable, setClickable] = useState(true);
   const [pictureSelected, setPictureSelected] = useState(false);
+  const [selectedPictureIndex, setSelectedPictureIndex] = useState(null);
   const { navigate } = useNavigation();
 
   useEffect(() => {
@@ -37,17 +38,44 @@ const ReserveModal = ({ lockpod, visible, onModalClose}) => {
     Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${destination}`);
   };
 
-  const handlePictureSelect = () => {
-    setPictureSelected(true);
+  const handlePictureSelect = (index) => {
+    if (pictureSelected) {
+        // If picture is already selected, unselect it
+        handlePictureUnSelect();
+    } else {
+        // If picture is not selected, select it
+        setPictureSelected(true);
+        setSelectedPictureIndex(index);
+    }
+    
+    //also returns the name of the lockpod?
   };
 
   const handlePictureUnSelect = () => {
     setPictureSelected(false);
+    setSelectedPictureIndex(null);
   };
 
 
 
+  const renderPictures = () => {
+    return (
+        <>
+            <Pressable onPress={() => handlePictureSelect(0)}>
+            <Image source={require('../assets/adaptive-icon.png')} style={styles.picture} />
+            </Pressable>
+            <Pressable onPress={() => handlePictureSelect(1)}>
+            <Image source={require('../assets/adaptive-icon.png')} style={styles.picture} />
+            </Pressable>
+            <Pressable onPress={() => handlePictureSelect(2)}>
+            <Image source={require('../assets/adaptive-icon.png')} style={styles.picture} />
+            </Pressable>
+        </>
+    ); 
+  };
+
   return (
+    
     <Modal
       animationType="slide"
       transparent={true}
@@ -55,6 +83,7 @@ const ReserveModal = ({ lockpod, visible, onModalClose}) => {
       onRequestClose={onModalClose}
     >
       <Pressable onPress={onModalClose} style={styles.modalOverlay}>
+        
         <View style={styles.modalContainer}>
           {/* Directions Section */}
           <View style={styles.directionContainer}>
@@ -66,19 +95,13 @@ const ReserveModal = ({ lockpod, visible, onModalClose}) => {
 
           {/* Picture List Section */}
           <ScrollView horizontal={true} contentContainerStyle={styles.pictureListContainer}>
-            {/* Example pictures (depends on the number of total lockpods)*/}
-            <Pressable onPress={handlePictureSelect}>
-              <Image source={require('../assets/adaptive-icon.png')} style={styles.picture} />
-            </Pressable>
-            <Pressable onPress={handlePictureSelect}>
-              <Image source={require('../assets/adaptive-icon.png')} style={styles.picture} />
-            </Pressable>
-            {/* Add more pictures here */}
+            {renderPictures()}
           </ScrollView>
 
           {/* Reserve and Unlock buttons (conditionally rendered) */}
           {pictureSelected && (
             <View style={styles.buttonContainer}>
+              <Image source={require('../assets/adaptive-icon.png')} style={styles.picture} />
               <Pressable
                 style={[
                   styles.button,
@@ -93,6 +116,7 @@ const ReserveModal = ({ lockpod, visible, onModalClose}) => {
               </Pressable>
             </View>
           )}
+          
         </View>
       </Pressable>
     </Modal>

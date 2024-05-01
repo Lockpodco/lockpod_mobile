@@ -82,6 +82,10 @@ const ReserveModal = ({ lockpod, visible, onModalClose }) => {
     // Update lockpod status in database to show updated status in map view
     await updateLockpodStatus(lockpod.id, "available");
 
+    // Update reserve button text and set reservedByUser state to false
+    setReserveButtonText("Reserve");
+    setReservedByUser(false);
+
     onModalClose();
     handlePictureUnSelect();
   };
@@ -187,10 +191,24 @@ const ReserveModal = ({ lockpod, visible, onModalClose }) => {
                     : styles.nonClickableButton,
                 ]}
                 onPress={reservedByUser ? handleCancel : handleReserve}
+                disabled={
+                  lockpod && lockpod.status == "unavailable" && !reservedByUser
+                }
               >
                 <Text style={styles.buttonText}>{reserveButtonText}</Text>
               </Pressable>
-              <Pressable style={styles.button} onPress={handleUnlock}>
+              <Pressable
+                style={[
+                  styles.button,
+                  clickable || reservedByUser
+                    ? styles.button
+                    : styles.nonClickableButton,
+                ]}
+                onPress={handleUnlock}
+                disabled={
+                  lockpod && lockpod.status == "unavailable" && !reservedByUser
+                }
+              >
                 <Text style={styles.buttonText}>Unlock</Text>
               </Pressable>
             </View>

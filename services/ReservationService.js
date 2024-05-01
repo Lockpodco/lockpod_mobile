@@ -1,4 +1,9 @@
-const API_URL = "http://localhost:3000";
+import { Platform } from "react-native";
+
+let localhost;
+localhost = Platform.OS === "android" ? "10.0.2.2" : "127.0.0.1";
+// subject to changes
+const API_URL = `http://${localhost}:3000`; //this opens same port as backend, which connects to database
 
 // MARK: ReserveLockpod
 export const reserveLockpod = async (req) => {

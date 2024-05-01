@@ -1,5 +1,9 @@
 // MARK: Vars
-const API_URL = "http://localhost:3000";
+import { Platform } from "react-native";
+
+let localhost;
+localhost = Platform.OS === "android" ? "10.0.2.2" : "127.0.0.1";
+const API_URL = `http://${localhost}:3000`;
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // MARK: Convenience Functions

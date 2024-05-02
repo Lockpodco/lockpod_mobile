@@ -26,6 +26,7 @@ async function checkUserExists(email) {
 }
 
 // MARK: Registration
+
 // registers a user using an email and password
 export const register = async (email, password) => {
   try {
@@ -140,24 +141,72 @@ export const signIn = async (email, password) => {
   }
 };
 
-export const changePassword = async (currentPass, newPass) => {
-	try {
-		console.log("\n");
-		console.log("Attempting to change user password: ", currentPass);
+// MARK: Get Profile
+export const getUserProfile = async (user_id) => {
+  try {
+    console.log("\n");
+    console.log("Attempting to retrieve userProfile for id:" + user_id);
 
-		// add way to verify currentPass
-		
-		// update db
-		//const response = await fetch(`${API_URL}/users`, {
-		//	method: "POST",
-		//	headers: {
-		//		"Content-Type": "application/json",
-		//	},
-		//	body: JSON.stringify({
-		//	}),
-		//});
+    const response = await fetch(`${API_URL}/userProfiles?user_id=${user_id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "applications/json",
+      },
+    });
 
-	} catch (error) {
-		handleError("error in changing password <changePassword>", error);
-	}
+    let jsonData = await response.json();
+
+    // if the user has signed in, but for some reason does not have an profile
+    // create one here with their user_id, and then return that
+    if (Object.keys(jsonData).length == 0) {
+      jsonData = await registerNewUserProfile(user_id);
+    }
+
+    return jsonData;
+  } catch (error) {
+    handleError("error getting userProfile <getUserProfile>", error);
+  }
+};
+
+// MARK: get User
+// posts a get method to the server for the provided email
+async function getUser(email) {
+  try {
+    const response = await fetch(
+      `${API_URL}/users?email=${email.toLowerCase()}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "applications/json",
+        },
+      }
+    );
+
+    const jsonData = await response.json();
+
+    return jsonData;
+  } catch (error) {
+    handleError("Error Getting user <getUser>", error);
+  }
 }
+
+// MARK: Get User_ID Locally
+const localUserIdKey = "localUserIdKey";
+
+export const saveUserIdLocally = async (user_id) => {
+  try {
+    const jsonData = JSON.stringify(user_id);
+    await AsyncStorage.setItem(localUserIdKey, jsonData);
+  } catch (error) {
+    handleError("error storing user_id", error);
+  }
+};
+
+export const getUserIdLocally = async () => {
+  try {
+    const value = await AsyncStorage.getItem(localUserIdKey);
+    return Number(value) ?? 0;
+  } catch (error) {
+    handleError("error retreiving user_id", error);
+  }
+};

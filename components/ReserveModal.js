@@ -4,7 +4,7 @@ import { windowWidth, windowHeight } from "../Constants";
 import { useNavigation } from "@react-navigation/native";
 
 const ReserveModal = ({ lockpod, visible, onModalClose}) => {
-  const [clickable, setClickable] = useState(true);
+  const [clickable, setClickable] = useState(false);
   const [pictureSelected, setPictureSelected] = useState(false);
   const [selectedPictureIndex, setSelectedPictureIndex] = useState(null);
   const { navigate } = useNavigation();
@@ -14,6 +14,14 @@ const ReserveModal = ({ lockpod, visible, onModalClose}) => {
       setClickable(true);
     }
   }, [lockpod]);
+
+  useEffect(() => {
+    if (!visible) {
+      // Reset picture selection when modal is closed
+      setPictureSelected(false);
+      setSelectedPictureIndex(null);
+    }
+  }, [visible]);
 
   const handleReserve = () => {
     // Navigate to ReserveScreen with lockpod information
@@ -56,8 +64,6 @@ const ReserveModal = ({ lockpod, visible, onModalClose}) => {
     setSelectedPictureIndex(null);
   };
 
-
-
   const renderPictures = () => {
     return (
         <>
@@ -94,9 +100,11 @@ const ReserveModal = ({ lockpod, visible, onModalClose}) => {
           </View>
 
           {/* Picture List Section */}
-          <ScrollView horizontal={true} contentContainerStyle={styles.pictureListContainer}>
-            {renderPictures()}
-          </ScrollView>
+          {!pictureSelected && (
+            <ScrollView horizontal={true} contentContainerStyle={styles.pictureListContainer}>
+              {renderPictures()}
+            </ScrollView>
+          )}
 
           {/* Reserve and Unlock buttons (conditionally rendered) */}
           {pictureSelected && (

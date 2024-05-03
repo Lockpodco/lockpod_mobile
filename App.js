@@ -9,12 +9,16 @@ import { Constants } from "./components/constants";
 import { UserProfileProvider } from "./stores/UserProfileContext";
 
 // pages
-import HomeScreen from "./screens/HomeScreen";
-import Settings from "./screens/Settings";
-import Wallet from "./screens/Wallet";
 import AuthScreen from "./screens/AuthScreen";
 import ProfileCreationScreen from "./screens/ProfileCreationScreen";
+import HomeScreen from "./screens/HomeScreen";
 import ScanQR from "./screens/ScanQR";
+import ProfileScreen from "./screens/ProfileScreen";
+import ActivityScreen from "./screens/ActivityScreen";
+import Wallet from "./screens/Wallet";
+import SubscriptionsScreen from "./screens/SubscriptionsScreen";
+import UserGuide from "./screens/UserGuide";
+import SupportScreen from "./screens/SupportScreen";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -29,15 +33,45 @@ function DrawerNav() {
           title: "Lockpod",
         }}
       />
+      <Stack.Screen
+        name="ScanQR"
+        component={ScanQR}
+        options={{
+          title: "Scan Your Pod",
+          drawerItemStyle: {
+            display: "none",
+          },
+        }}
+      />
       <Drawer.Screen
-        name="Settings"
-        component={Settings}
-        options={{ title: "Settings" }}
+        name="Profile"
+        component={ProfileScreen}
+        options={{ title: "Profile" }}
+      />
+      <Drawer.Screen
+        name="Activity"
+        component={ActivityScreen}
+        options={{ title: "Activity" }}
       />
       <Drawer.Screen
         name="Wallet"
         component={Wallet}
         options={{ title: "Wallet" }}
+      />
+      <Drawer.Screen
+        name="Subscriptions"
+        component={SubscriptionsScreen}
+        options={{ title: "Subscriptions" }}
+      />
+      <Drawer.Screen
+        name="UserGuide"
+        component={UserGuide}
+        options={{ title: "User Guide" }}
+      />
+      <Drawer.Screen
+        name="Support"
+        component={SupportScreen}
+        options={{ title: "Support" }}
       />
     </Drawer.Navigator>
   );
@@ -45,22 +79,6 @@ function DrawerNav() {
 
 // MARK: Body
 export default function App() {
-  //return (
-  //	<NavigationContainer>
-  //		<Stack.Navigator>
-  //			<Stack.Screen
-  //				name="Lockpod"
-  //				component={DrawerNav}
-  //				options={{ headerShown: false }}
-  //			/>
-  //			<Stack.Screen
-  //				name="ScanQR"
-  //				component={ScanQR}
-  //				options={{title: "Scan Your Pod"}}
-  //			/>
-  //		</Stack.Navigator>
-  //	</NavigationContainer>
-  //);
   return (
     <NavigationContainer theme={MyTheme}>
       <UserProfileProvider>
@@ -68,17 +86,17 @@ export default function App() {
           <Stack.Screen
             name="Home"
             component={DrawerNav}
-            options={{ title: "Welcome" }}
-          />
-          <Stack.Screen
-            name="ScanQR"
-            component={ScanQR}
-            options={{ title: "Scan Your Pod" }}
+            options={{
+              title: "Welcome",
+              headerShown: false,
+            }}
           />
           <Stack.Screen
             name="Auth"
             component={AuthScreen}
-            options={{ title: "Login" }}
+            options={{
+              title: "Login",
+            }}
           />
           <Stack.Screen
             name="ProfileCreation"

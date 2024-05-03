@@ -2,7 +2,7 @@ import React from "react";
 import { View, StyleSheet, TouchableOpacity, Text, Pressable, Image, Animated, TextInput, Button } from 'react-native';
 import { changePassword } from "../services/AuthService";
 
-const Settings = () => {
+const ProfileScreen = () => {
 	const [currentPass, setCurrentPass] = React.useState('');
 	const [newPass, setNewPass] = React.useState('');
 	const [confirmNewPass, setConfirmNewPass] = React.useState('');
@@ -71,4 +71,4 @@ const Settings = () => {
     );
 };
 
-export default Settings;
+export default ProfileScreen;

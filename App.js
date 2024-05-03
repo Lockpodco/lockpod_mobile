@@ -13,12 +13,12 @@ import AuthScreen from "./screens/AuthScreen";
 import ProfileCreationScreen from "./screens/ProfileCreationScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ScanQR from "./screens/ScanQR";
-import ProfileScreen from "./screens/ProfileScreen";
-import ActivityScreen from "./screens/ActivityScreen";
-import Wallet from "./screens/Wallet";
-import SubscriptionsScreen from "./screens/SubscriptionsScreen";
-import UserGuide from "./screens/UserGuide";
-import SupportScreen from "./screens/SupportScreen";
+import ProfileScreen from "./screens/MyAccount/ProfileScreen";
+import ActivityScreen from "./screens/MyAccount/ActivityScreen";
+import Wallet from "./screens/Payment/WalletScreen";
+import SubscriptionsScreen from "./screens/Payment/SubscriptionsScreen";
+import UserGuide from "./screens/Help/UserGuideScreen";
+import SupportScreen from "./screens/Help/SupportScreen";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();

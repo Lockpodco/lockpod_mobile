@@ -141,6 +141,14 @@ export const signIn = async (email, password) => {
   }
 };
 
+export const changePassword = async () => {
+	try {
+
+	} catch (error) {
+
+	}
+}
+
 // MARK: Get Profile
 export const getUserProfile = async (user_id) => {
   try {

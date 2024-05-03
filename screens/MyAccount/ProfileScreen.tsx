@@ -1,11 +1,14 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Text, Pressable, Image, Animated, TextInput, Button } from 'react-native';
-import { changePassword } from "../services/AuthService";
+import { View, StyleSheet, Text, Image, TextInput, Button, Alert } from 'react-native';
 
-const ProfileScreen = () => {
+import { useUserProfileContext } from "../../stores/UserProfileContext";
+
+const ProfileScreen = ({ navigation }: { navigation: any }) => {
 	const [currentPass, setCurrentPass] = React.useState('');
 	const [newPass, setNewPass] = React.useState('');
 	const [confirmNewPass, setConfirmNewPass] = React.useState('');
+
+    const { userProfile, profileDispatch } = useUserProfileContext();
 
 	function checkFieldCompletion() {
 		if (currentPass === "" || newPass === "" || confirmNewPass === "") {
@@ -23,9 +26,9 @@ const ProfileScreen = () => {
 		if (!checkFieldCompletion) {
 			return;
 		}
-
 		try {
-			const response = await changePassword(currentPass, newPass);
+
+			const response = ""
 			console.log(response);
 
 			Alert.alert("Success", "Change Password Successful", [
@@ -65,6 +68,14 @@ const ProfileScreen = () => {
 					onPress={handlePasswordChange}
 					title="Change Password"
 					color={"#1CB91B"}
+				/>
+			</View>
+			<View>
+				<Button
+					onPress={() =>
+						navigation.navigate("Auth")
+					}
+					title="Log Out"
 				/>
 			</View>
         </View>

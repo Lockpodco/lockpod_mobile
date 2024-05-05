@@ -2,17 +2,23 @@ import React from "react";
 import { View, StyleSheet, Text, Image, TextInput, Button, Alert } from 'react-native';
 
 import { useUserProfileContext } from "../../stores/UserProfileContext";
+import { removeUserIdLocally } from "../../services/AuthService";
+import { changePassword, getUser } from "../../services/ProfileService";
 
 const ProfileScreen = ({ navigation }: { navigation: any }) => {
 	const [currentPass, setCurrentPass] = React.useState('');
 	const [newPass, setNewPass] = React.useState('');
 	const [confirmNewPass, setConfirmNewPass] = React.useState('');
 
-    const { userProfile, profileDispatch } = useUserProfileContext();
+  const { userProfile, profileDispatch } = useUserProfileContext();
 
-	function checkFieldCompletion() {
+	function checkFieldCompletion(password: string) {
 		if (currentPass === "" || newPass === "" || confirmNewPass === "") {
 			Alert.alert("Error", "Please fill all the fields.");
+			return false;
+		}
+		if (currentPass !== password) {
+			Alert.alert("Error", "Incorrect password");
 			return false;
 		}
 		if (newPass !== confirmNewPass) {
@@ -22,20 +28,22 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 		return true;
   	}
 
-	const handlePasswordChange = async () => {
-		if (!checkFieldCompletion) {
+	const handlePasswordChange = async (newPassword: string) => {
+		const user = await getUser(userProfile["user_id"]);
+		const password = user["password"];
+		const email = user["email"];
+		if (!checkFieldCompletion(password)) {
 			return;
 		}
 		try {
-
-			const response = ""
-			console.log(response);
+			const a = await changePassword(email, newPassword);
 
 			Alert.alert("Success", "Change Password Successful", [
 				{ text: "OK", },
 			]);
 
 		} catch (error) {
+			Alert.alert("Error", "Password change unsuccessful");
 		}
 	};
 
@@ -48,6 +56,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 					value={currentPass}
 					placeholder="Current Password"
 					placeholderTextColor={"#808080"}
+					autoCapitalize="none"
 					//secureTextEntry={true} uncomment to switch to password dots
 				/>
 				<TextInput
@@ -55,6 +64,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 					value={newPass}
 					placeholder="New Password"
 					placeholderTextColor={"#808080"}
+					autoCapitalize="none"
 					//secureTextEntry={true}
 				/>
 				<TextInput
@@ -62,19 +72,21 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 					value={confirmNewPass}
 					placeholder="Confirm New Password"
 					placeholderTextColor={"#808080"}
+					autoCapitalize="none"
 					//secureTextEntry={true}
 				/>
 				<Button
-					onPress={handlePasswordChange}
+					onPress={() => handlePasswordChange(newPass)}
 					title="Change Password"
 					color={"#1CB91B"}
 				/>
 			</View>
 			<View>
 				<Button
-					onPress={() =>
-						navigation.navigate("Auth")
-					}
+					onPress={() => {
+						navigation.navigate("Auth");
+						removeUserIdLocally();
+					}}
 					title="Log Out"
 				/>
 			</View>

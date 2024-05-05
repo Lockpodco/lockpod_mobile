@@ -100,7 +100,7 @@ const registerNewUserProfile = async (user_id) => {
           data["id"] +
           ", user_id:" +
           user_id +
-          "]"
+          "]",
       );
     }
 
@@ -108,7 +108,7 @@ const registerNewUserProfile = async (user_id) => {
   } catch (error) {
     handleError(
       "erorr in registering new profile <registerNewUserProfile>",
-      error
+      error,
     );
   }
 };
@@ -130,7 +130,7 @@ export const signIn = async (email, password) => {
           "Incorrect Password, got: " +
             password +
             ", expected: " +
-            jsonData["email"]
+            jsonData["email"],
         );
       }
     } else {
@@ -140,14 +140,6 @@ export const signIn = async (email, password) => {
     handleError("error in Signing in <signIn>", error);
   }
 };
-
-export const changePassword = async () => {
-	try {
-
-	} catch (error) {
-
-	}
-}
 
 // MARK: Get Profile
 export const getUserProfile = async (user_id) => {
@@ -187,10 +179,10 @@ async function getUser(email) {
         headers: {
           "Content-Type": "applications/json",
         },
-      }
+      },
     );
 
-    const jsonData = await response.json();
+		const jsonData = await response.json();
 
     return jsonData;
   } catch (error) {
@@ -204,9 +196,18 @@ const localUserIdKey = "localUserIdKey";
 export const saveUserIdLocally = async (user_id) => {
   try {
     const jsonData = JSON.stringify(user_id);
+		console.log("Attempting to save user_id: ", jsonData);
     await AsyncStorage.setItem(localUserIdKey, jsonData);
   } catch (error) {
     handleError("error storing user_id", error);
+  }
+};
+
+export const removeUserIdLocally = async () => {
+  try {
+    await AsyncStorage.removeItem(localUserIdKey);
+  } catch (error) {
+    handleError("error removing user_id", error);
   }
 };
 

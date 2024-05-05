@@ -5,6 +5,7 @@ import { windowHeight, windowWidth } from "../Constants";
 import { useNavigation } from "@react-navigation/native";
 
 import { useUserProfileContext } from "../stores/UserProfileContext";
+import { getUserEmailLocally } from "../services/AuthService";
 
 const styles = StyleSheet.create({
   floatingButton: {

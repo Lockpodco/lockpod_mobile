@@ -22,14 +22,14 @@ const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
+    fetchLockpods().then((data) => setLockpods(data));
+  }, []);
+
+  useEffect(() => {
     if (isFocused) {
       fetchLockpods().then((data) => setLockpods(data)); // Fetch lockpods when navigating back to home screen
     }
-  }, [isFocused]);
-
-  useEffect(() => {
-    fetchLockpods().then((data) => setLockpods(data));
-  }, []);
+  }, [isFocused, lockpods]);
 
   const handleCalloutPressed = (lockpod) => {
     setSelectedLockpod(lockpod);
@@ -60,6 +60,7 @@ const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
       </MapView>
       <ReserveModal
         visible={modalVisible}
+        lockpods={lockpods}
         lockpod={selectedLockpod}
         onModalClose={handleModalClose}
       />

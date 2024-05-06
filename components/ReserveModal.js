@@ -56,6 +56,14 @@ const ReserveModal = ({ lockpod, visible, onModalClose }) => {
     }
   }, [lockpod]);
 
+  useEffect(() => {
+    if (!visible) {
+      // Reset picture selection when modal is closed
+      setPictureSelected(false);
+      setSelectedPictureIndex(null);
+    }
+  }, [visible]);
+
   const handleReserve = () => {
     // Navigate to ReserveScreen with lockpod information
     navigate("Reserve", {

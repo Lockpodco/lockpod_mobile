@@ -12,6 +12,8 @@ import { Constants } from "../../components/constants";
 import { removeUserIdLocally } from "../../services/AuthService";
 import { useUserProfileContext } from "../../stores/UserProfileContext";
 import { changePassword, getUser } from "../../services/ProfileService";
+import { PlainTextField } from "../../components/Forms/FormComponents";
+import { PlainSubmitButton, StyledSubmitButton } from "../../components/Buttons";
 
 const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
   const [currentPass, setCurrentPass] = React.useState("");
@@ -55,19 +57,6 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
     }
   };
   const styles = StyleSheet.create({
-		confirm: {
-      justifyContent: "center",
-      alignItems: "center",
-      height: 50,
-      marginLeft: 15,
-      marginRight: 15,
-      borderRadius: 15,
-      backgroundColor: Constants.baseDark,
-		},
-		confirmText: {
-			color: "#FFFFFF",
-			fontSize: 20,
-		},
 		inputContainer: {
 			marginTop: 20,
 			marginBottom: 20,
@@ -87,43 +76,38 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
   return (
     <View>
       <View style={styles.inputContainer}>
-					<TextInput
-						style={styles.text}
-						onChangeText={setCurrentPass}
+					<PlainTextField 
 						value={currentPass}
-						placeholder="Current Password"
-						placeholderTextColor={"#808080"}
-						autoCapitalize="none"
-						//secureTextEntry={true} uncomment to switch to password dots
+						placeHolder="Current Password"
+						height={0}
+						multiline= { false }
+						secureTextEntry= { false }
+						setValue={setCurrentPass}
 					/>
-					<TextInput
-						style={styles.text}
-						onChangeText={setNewPass}
+					<PlainTextField 
 						value={newPass}
-						placeholder="New Password"
-						placeholderTextColor={"#808080"}
-						autoCapitalize="none"
-						//secureTextEntry={true}
+						placeHolder="New Password"
+						height={0}
+						multiline= { false }
+						secureTextEntry= { false }
+						setValue={setNewPass}
 					/>
-					<TextInput
-						style={styles.text}
-						onChangeText={setConfirmNewPass}
+					<PlainTextField 
 						value={confirmNewPass}
-						placeholder="Confirm New Password"
-						placeholderTextColor={"#808080"}
-						autoCapitalize="none"
-						//secureTextEntry={true}
+						placeHolder="Confirm New Password"
+						height={0}
+						multiline= { false }
+						secureTextEntry= { false }
+						setValue={setConfirmNewPass}
 					/>
       </View>
-			<Pressable
-          onPress={() => handlePasswordChange(newPass)}
-			>
-				<View style={styles.confirm}>
-          <View>
-            <Text style={styles.confirmText}>Confirm</Text>
-          </View>
-				</View>
-			</Pressable>
+			<PlainSubmitButton
+				title="Confirm"
+				isActive={true}
+  			horizontalLayout={false}
+  			onSubmit={() => handlePasswordChange(newPass)}
+			/>
+
     </View>
   );
 };

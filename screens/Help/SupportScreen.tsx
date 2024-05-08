@@ -1,6 +1,8 @@
 import React from "react";
 import { View, TextInput, Button, StyleSheet, Alert, Text, Pressable } from "react-native";
 import { Constants } from "../../components/constants";
+import { PlainTextField } from "../../components/Forms/FormComponents";
+import { PlainSubmitButton } from "../../components/Buttons";
 
 const SupportScreen = () => {
 
@@ -11,16 +13,6 @@ const SupportScreen = () => {
 	const styles = StyleSheet.create({
 		container: {
 			flex: 1,
-		},
-		submit: {
-			height: 50,
-			marginLeft: 15,
-			marginRight: 15,
-			borderRadius: 15,
-			alignSelf: "stretch",
-			backgroundColor: Constants.baseDark,
-			justifyContent: "center",
-			alignItems: "center",
 		},
 		greetContainer: {
 			marginTop: 30,
@@ -36,27 +28,6 @@ const SupportScreen = () => {
 		},
 		text: {
 			marginLeft: 20,
-			marginBottom: 4,
-			fontSize: 15,
-		},
-		smallInput: {
-			height: 40,
-			marginLeft: 20,
-			paddingLeft: 10,
-			marginRight: 20,
-			borderWidth: 1,
-			borderRadius: 5,
-			fontSize: 15,
-		},
-		largeInput: {
-			textAlignVertical: "top",
-			height: 100,
-			paddingTop: 8,
-			marginLeft: 20,
-			paddingLeft: 10,
-			marginRight: 20,
-			borderWidth: 1,
-			borderRadius: 5,
 			fontSize: 15,
 		},
 	})
@@ -69,52 +40,44 @@ const SupportScreen = () => {
 			<View style={styles.inputContainer}>
 				<View>
 					<Text style={styles.text}>Name</Text>
-					<TextInput
-						style={styles.smallInput}
-						onChangeText={setName}
+					<PlainTextField 
 						value={name}
-						placeholder="Enter Name"
-						placeholderTextColor={"#808080"}
-						autoCapitalize="none"
+						placeHolder="Enter Name"
+						height={0}
+						multiline= { false }
+						secureTextEntry= { false }
+						setValue={setName}
 					/>
 				</View>
 				<View>
 					<Text style={styles.text}>Email</Text>
-					<TextInput
-						style={styles.smallInput}
-						onChangeText={setEmail}
+					<PlainTextField 
 						value={email}
-						placeholder="example@gmail.com"
-						placeholderTextColor={"#808080"}
-						autoCapitalize="none"
+						placeHolder="example@gmail.com"
+						height={0}
+						multiline={false}
+						secureTextEntry={false}
+						setValue={setEmail}
 					/>
 				</View>
 				<View>
 					<Text style={styles.text}>Report Issue</Text>
-					<TextInput
-						style={styles.largeInput}
-						onChangeText={setIssue}
+					<PlainTextField 
 						value={issue}
-						placeholder="Type here..."
-						placeholderTextColor={"#808080"}
-						autoCapitalize="none"
+						placeHolder="Type here..."
+						height={100}
 						multiline={true}
+						secureTextEntry={false}
+						setValue={setIssue}
 					/>
 				</View>
 			</View>
-			<Pressable
-				onPress={() => {
-				}}
-			>
-				<View style={styles.submit}>
-					<Text
-						style={{
-							color: "#FFFFFF",
-							fontSize: 20,
-						}}>
-						Submit</Text>
-				</View>
-			</Pressable>
+			<PlainSubmitButton 
+				title="Submit"
+				isActive={true}
+				horizontalLayout={false}
+				onSubmit={() => {}}
+			/>
 		</View>
 	);
 }

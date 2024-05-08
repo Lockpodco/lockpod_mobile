@@ -55,43 +55,83 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
     }
   };
   const styles = StyleSheet.create({
-
+		confirm: {
+      justifyContent: "center",
+      alignItems: "center",
+      height: 50,
+      marginLeft: 15,
+      marginRight: 15,
+      borderRadius: 15,
+      backgroundColor: Constants.baseDark,
+		},
+		confirmText: {
+			color: "#FFFFFF",
+			fontSize: 20,
+		},
+		inputContainer: {
+			marginTop: 20,
+			marginBottom: 20,
+			gap: 20,
+		},
+		textBox: {
+			justifyContent: "center",
+			height: 40,
+			marginLeft: 20,
+			marginRight: 20,
+			borderWidth: 1,
+			borderRadius: 5,
+		},
+		text: {
+			fontSize: 15,
+			marginLeft: 10,
+		},
   });
   return (
     <View>
-      <View>
-        <Text>Reset your password</Text>
-        <TextInput
-          onChangeText={setCurrentPass}
-          value={currentPass}
-          placeholder="Current Password"
-          placeholderTextColor={"#808080"}
-          autoCapitalize="none"
-          //secureTextEntry={true} uncomment to switch to password dots
-        />
-        <TextInput
-          onChangeText={setNewPass}
-          value={newPass}
-          placeholder="New Password"
-          placeholderTextColor={"#808080"}
-          autoCapitalize="none"
-          //secureTextEntry={true}
-        />
-        <TextInput
-          onChangeText={setConfirmNewPass}
-          value={confirmNewPass}
-          placeholder="Confirm New Password"
-          placeholderTextColor={"#808080"}
-          autoCapitalize="none"
-          //secureTextEntry={true}
-        />
-        <Button
-          onPress={() => handlePasswordChange(newPass)}
-          title="Change Password"
-          color={Constants.darkAccent}
-        />
+      <View style={styles.inputContainer}>
+				<View style={styles.textBox}>
+					<TextInput
+						style={styles.text}
+						onChangeText={setCurrentPass}
+						value={currentPass}
+						placeholder="Current Password"
+						placeholderTextColor={"#808080"}
+						autoCapitalize="none"
+						//secureTextEntry={true} uncomment to switch to password dots
+					/>
+				</View>
+				<View style={styles.textBox}>
+					<TextInput
+						style={styles.text}
+						onChangeText={setNewPass}
+						value={newPass}
+						placeholder="New Password"
+						placeholderTextColor={"#808080"}
+						autoCapitalize="none"
+						//secureTextEntry={true}
+					/>
+				</View>
+				<View style={styles.textBox}>
+					<TextInput
+						style={styles.text}
+						onChangeText={setConfirmNewPass}
+						value={confirmNewPass}
+						placeholder="Confirm New Password"
+						placeholderTextColor={"#808080"}
+						autoCapitalize="none"
+						//secureTextEntry={true}
+					/>
+				</View>
       </View>
-
+			<Pressable
+          onPress={() => handlePasswordChange(newPass)}
+			>
+				<View style={styles.confirm}>
+          <View>
+            <Text style={styles.confirmText}>Confirm</Text>
+          </View>
+				</View>
+			</Pressable>
     </View>
   );
 };

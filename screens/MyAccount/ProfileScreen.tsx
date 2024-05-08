@@ -110,7 +110,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
           </Pressable>
         </View>
       </View>
-      <View style={{}}>
+      <View>
         <Pressable
           onPress={() => {
             navigation.navigate("Auth");

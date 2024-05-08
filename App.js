@@ -19,6 +19,8 @@ import Wallet from "./screens/Payment/WalletScreen";
 import SubscriptionsScreen from "./screens/Payment/SubscriptionsScreen";
 import UserGuide from "./screens/Help/UserGuideScreen";
 import SupportScreen from "./screens/Help/SupportScreen";
+import ChangePasswordScreen from "./screens/MyAccount/ChangePasswordScreen";
+import { Button } from "react-native";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -31,16 +33,6 @@ function DrawerNav() {
         component={HomeScreen}
         options={{
           title: "Lockpod",
-        }}
-      />
-      <Stack.Screen
-        name="ScanQR"
-        component={ScanQR}
-        options={{
-          title: "Scan Your Pod",
-          drawerItemStyle: {
-            display: "none",
-          },
         }}
       />
       <Drawer.Screen
@@ -102,6 +94,22 @@ export default function App() {
             name="ProfileCreation"
             component={ProfileCreationScreen}
             options={{ title: "Create Profile" }}
+          />
+          <Stack.Screen
+            name="ScanQR"
+            component={ScanQR}
+            options={{
+              title: "Scan Your Pod",
+							headerBackTitle: "Back",
+            }}
+          />
+          <Stack.Screen
+            name="ChangePassword"
+            component={ChangePasswordScreen}
+            options={{
+              title: "Change Password",
+              headerBackTitle: "Back",
+            }}
           />
         </Stack.Navigator>
       </UserProfileProvider>

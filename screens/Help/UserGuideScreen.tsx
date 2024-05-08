@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TextInput, Button, StyleSheet, Alert, Text } from "react-native";
+import { View, Button, StyleSheet, Text } from "react-native";
 
 const UserGuide = () => {
 

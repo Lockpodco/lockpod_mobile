@@ -11,6 +11,7 @@ import { useState } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { windowHeight, windowWidth } from "../Constants";
 import { TextInput } from "react-native-gesture-handler";
+import { fetchLockpodInfo } from "../services/LockpodService";
 
 const ScanQR = () => {
   // MARK: Vars
@@ -18,15 +19,33 @@ const ScanQR = () => {
   const [scanned, setScanned] = useState(false);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [code, setCode] = useState("");
+  const [lockpodInfo, setLockpodInfo] = useState(null);
+
+
 
   const handleBarCodeScanned = ({ data }) => {
     setScanned(true);
     alert(`Barcode scanned with data: ${data}`);
+    setLockpodInfo(fetchLockpodInfo(data))
   };
 
   const handleSubmit = () => {
     // Use the value of 'code' when the submit button is pressed
     alert(`Submitted code: ${code}`);
+    setLockpodInfo(fetchLockpodInfo(code));
+    const name = lockpodInfo.name;
+    // for testing
+    alert(`name: ${name}`);
+    if (lockpodInfo && code === lockpodInfo.name) {
+      console.log("correct password")
+
+      // Start reservation timer and navigate to main screen
+      // setReservationStarted(true);
+      // You can navigate to the main screen here
+    } else {
+      // Handle incorrect password
+      alert("Incorrect password");
+    }
   };
 
   // MARK: Body

@@ -61,7 +61,7 @@ const ReserveScreen = () => {
       >
         <Text style={styles.buttonText}>15 mins</Text>
       </TouchableOpacity>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => onReservationSelect(30)}
         style={styles.button}
       >
@@ -78,7 +78,7 @@ const ReserveScreen = () => {
         style={styles.button}
       >
         <Text style={styles.buttonText}>60 mins</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 };

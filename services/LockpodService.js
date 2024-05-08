@@ -35,3 +35,15 @@ export const updateLockpodStatus = async (lockpodId, status) => {
     throw error;
   }
 };
+
+// data is id?
+export const fetchLockpodInfo = async (data) => {
+  try {
+    const response = await fetch(`${API_URL}/${data}`); //calls lockpods route from backend
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching lockpod info:", error);
+    throw error;
+  }
+};

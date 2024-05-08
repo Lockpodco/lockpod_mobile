@@ -73,23 +73,20 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
 			marginBottom: 20,
 			gap: 20,
 		},
-		textBox: {
+		text: {
 			justifyContent: "center",
 			height: 40,
 			marginLeft: 20,
+			paddingLeft: 10,
 			marginRight: 20,
 			borderWidth: 1,
 			borderRadius: 5,
-		},
-		text: {
 			fontSize: 15,
-			marginLeft: 10,
 		},
   });
   return (
     <View>
       <View style={styles.inputContainer}>
-				<View style={styles.textBox}>
 					<TextInput
 						style={styles.text}
 						onChangeText={setCurrentPass}
@@ -99,8 +96,6 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
 						autoCapitalize="none"
 						//secureTextEntry={true} uncomment to switch to password dots
 					/>
-				</View>
-				<View style={styles.textBox}>
 					<TextInput
 						style={styles.text}
 						onChangeText={setNewPass}
@@ -110,8 +105,6 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
 						autoCapitalize="none"
 						//secureTextEntry={true}
 					/>
-				</View>
-				<View style={styles.textBox}>
 					<TextInput
 						style={styles.text}
 						onChangeText={setConfirmNewPass}
@@ -121,7 +114,6 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
 						autoCapitalize="none"
 						//secureTextEntry={true}
 					/>
-				</View>
       </View>
 			<Pressable
           onPress={() => handlePasswordChange(newPass)}

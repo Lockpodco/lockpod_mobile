@@ -5,10 +5,14 @@ import { View, Button, StyleSheet, Text, Alert } from "react-native";
 import {
   register,
   signIn,
-  getUserProfile,
   getUserIdLocally,
   saveUserIdLocally,
 } from "../../services/AuthService";
+
+import { getUserProfile } from "../../services/ProfileService";
+
+import { UserProfile } from "../../Models/UserProfileModel";
+
 import {
   useUserProfileContext,
   UpdateUserProfileActionType,
@@ -39,7 +43,7 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
   }
 
   useEffect(() => {
-    if (userProfile == null) {
+    if (userProfile.user_id == 0) {
       checkSignInStatus();
     }
   });
@@ -56,11 +60,11 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
 
   const postAuthentication = async (user_id: Number) => {
     try {
-      const userProfile = await getUserProfile(user_id);
+      const userProfile: UserProfile = (await getUserProfile(user_id))!;
       await saveUserIdLocally(user_id);
 
       profileDispatch!({
-        type: UpdateUserProfileActionType.loadProfile,
+        type: UpdateUserProfileActionType.updateProfile,
         updatedProfile: userProfile,
       });
 
@@ -92,6 +96,7 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
   const handleRegister = async () => {
     if (!checkFieldCompletion) {
       Alert.alert("Please correct your information.");
+      return;
     }
 
     try {

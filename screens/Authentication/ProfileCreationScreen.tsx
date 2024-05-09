@@ -2,12 +2,12 @@ import React from "react";
 import { useState, useRef, useEffect } from "react";
 import { View, StyleSheet, Text, Alert } from "react-native";
 
+import { UserProfile } from "../../Models/UserProfileModel";
+
 import {
   useUserProfileContext,
   UpdateUserProfileActionType,
-  UserProfile,
 } from "../../stores/UserProfileContext";
-import { updateProfileInformation } from "../../services/ProfileService";
 
 import { Constants } from "../../components/constants";
 import { StyledTextField } from "../../components/Forms/FormComponents";
@@ -26,18 +26,15 @@ const ProfileCreationScreen = ({ navigation }: { navigation: any }) => {
   }
 
   async function submitInformation() {
-    const id = userProfile["user_id"];
-    const newProfile: UserProfile = await updateProfileInformation(
-      id,
-      firstName,
-      lastName,
-      userName
-    );
+    const id = userProfile.user_id;
+    const newProfile = new UserProfile(id, firstName, lastName, userName);
 
     profileDispatch!({
-      type: UpdateUserProfileActionType.loadProfile,
+      type: UpdateUserProfileActionType.updateProfile,
       updatedProfile: newProfile,
     });
+
+    await newProfile.saveChangesToDataBase();
 
     navigation.navigate("Home");
   }

@@ -1,12 +1,12 @@
 // MARK: Vars
-const API_URL = "http://localhost:3000";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { registerNewUserProfile } from "./ProfileService";
 
-// MARK: Convenience Functions
-function handleError(title: String, error: any) {
-  console.log(title, ": ", error);
-  throw error;
-}
+import {
+  API_URL,
+  checkResponse,
+  handleError,
+} from "../services/ServiceUniversals";
 
 // checks whether an email is already in use in the database
 async function checkUserExists(email: String) {
@@ -21,12 +21,11 @@ async function checkUserExists(email: String) {
 
     return false;
   } catch (error) {
-    handleError("Error Checking if Account Exists", error);
+    handleError("Error Checking if Account Exists", error as Error);
   }
 }
 
-// MARK: Registration
-
+// MARK: User Registration
 // registers a user using an email and password
 export const register = async (email: String, password: String) => {
   try {
@@ -34,9 +33,7 @@ export const register = async (email: String, password: String) => {
     console.log("Attempting to register user: " + email);
 
     // checks to make sure the user does not already have an account
-    let hasAccount = await checkUserExists(email);
-
-    if (hasAccount) {
+    if (await checkUserExists(email)) {
       return signIn(email, password);
     }
 
@@ -54,66 +51,19 @@ export const register = async (email: String, password: String) => {
       }),
     });
 
+    checkResponse(response, "unable to register", "registration successful");
+
     const data = await response.json();
+    const id = data["id"];
 
-    if (!response.ok) {
-      // Convert non-2xx HTTP responses into errors:
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Unable to register.");
-    } else {
-      console.log("registration successful");
-
-      await registerNewUserProfile(data["id"]);
-    }
-
-    return data["id"];
+    await registerNewUserProfile(id);
+    return id;
   } catch (error) {
-    handleError("error in registartion <register>", error);
+    handleError("error in registartion <register>", error as Error);
   }
 };
 
-// MARK: Profile Registration
-// this creates a new, blank user profile, linked to a specific user_id
-const registerNewUserProfile = async (user_id: Number) => {
-  try {
-    console.log("\n");
-    console.log("Attempting to create a new user Profle, id: " + user_id);
-
-    const response = await fetch(`${API_URL}/userProfiles`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        user_id: user_id,
-      }),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      // Convert non-2xx HTTP responses into errors:
-      throw new Error(data.message || "Unable to create profile.");
-    } else {
-      console.log(
-        "profile registration successful [id:" +
-          data["id"] +
-          ", user_id:" +
-          user_id +
-          "]"
-      );
-    }
-
-    return data;
-  } catch (error) {
-    handleError(
-      "erorr in registering new profile <registerNewUserProfile>",
-      error
-    );
-  }
-};
-
-// MARK: signIn
+// MARK: User SignIn
 export const signIn = async (email: String, password: String) => {
   try {
     console.log("\n");
@@ -137,34 +87,7 @@ export const signIn = async (email: String, password: String) => {
       throw new Error("Unable to find account");
     }
   } catch (error) {
-    handleError("error in Signing in <signIn>", error);
-  }
-};
-
-// MARK: Get Profile
-export const getUserProfile = async (user_id: Number) => {
-  try {
-    console.log("\n");
-    console.log("Attempting to retrieve userProfile for id:" + user_id);
-
-    const response = await fetch(`${API_URL}/userProfiles?user_id=${user_id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "applications/json",
-      },
-    });
-
-    let jsonData = await response.json();
-
-    // if the user has signed in, but for some reason does not have an profile
-    // create one here with their user_id, and then return that
-    if (Object.keys(jsonData).length == 0) {
-      jsonData = await registerNewUserProfile(user_id);
-    }
-
-    return jsonData;
-  } catch (error) {
-    handleError("error getting userProfile <getUserProfile>", error);
+    handleError("error in Signing in <signIn>", error as Error);
   }
 };
 
@@ -186,11 +109,11 @@ async function getUser(email: String) {
 
     return jsonData;
   } catch (error) {
-    handleError("Error Getting user <getUser>", error);
+    handleError("Error Getting user <getUser>", error as Error);
   }
 }
 
-// MARK: Get User_ID Locally
+// MARK: Storing User_ID Locally
 const localUserIdKey = "localUserIdKey";
 
 export const saveUserIdLocally = async (user_id: Number) => {
@@ -199,7 +122,7 @@ export const saveUserIdLocally = async (user_id: Number) => {
     console.log("Attempting to save user_id: ", jsonData);
     await AsyncStorage.setItem(localUserIdKey, jsonData);
   } catch (error) {
-    handleError("error storing user_id", error);
+    handleError("error storing user_id", error as Error);
   }
 };
 
@@ -207,7 +130,7 @@ export const removeUserIdLocally = async () => {
   try {
     await AsyncStorage.removeItem(localUserIdKey);
   } catch (error) {
-    handleError("error removing user_id", error);
+    handleError("error removing user_id", error as Error);
   }
 };
 
@@ -216,6 +139,6 @@ export const getUserIdLocally = async () => {
     const value = await AsyncStorage.getItem(localUserIdKey);
     return Number(value) ?? 0;
   } catch (error) {
-    handleError("error retreiving user_id", error);
+    handleError("error retreiving user_id", error as Error);
   }
 };

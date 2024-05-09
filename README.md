@@ -2,25 +2,25 @@
 
 ### **GLOBAL STORE**
 
-Global store is a built in react-native way of storing, passing, and updatng data throuhgout the app. Instead of passing stateObjects like a `userProfile` to each Screen / component individually, you can store one copy of it, and then observe changes within the individual Screens that need access to it.
+Global store is a built in react-native way of storing, passing, and updatng data throughout the app. Instead of passing stateObjects like a `userProfile` to each Screen / component individually, you can store one copy of it, and then observe changes within the individual Screens that need access to it.
 
-To update the object, you call a dispatch function wiht the type of update you are making along with the associated payload.
+To update the object, you call a dispatch function with the type of update you are making along with the associated payload.
 
 ### **Example: Reading UserProfile**
 
 (This will only work once the user is authenticated)
 
-in the file you want to access the userProfile through, import the useProfileContext hook from the `UserProfileContext.js` file.
+in the file you want to access the userProfile through, import the useProfileContext hook from the `UserProfileContext.tsx` file. Also import the `UpdateUserProfileActionType` and `UserProfile`. The `UpdateUserProfileActionType` is the type of action you run on the dispatch, and the `UserProfile` is the schema for the UserProfile
 
-` import { useUserProfileContext } from <path to UserProfileContext.js>";`
+` import { useUserProfileContext, UpdateUserProfileActionType, UserProfile } from <path to UserProfileContext>";`
 
 at the top of the component you want to use the userProfile, use the `useProfileContext` hook. This is basically a glorified useReducer() method that specifically connects to the userProfile context.
 
 `const { userProfile, profileDispatch } = useUserProfileContext();`
 
-to access specific properties of the userProfile, invoke it using subscript notation, passing the coloumn name for the property you want to access
+to access specific properties of the userProfile, invoke it using dot notation. This is a class and you can simply access properties / methods as you would any other class.
 
-`const user_id = userProfile["user_id"];`
+`const user_id = userProfile.user_id;`
 
 To update the userProfile
 
@@ -30,8 +30,8 @@ To update the userProfile
 
 ```
 profileDispatch( {
-    type: "loadProfile"
-    payload: newProfile
+    type: UpdateUserProfileActionType.loadProfile,
+    updatedProfile: newProfile
 } );
 ```
 

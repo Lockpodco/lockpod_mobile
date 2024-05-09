@@ -9,7 +9,7 @@ const ScanQR = () => {
   const [scanned, setScanned] = useState(false);
   const [permission, requestPermission] = Camera.useCameraPermissions();
 
-  const handleBarCodeScanned = ({ data }) => {
+  const handleBarCodeScanned = ({ data }: { data: any }) => {
     setScanned(true);
     alert(`Barcode scanned with data: ${data}`);
   };

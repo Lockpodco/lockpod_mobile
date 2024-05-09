@@ -27,7 +27,7 @@ const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
       lockpod.status = "available";
     }
 
-    fakeUser = {
+    const fakeUser = {
       userId: 2,
       lockpodId: lockpod.id,
       status: lockpod.status,

@@ -1,5 +1,7 @@
 const API_URL = "http://localhost:3000";
 
+import { UserProfile } from "../stores/UserProfileContext";
+
 // MARK: Convenience Functions
 function handleError(title: string, error: Error) {
   console.log(title, ": ", error);
@@ -12,7 +14,7 @@ export const updateProfileInformation = async (
   firstName: string,
   lastName: string,
   userName: string
-) => {
+): Promise<UserProfile> => {
   console.log("\n");
   console.log("attempting to update userProfile with id: " + user_id);
 
@@ -38,15 +40,11 @@ export const updateProfileInformation = async (
     console.log("profle update successful");
   }
 
-  try {
-  } catch (error) {
-    handleError(
-      "error in updating profile information <updateProfileInformation>",
-      error as Error
-    );
-  }
+  let profile = Object.assign(new UserProfile(), data);
+  return profile;
 };
 
+// MARK: getUser
 export const getUser = async (id: Number) => {
   try {
     console.log("\n");
@@ -68,30 +66,30 @@ export const getUser = async (id: Number) => {
 };
 
 export const changePassword = async (email: string, newPassword: string) => {
-	try {
-		console.log("\n");
-		console.log("attempting to change password to: " + newPassword);
+  try {
+    console.log("\n");
+    console.log("attempting to change password to: " + newPassword);
 
-		const response = await fetch(`${API_URL}/users/update`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				email: email.toLowerCase(),
-				password: newPassword,
-			}),
-		});
-		const data = await response.json();
+    const response = await fetch(`${API_URL}/users/update`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email.toLowerCase(),
+        password: newPassword,
+      }),
+    });
+    const data = await response.json();
 
-		if (!response.ok) {
-			// Convert non-2xx HTTP responses into errors:
-			// const errorData = await response.json();
-			throw new Error(data.message || "Unable to change password");
-		} else {
-		console.log("password change successful");
-		}
-	} catch (error) {
-		handleError("error changing password <changePassword>", error as Error);
-	}
+    if (!response.ok) {
+      // Convert non-2xx HTTP responses into errors:
+      // const errorData = await response.json();
+      throw new Error(data.message || "Unable to change password");
+    } else {
+      console.log("password change successful");
+    }
+  } catch (error) {
+    handleError("error changing password <changePassword>", error as Error);
+  }
 };

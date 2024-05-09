@@ -5,7 +5,6 @@ import { windowHeight, windowWidth } from "../Constants";
 import { useNavigation } from "@react-navigation/native";
 
 import { useUserProfileContext } from "../stores/UserProfileContext";
-import { getUserEmailLocally } from "../services/AuthService";
 
 const styles = StyleSheet.create({
   floatingButton: {
@@ -21,9 +20,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const HomeScreen = () => {
-  const { navigate } = useNavigation();
-
+const HomeScreen = ({ navigation }: { navigation: any }) => {
   const { userProfile, profileDispatch } = useUserProfileContext();
 
   return (
@@ -33,7 +30,9 @@ const HomeScreen = () => {
       <TouchableOpacity
         activeOpacity={0.7}
         style={styles.floatingButton}
-        onPress={() => navigate("ScanQR")}
+        onPress={() => {
+          navigation.navgiate("ScanQR");
+        }}
       >
         <Text>Scan Pod</Text>
       </TouchableOpacity>

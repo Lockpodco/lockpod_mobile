@@ -9,8 +9,8 @@ import { Constants } from "./components/constants";
 import { UserProfileProvider } from "./stores/UserProfileContext";
 
 // pages
-import AuthScreen from "./screens/AuthScreen";
-import ProfileCreationScreen from "./screens/ProfileCreationScreen";
+import AuthScreen from "./screens/Authentication/AuthScreen";
+import ProfileCreationScreen from "./screens/Authentication/ProfileCreationScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ScanQR from "./screens/ScanQR";
 import ProfileScreen from "./screens/MyAccount/ProfileScreen";
@@ -100,7 +100,7 @@ export default function App() {
             component={ScanQR}
             options={{
               title: "Scan Your Pod",
-							headerBackTitle: "Back",
+              headerBackTitle: "Back",
             }}
           />
           <Stack.Screen

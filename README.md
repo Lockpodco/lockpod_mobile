@@ -45,21 +45,13 @@ profileDispatch( {
 
 #### **Environment**
 
-create a file named `.env` in the root directory of the backend repo. In it, paste in the following code
-
-`DATABASE_URL=postgresql://lockpods:LockYourBike@lockpod-db.cl6ui2s2cuk7.us-west-1.rds.amazonaws.com:5434/app_data`
-
-when working on the mobile front_end, you will need an instance of the backend running.
+create a file named `.env` in the root directory of the backend repo. In it, configure the `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_DATABSE`, `DATABASE_PORT`, `DATABASE_HOST` variables given to you by an admin.
 
 #### **Node.js packages**
 
 Have either the [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) or [`yarn`](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable) package manager
 
-you will need the following packages
-
-- `npm install expo `
-- `npm install react`
-- `npm install react-native`
+run `npm install` in the root directory.
 
 ### **RUNNING**
 

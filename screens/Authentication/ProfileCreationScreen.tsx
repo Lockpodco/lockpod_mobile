@@ -2,12 +2,16 @@ import React from "react";
 import { useState, useRef, useEffect } from "react";
 import { View, StyleSheet, Text, Alert } from "react-native";
 
-import { useUserProfileContext } from "../stores/UserProfileContext";
-import { updateProfileInformation } from "../services/ProfileService";
+import {
+  useUserProfileContext,
+  UpdateUserProfileActionType,
+  UserProfile,
+} from "../../stores/UserProfileContext";
+import { updateProfileInformation } from "../../services/ProfileService";
 
-import { Constants } from "../components/constants";
-import { StyledTextField } from "../components/Forms/FormComponents";
-import { StyledSubmitButton } from "../components/Buttons";
+import { Constants } from "../../components/constants";
+import { StyledTextField } from "../../components/Forms/FormComponents";
+import { StyledSubmitButton } from "../../components/Buttons";
 
 const ProfileCreationScreen = ({ navigation }: { navigation: any }) => {
   // MARK: Vars
@@ -23,16 +27,19 @@ const ProfileCreationScreen = ({ navigation }: { navigation: any }) => {
 
   async function submitInformation() {
     const id = userProfile["user_id"];
-    const newProfile = await updateProfileInformation(
+    const newProfile: UserProfile = await updateProfileInformation(
       id,
       firstName,
       lastName,
       userName
     );
-    profileDispatch({
-      type: "loadProfile",
-      payload: newProfile,
+
+    profileDispatch!({
+      type: UpdateUserProfileActionType.loadProfile,
+      updatedProfile: newProfile,
     });
+
+    navigation.navigate("Home");
   }
 
   //   MARK: styles

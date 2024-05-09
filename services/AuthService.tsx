@@ -3,13 +3,13 @@ const API_URL = "http://localhost:3000";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // MARK: Convenience Functions
-function handleError(title, error) {
+function handleError(title: String, error: any) {
   console.log(title, ": ", error);
   throw error;
 }
 
 // checks whether an email is already in use in the database
-async function checkUserExists(email) {
+async function checkUserExists(email: String) {
   try {
     const jsonData = await getUser(email);
 
@@ -28,7 +28,7 @@ async function checkUserExists(email) {
 // MARK: Registration
 
 // registers a user using an email and password
-export const register = async (email, password) => {
+export const register = async (email: String, password: String) => {
   try {
     console.log("\n");
     console.log("Attempting to register user: " + email);
@@ -74,7 +74,7 @@ export const register = async (email, password) => {
 
 // MARK: Profile Registration
 // this creates a new, blank user profile, linked to a specific user_id
-const registerNewUserProfile = async (user_id) => {
+const registerNewUserProfile = async (user_id: Number) => {
   try {
     console.log("\n");
     console.log("Attempting to create a new user Profle, id: " + user_id);
@@ -114,7 +114,7 @@ const registerNewUserProfile = async (user_id) => {
 };
 
 // MARK: signIn
-export const signIn = async (email, password) => {
+export const signIn = async (email: String, password: String) => {
   try {
     console.log("\n");
     console.log("Attempting to login user: " + email);
@@ -142,7 +142,7 @@ export const signIn = async (email, password) => {
 };
 
 // MARK: Get Profile
-export const getUserProfile = async (user_id) => {
+export const getUserProfile = async (user_id: Number) => {
   try {
     console.log("\n");
     console.log("Attempting to retrieve userProfile for id:" + user_id);
@@ -170,7 +170,7 @@ export const getUserProfile = async (user_id) => {
 
 // MARK: get User
 // posts a get method to the server for the provided email
-async function getUser(email) {
+async function getUser(email: String) {
   try {
     const response = await fetch(
       `${API_URL}/users?email=${email.toLowerCase()}`,
@@ -193,12 +193,21 @@ async function getUser(email) {
 // MARK: Get User_ID Locally
 const localUserIdKey = "localUserIdKey";
 
-export const saveUserIdLocally = async (user_id) => {
+export const saveUserIdLocally = async (user_id: Number) => {
   try {
     const jsonData = JSON.stringify(user_id);
+    console.log("Attempting to save user_id: ", jsonData);
     await AsyncStorage.setItem(localUserIdKey, jsonData);
   } catch (error) {
     handleError("error storing user_id", error);
+  }
+};
+
+export const removeUserIdLocally = async () => {
+  try {
+    await AsyncStorage.removeItem(localUserIdKey);
+  } catch (error) {
+    handleError("error removing user_id", error);
   }
 };
 

@@ -1,7 +1,7 @@
 const API_URL = "http://localhost:3000";
 
 // MARK: ReserveLockpod
-export const reserveLockpod = async (req) => {
+export const reserveLockpod = async (req: any) => {
   console.log("data in reserveLockpod: ", JSON.stringify(req));
   try {
     const response = await fetch(`${API_URL}/reservations`, {
@@ -20,7 +20,7 @@ export const reserveLockpod = async (req) => {
 };
 
 // MARK: endReservation
-export const endReservation = async (req) => {
+export const endReservation = async (req: any) => {
   console.log("data in endReservation: ", JSON.stringify(req));
   try {
     const response = await fetch(`${API_URL}/reservations`, {

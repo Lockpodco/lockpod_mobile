@@ -8,12 +8,15 @@ import {
   getUserProfile,
   getUserIdLocally,
   saveUserIdLocally,
-} from "../services/AuthService";
-import { useUserProfileContext } from "../stores/UserProfileContext";
+} from "../../services/AuthService";
+import {
+  useUserProfileContext,
+  UpdateUserProfileActionType,
+} from "../../stores/UserProfileContext";
 
-import { Constants } from "../components/constants";
-import { StyledTextField } from "../components/Forms/FormComponents";
-import { StyledSubmitButton } from "../components/Buttons";
+import { Constants } from "../../components/constants";
+import { StyledTextField } from "../../components/Forms/FormComponents";
+import { StyledSubmitButton } from "../../components/Buttons";
 
 const AuthScreen = ({ navigation }: { navigation: any }) => {
   // MARK: Vars
@@ -56,9 +59,9 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
       const userProfile = await getUserProfile(user_id);
       await saveUserIdLocally(user_id);
 
-      profileDispatch({
-        type: "loadProfile",
-        payload: userProfile,
+      profileDispatch!({
+        type: UpdateUserProfileActionType.loadProfile,
+        updatedProfile: userProfile,
       });
 
       if (userProfile["first_name"] != null) {

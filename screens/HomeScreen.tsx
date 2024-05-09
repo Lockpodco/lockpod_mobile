@@ -19,9 +19,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
-const HomeScreen = () => {
-  const { navigate } = useNavigation();
 
+const HomeScreen = ({ navigation }: { navigation: any }) => {
   const { userProfile, profileDispatch } = useUserProfileContext();
 
   return (
@@ -31,7 +30,9 @@ const HomeScreen = () => {
       <TouchableOpacity
         activeOpacity={0.7}
         style={styles.floatingButton}
-        onPress={() => navigate("ScanQR")}
+        onPress={() => {
+          navigation.navgiate("ScanQR");
+        }}
       >
         <Text>Scan Pod</Text>
       </TouchableOpacity>

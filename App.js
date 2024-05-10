@@ -7,6 +7,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Constants } from "./components/constants";
 
 import { UserProfileProvider } from "./stores/UserProfileContext";
+import { LockPodsProvider } from "./stores/LockPodsContext";
 
 // pages
 import AuthScreen from "./screens/Authentication/AuthScreen";
@@ -73,46 +74,48 @@ function DrawerNav() {
 export default function App() {
   return (
     <NavigationContainer theme={MyTheme}>
-      <UserProfileProvider>
-        <Stack.Navigator initialRouteName="Auth">
-          <Stack.Screen
-            name="Home"
-            component={DrawerNav}
-            options={{
-              title: "Welcome",
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Auth"
-            component={AuthScreen}
-            options={{
-              title: "Login",
-            }}
-          />
-          <Stack.Screen
-            name="ProfileCreation"
-            component={ProfileCreationScreen}
-            options={{ title: "Create Profile" }}
-          />
-          <Stack.Screen
-            name="ScanQR"
-            component={ScanQR}
-            options={{
-              title: "Scan Your Pod",
-              headerBackTitle: "Back",
-            }}
-          />
-          <Stack.Screen
-            name="ChangePassword"
-            component={ChangePasswordScreen}
-            options={{
-              title: "Change Password",
-              headerBackTitle: "Back",
-            }}
-          />
-        </Stack.Navigator>
-      </UserProfileProvider>
+      <LockPodsProvider>
+        <UserProfileProvider>
+          <Stack.Navigator initialRouteName="Auth">
+            <Stack.Screen
+              name="Home"
+              component={DrawerNav}
+              options={{
+                title: "Welcome",
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="Auth"
+              component={AuthScreen}
+              options={{
+                title: "Login",
+              }}
+            />
+            <Stack.Screen
+              name="ProfileCreation"
+              component={ProfileCreationScreen}
+              options={{ title: "Create Profile" }}
+            />
+            <Stack.Screen
+              name="ScanQR"
+              component={ScanQR}
+              options={{
+                title: "Scan Your Pod",
+                headerBackTitle: "Back",
+              }}
+            />
+            <Stack.Screen
+              name="ChangePassword"
+              component={ChangePasswordScreen}
+              options={{
+                title: "Change Password",
+                headerBackTitle: "Back",
+              }}
+            />
+          </Stack.Navigator>
+        </UserProfileProvider>
+      </LockPodsProvider>
     </NavigationContainer>
   );
 }

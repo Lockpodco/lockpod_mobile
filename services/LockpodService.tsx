@@ -32,3 +32,37 @@ export const fetchLockpods = async (): Promise<LockPod[]> => {
     throw error;
   }
 };
+
+// MARK: Update LockPod Status
+export const updateLockPodStatus = async (
+  id: number,
+  isReserved: boolean,
+  inSession: boolean
+) => {
+  try {
+    console.log("\n");
+    console.log("attempting to update status of lockpod: " + id);
+
+    const response = await fetch(`${API_URL}/lockpods/setStatus`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id,
+        isReserved: isReserved,
+        inSession: inSession,
+      }),
+    });
+
+    checkResponse(
+      response,
+      "failed to update lockpod",
+      "successfully updated lockpod"
+    );
+    return;
+  } catch (error) {
+    console.error("Error fetching lockpods", error);
+    throw error;
+  }
+};

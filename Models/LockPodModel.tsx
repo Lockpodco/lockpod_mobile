@@ -6,7 +6,7 @@ export class LockPod {
   longitude: number;
   name: string;
   isReserved: boolean;
-  isInSession: boolean;
+  inSession: boolean;
 
   public constructor(
     id: number = 0,
@@ -14,13 +14,13 @@ export class LockPod {
     longitude: number = 0,
     name: string = "",
     isReserved: boolean = false,
-    isInSession: boolean = false
+    inSession: boolean = false
   ) {
     this.id = id;
     this.latitude = latitude;
     this.longitude = longitude;
     this.name = name;
     this.isReserved = isReserved;
-    this.isInSession = isInSession;
+    this.inSession = inSession;
   }
 }

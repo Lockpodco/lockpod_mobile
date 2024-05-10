@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
-import { fetchLockpods } from "../services/LockpodService";
 import { reserveLockpod, endReservation } from "../services/ReservationService";
+
+import { fetchLockpods, updateLockPodStatus } from "../services/LockpodService";
 
 import {
   useLockPodsContext,
   UpdateLockPodsActionType,
 } from "../stores/LockPodsContext";
+
 import { LockPod } from "../Models/LockPodModel";
 
 const UCSD_REGION = {
@@ -33,17 +35,8 @@ const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
     fetch();
   }, []);
 
-  const handleCalloutpressed = (lockPod: LockPod) => {
-    let lockPodCopy = lockPod;
-    lockPodCopy.name = "testing!";
-
-    let pods = [lockPods[0], lockPods[1]];
-
-    lockPodsDispatch!({
-      type: UpdateLockPodsActionType.setLockPods,
-      updatedLockPod: undefined,
-      updatedLockPods: pods,
-    });
+  const handleCalloutpressed = async (lockPod: LockPod) => {
+    await updateLockPodStatus(lockPod.id, true, false);
 
     // // chagning the status of the pod since its now reserved/unreserved
     // if (lockpod.status == "available") {
@@ -51,13 +44,11 @@ const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
     // } else {
     //   lockpod.status = "available";
     // }
-
     // const fakeUser = {
     //   userId: 2,
     //   lockpodId: lockpod.id,
     //   status: lockpod.status,
     // };
-
     // //this is reversed cause we changed status at the top
     // if (lockpod.status == "available") {
     //   endReservation(fakeUser);

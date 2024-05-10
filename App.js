@@ -22,7 +22,6 @@ import SubscriptionsScreen from "./screens/Payment/SubscriptionsScreen";
 import UserGuide from "./screens/Help/UserGuideScreen";
 import SupportScreen from "./screens/Help/SupportScreen";
 import ChangePasswordScreen from "./screens/MyAccount/ChangePasswordScreen";
-import { Button } from "react-native";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();

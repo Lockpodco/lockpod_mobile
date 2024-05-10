@@ -2,7 +2,7 @@ import React from "react";
 import { View, TextInput, Button, StyleSheet, Alert, Text, Pressable } from "react-native";
 import { Constants } from "../../components/constants";
 import { PlainTextField } from "../../components/Forms/FormComponents";
-import { PlainSubmitButton } from "../../components/Buttons";
+import { DefaultSubmitButton } from "../../components/Buttons";
 
 const SupportScreen = () => {
 
@@ -24,7 +24,6 @@ const SupportScreen = () => {
 		inputContainer: {
 			marginTop: 30,
 			marginBottom: 20,
-			gap: 20,
 		},
 		text: {
 			marginLeft: 20,
@@ -72,9 +71,10 @@ const SupportScreen = () => {
 					/>
 				</View>
 			</View>
-			<PlainSubmitButton 
+			<DefaultSubmitButton 
 				title="Submit"
 				isActive={true}
+				activeColor={Constants.baseDark}
 				horizontalLayout={false}
 				onSubmit={() => {}}
 			/>

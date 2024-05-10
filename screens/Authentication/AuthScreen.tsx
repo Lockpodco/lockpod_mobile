@@ -3,226 +3,289 @@ import { useState, useRef, useEffect } from "react";
 import { View, Button, StyleSheet, Text, Alert } from "react-native";
 
 import {
-  register,
-  signIn,
-  getUserProfile,
-  getUserIdLocally,
-  saveUserIdLocally,
+	register,
+	signIn,
+	getUserProfile,
+	getUserIdLocally,
+	saveUserIdLocally,
 } from "../../services/AuthService";
 import {
-  useUserProfileContext,
-  UpdateUserProfileActionType,
+	useUserProfileContext,
+	UpdateUserProfileActionType,
 } from "../../stores/UserProfileContext";
 
 import { Constants } from "../../components/constants";
-import { StyledTextField } from "../../components/Forms/FormComponents";
-import { StyledSubmitButton } from "../../components/Buttons";
+import {
+	PlainTextField,
+} from "../../components/Forms/FormComponents";
+import {
+	DefaultSubmitButton,
+} from "../../components/Buttons";
+import { useFonts } from "expo-font";
+import AppLoading from "expo-app-loading";
+import { RegularText, SemiBoldText } from "../../components/Text";
 
 const AuthScreen = ({ navigation }: { navigation: any }) => {
-  // MARK: Vars
-  const [signInSection, setSignIn] = useState(true);
+	// MARK: Vars
+	const [signInSection, setSignIn] = useState(true);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 
-  // calls useContext on the userProfileStore context that was created globally
-  const { userProfile, profileDispatch } = useUserProfileContext();
+	// calls useContext on the userProfileStore context that was created globally
+	const { userProfile, profileDispatch } = useUserProfileContext();
 
-  function checkFieldCompletion(): boolean {
-    if (!signInSection) {
-      if (password !== confirmPassword) {
-        return false;
-      }
-    }
-    return !(email === "" || password === "");
-  }
 
-  useEffect(() => {
-    if (userProfile == null) {
-      checkSignInStatus();
-    }
-  });
+	function checkFieldCompletion(): boolean {
+		if (!signInSection) {
+			if (password !== confirmPassword) {
+				return false;
+			}
+		}
+		return !(email === "" || password === "");
+	}
 
-  // MARK: Methods
-  const checkSignInStatus = async () => {
-    const id = await getUserIdLocally();
-    // user is already signed in and their id has been persisted in local storage
-    if (id != 0) {
-      console.log("user already signed in with id: " + id);
-      await postAuthentication(id!);
-    }
-  };
+	useEffect(() => {
+		if (userProfile == null) {
+			checkSignInStatus();
+		}
+	});
 
-  const postAuthentication = async (user_id: Number) => {
-    try {
-      const userProfile = await getUserProfile(user_id);
-      await saveUserIdLocally(user_id);
+	// MARK: Methods
+	const checkSignInStatus = async () => {
+		const id = await getUserIdLocally();
+		// user is already signed in and their id has been persisted in local storage
+		if (id != 0) {
+			console.log("user already signed in with id: " + id);
+			await postAuthentication(id!);
+		}
+	};
 
-      profileDispatch!({
-        type: UpdateUserProfileActionType.loadProfile,
-        updatedProfile: userProfile,
-      });
+	const postAuthentication = async (user_id: Number) => {
+		try {
+			const userProfile = await getUserProfile(user_id);
+			await saveUserIdLocally(user_id);
 
-      if (userProfile["first_name"] != null) {
-        navigation.navigate("Home");
-      } else {
-        navigation.navigate("ProfileCreation");
-      }
-    } catch (error) {
-      Alert.alert("Login Failed", (error as Error).message);
-    }
-  };
+			profileDispatch!({
+				type: UpdateUserProfileActionType.loadProfile,
+				updatedProfile: userProfile,
+			});
 
-  //
-  const handleSignIn = async () => {
-    if (!checkFieldCompletion()) {
-      Alert.alert("Please enter both email and password.");
-      return;
-    }
+			if (userProfile["first_name"] != null) {
+				navigation.navigate("Home");
+			} else {
+				navigation.navigate("ProfileCreation");
+			}
+		} catch (error) {
+			Alert.alert("Login Failed", (error as Error).message);
+		}
+	};
 
-    try {
-      const user_id = await signIn(email, password);
-      await postAuthentication(user_id);
-    } catch (error) {
-      Alert.alert("Login Failed", (error as Error).message);
-    }
-  };
+	//
+	const handleSignIn = async () => {
+		if (!checkFieldCompletion()) {
+			Alert.alert("Please enter both email and password.");
+			return;
+		}
 
-  const handleRegister = async () => {
-    if (!checkFieldCompletion) {
-      Alert.alert("Please correct your information.");
-    }
+		try {
+			const user_id = await signIn(email, password);
+			await postAuthentication(user_id);
+		} catch (error) {
+			Alert.alert("Login Failed", (error as Error).message);
+		}
+	};
 
-    try {
-      const userId = await register(email, password);
-      await postAuthentication(userId);
-    } catch (error) {
-      Alert.alert("Registration Failed", (error as Error).message);
-    }
-  };
+	const handleRegister = async () => {
+		if (!checkFieldCompletion) {
+			Alert.alert("Please correct your information.");
+		}
 
-  async function submit() {
-    if (signInSection) {
-      await handleSignIn();
-    } else {
-      await handleRegister();
-    }
-  }
+		try {
+			const userId = await register(email, password);
+			await postAuthentication(userId);
+		} catch (error) {
+			Alert.alert("Registration Failed", (error as Error).message);
+		}
+	};
 
-  // MARK: Styles
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      width: "100%",
-      flexDirection: "column",
-      paddingTop: 10,
-      alignItems: "center",
-    },
+	async function submit() {
+		if (signInSection) {
+			await handleSignIn();
+		} else {
+			await handleRegister();
+		}
+	}
 
-    top: {
-      flex: 1,
-      width: "100%",
-    },
+	// MARK: Styles
+	const styles = StyleSheet.create({
+		container: {
+			flex: 1,
+			width: "100%",
+			flexDirection: "column",
+			paddingTop: 10,
+			alignItems: "center",
+		},
 
-    bottom: {
-      flex: 0.25,
-      width: "100%",
-      marginBottom: Constants.bottomOfPagePadding,
-    },
+		top: {
+			flex: 0.75,
+			width: "100%",
+		},
 
-    errorMessage: {
-      color: Constants.red,
-      fontWeight: "bold",
-      fontSize: 15,
-      padding: 15,
-    },
+		bottom: {
+			flex: 0.25,
+			width: "100%",
+			marginBottom: Constants.bottomOfPagePadding,
+		},
 
-    hStack: {
-      flexDirection: "row",
-    },
-  });
+		errorMessage: {
+			color: Constants.red,
+			fontWeight: "bold",
+			fontSize: 15,
+			padding: 15,
+		},
 
-  // MARK: Body
-  return (
-    <View style={styles.container}>
-      <View style={styles.top}>
-        {signInSection ? (
-          // signin screen
-          <View>
-            <StyledTextField
-              value={email}
-              placeHolder="email"
-              secureTextEntry={false}
-              setValue={setEmail}
-            />
-            <StyledTextField
-              value={password}
-              placeHolder="password"
-              secureTextEntry={true}
-              setValue={setPassword}
-            />
-          </View>
-        ) : (
-          // register screen
-          <View>
-            <StyledTextField
-              value={email}
-              placeHolder="email"
-              secureTextEntry={false}
-              setValue={setEmail}
-            />
-            <StyledTextField
-              value={password}
-              placeHolder="password"
-              secureTextEntry={true}
-              setValue={setPassword}
-            />
-            <StyledTextField
-              value={confirmPassword}
-              placeHolder="confirm password"
-              secureTextEntry={true}
-              setValue={setConfirmPassword}
-            />
-          </View>
-        )}
-      </View>
+		hStack: {
+			flex: 1,
+			flexDirection: "column",
+		},
 
-      {/* submit button */}
-      <View style={styles.bottom}>
-        <StyledSubmitButton
-          title={signInSection ? "login" : "register"}
-          isActive={checkFieldCompletion()}
-          horizontalLayout={false}
-          onSubmit={() => {
-            submit();
-          }}
-        />
+		inputTitle: {
+			marginLeft: 20,
+		},
 
-        {/* Toggle between signin and register */}
-        <View style={styles.hStack}>
-          <StyledSubmitButton
-            title="register"
-            isActive={!signInSection}
-            horizontalLayout={true}
-            onSubmit={() => {
-              setSignIn(false);
-            }}
-          />
-          <StyledSubmitButton
-            title="log in"
-            isActive={signInSection}
-            horizontalLayout={true}
-            onSubmit={() => {
-              setSignIn(true);
-            }}
-          />
-        </View>
-      </View>
+		center: {
+			alignSelf: "center",
+		}
+	});
 
-      {/* submit */}
-    </View>
-  );
+	// MARK: Body
+	return (
+		<View style={styles.container}>
+			<View style={styles.top}>
+				{signInSection ? (
+					// signin screen
+					<View>
+						<RegularText
+							value="Email"
+							style={styles.inputTitle}
+						/>
+						<PlainTextField
+							value={email}
+							placeHolder="example@gmail.com"
+							height={0}
+							multiline={false}
+							secureTextEntry={false}
+							setValue={setEmail}
+						/>
+						<RegularText
+							value="Password"
+							style={styles.inputTitle}
+						/>
+						<PlainTextField
+							value={password}
+							placeHolder="Enter password"
+							height={0}
+							multiline={false}
+							secureTextEntry={true}
+							setValue={setPassword}
+						/>
+						{/* submit button */}
+						<DefaultSubmitButton
+							title="Login"
+							isActive={checkFieldCompletion()}
+							activeColor={Constants.lightAccent}
+							horizontalLayout={false}
+							onSubmit={() => {
+								submit();
+							}}
+						/>
+					</View>
+				) : (
+					// register screen
+					<View>
+						<RegularText
+							value="Email"
+							style={styles.inputTitle}
+						/>
+						<PlainTextField
+							value={email}
+							placeHolder="example@gmail.com"
+							height={0}
+							multiline={false}
+							secureTextEntry={false}
+							setValue={setEmail}
+						/>
+						<RegularText
+							value="Password"
+							style={styles.inputTitle}
+						/>
+						<PlainTextField
+							value={password}
+							placeHolder="Enter password"
+							height={0}
+							multiline={false}
+							secureTextEntry={true}
+							setValue={setPassword}
+						/>
+						<RegularText
+							value="Password Confirmation"
+							style={styles.inputTitle}
+						/>
+						<PlainTextField
+							value={confirmPassword}
+							placeHolder="Confirm password"
+							height={0}
+							multiline={false}
+							secureTextEntry={true}
+							setValue={setConfirmPassword}
+						/>
+						{/* submit button */}
+						<DefaultSubmitButton
+							title="Register"
+							isActive={checkFieldCompletion()}
+							activeColor={Constants.lightAccent}
+							horizontalLayout={false}
+							onSubmit={() => {
+								submit();
+							}}
+						/>
+					</View>
+				)}
+			</View>
+
+			<View style={styles.bottom}>
+				{/* Toggle between signin and register */}
+				<View style={styles.hStack}>
+					<DefaultSubmitButton
+						title="Log in"
+						isActive={signInSection}
+						activeColor={Constants.baseDark}
+						horizontalLayout={false}
+						onSubmit={() => {
+							setSignIn(true);
+						}}
+					/>
+					<SemiBoldText 
+						value="-or-"
+						style={styles.center}
+					/>
+					<DefaultSubmitButton
+						title="Register"
+						isActive={!signInSection}
+						activeColor={Constants.baseDark}
+						horizontalLayout={false}
+						onSubmit={() => {
+							setSignIn(false);
+						}}
+					/>
+				</View>
+			</View>
+
+			{/* submit */}
+		</View>
+	);
 };
 
 export default AuthScreen;

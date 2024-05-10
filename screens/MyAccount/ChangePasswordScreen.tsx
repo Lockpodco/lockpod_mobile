@@ -1,11 +1,7 @@
 import React from "react";
 import {
   Alert,
-  Button,
-  Pressable,
   StyleSheet,
-  Text,
-  TextInput,
   View,
 } from "react-native";
 import { Constants } from "../../components/constants";
@@ -13,7 +9,7 @@ import { removeUserIdLocally } from "../../services/AuthService";
 import { useUserProfileContext } from "../../stores/UserProfileContext";
 import { changePassword, getUser } from "../../services/ProfileService";
 import { PlainTextField } from "../../components/Forms/FormComponents";
-import { PlainSubmitButton, StyledSubmitButton } from "../../components/Buttons";
+import { DefaultSubmitButton } from "../../components/Buttons";
 
 const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
   const [currentPass, setCurrentPass] = React.useState("");
@@ -46,7 +42,7 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
       return;
     }
     try {
-      const a = await changePassword(email, newPassword);
+      const result = await changePassword(email, newPassword);
 
       Alert.alert("Success", "Change Password Successful", [{ text: "OK" }]);
 			setCurrentPass("")
@@ -56,23 +52,15 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
       Alert.alert("Error", "Password change unsuccessful");
     }
   };
+	
   const styles = StyleSheet.create({
 		inputContainer: {
 			marginTop: 20,
 			marginBottom: 20,
 			gap: 20,
 		},
-		text: {
-			justifyContent: "center",
-			height: 40,
-			marginLeft: 20,
-			paddingLeft: 10,
-			marginRight: 20,
-			borderWidth: 1,
-			borderRadius: 5,
-			fontSize: 15,
-		},
   });
+
   return (
     <View>
       <View style={styles.inputContainer}>
@@ -101,9 +89,10 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
 						setValue={setConfirmNewPass}
 					/>
       </View>
-			<PlainSubmitButton
+			<DefaultSubmitButton
 				title="Confirm"
 				isActive={true}
+				activeColor={Constants.baseDark}
   			horizontalLayout={false}
   			onSubmit={() => handlePasswordChange(newPass)}
 			/>

@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import MapViewComponent from "../components/MapViewComponent";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { windowHeight, windowWidth } from "../Constants";
-import { useNavigation } from "@react-navigation/native";
 
 import { useUserProfileContext } from "../stores/UserProfileContext";
 
@@ -31,8 +30,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         activeOpacity={0.7}
         style={styles.floatingButton}
         onPress={() => {
-          navigation.navgiate("ScanQR");
-        }}
+					navigation.navigate("ScanQR")
+				}}
       >
         <Text>Scan Pod</Text>
       </TouchableOpacity>

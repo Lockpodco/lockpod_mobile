@@ -23,7 +23,7 @@ const ScanQR = () => {
 
 
 
-  const handleBarCodeScanned = ({ data }) => {
+  const handleBarCodeScanned = ({ data }: { data: any }) => {
     setScanned(true);
     alert(`Barcode scanned with data: ${data}`);
     setLockpodInfo(fetchLockpodInfo(data))

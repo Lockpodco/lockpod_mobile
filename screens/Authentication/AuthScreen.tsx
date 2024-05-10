@@ -5,15 +5,22 @@ import { View, Button, StyleSheet, Text, Alert } from "react-native";
 import {
   register,
   signIn,
-  getUserProfile,
   getUserIdLocally,
   saveUserIdLocally,
-} from "../services/AuthService";
-import { useUserProfileContext } from "../stores/UserProfileContext";
+} from "../../services/AuthService";
 
-import { Constants } from "../components/constants";
-import { StyledTextField } from "../components/Forms/FormComponents";
-import { StyledSubmitButton } from "../components/Buttons";
+import { getUserProfile } from "../../services/ProfileService";
+
+import { UserProfile } from "../../Models/UserProfileModel";
+
+import {
+  useUserProfileContext,
+  UpdateUserProfileActionType,
+} from "../../stores/UserProfileContext";
+
+import { Constants } from "../../components/constants";
+import { StyledTextField } from "../../components/Forms/FormComponents";
+import { StyledSubmitButton } from "../../components/Buttons";
 
 const AuthScreen = ({ navigation }: { navigation: any }) => {
   // MARK: Vars
@@ -36,7 +43,7 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
   }
 
   useEffect(() => {
-    if (userProfile == null) {
+    if (userProfile.user_id == 0) {
       checkSignInStatus();
     }
   });
@@ -53,12 +60,12 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
 
   const postAuthentication = async (user_id: Number) => {
     try {
-      const userProfile = await getUserProfile(user_id);
+      const userProfile: UserProfile = (await getUserProfile(user_id))!;
       await saveUserIdLocally(user_id);
 
-      profileDispatch({
-        type: "loadProfile",
-        payload: userProfile,
+      profileDispatch!({
+        type: UpdateUserProfileActionType.updateProfile,
+        updatedProfile: userProfile,
       });
 
       if (userProfile["first_name"] != null) {
@@ -89,6 +96,7 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
   const handleRegister = async () => {
     if (!checkFieldCompletion) {
       Alert.alert("Please correct your information.");
+      return;
     }
 
     try {

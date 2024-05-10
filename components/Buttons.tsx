@@ -49,3 +49,50 @@ export const StyledSubmitButton = ({
     </rn.TouchableOpacity>
   );
 };
+
+export const PlainSubmitButton = ({
+  title,
+  isActive,
+  horizontalLayout,
+  onSubmit,
+}: {
+  title: string;
+  isActive: boolean;
+  horizontalLayout: boolean;
+  onSubmit: () => void;
+}) => {
+  const styles = StyleSheet.create({
+    spacer: {
+      flex: 1,
+    },
+
+    primary: {
+      backgroundColor: isActive
+        ? "#000000"
+        : Constants.secondaryLight,
+
+      flex: horizontalLayout ? 1 : 0,
+      flexDirection: "row",
+      alignItems: "center",
+
+      height: 50,
+      justifyContent: "center",
+
+      padding: 10,
+      marginHorizontal: 5,
+      marginVertical: 5,
+
+      borderRadius: Constants.defaultCornerRadius,
+      borderWidth: isActive ? Constants.defaltStrokeWidth : 0,
+      borderColor: Constants.baseDark,
+    },
+  });
+
+  return (
+    <rn.TouchableOpacity onPress={onSubmit} style={styles.primary}>
+      <rn.View style={styles.spacer}></rn.View>
+      <rn.Text style={{color: "#FFFFFF", fontSize: 20}}>{title}</rn.Text>
+      <rn.View style={styles.spacer}></rn.View>
+    </rn.TouchableOpacity>
+  );
+};

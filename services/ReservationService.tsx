@@ -6,7 +6,7 @@ localhost = Platform.OS === "android" ? "10.0.2.2" : "127.0.0.1";
 const API_URL = `http://${localhost}:3000`; //this opens same port as backend, which connects to database
 
 // MARK: ReserveLockpod
-export const reserveLockpod = async (req) => {
+export const reserveLockpod = async (req: any) => {
   console.log("data in reserveLockpod: ", JSON.stringify(req));
   try {
     const response = await fetch(`${API_URL}/reservations`, {
@@ -25,8 +25,12 @@ export const reserveLockpod = async (req) => {
 };
 
 // MARK: endReservation
+<<<<<<< HEAD:services/ReservationService.js
 /*
 export const endReservation = async (req) => {
+=======
+export const endReservation = async (req: any) => {
+>>>>>>> ed2a17668f440665bf0810bb6918eabbec7a5875:services/ReservationService.tsx
   console.log("data in endReservation: ", JSON.stringify(req));
   try {
     const response = await fetch(`${API_URL}/reservations`, {

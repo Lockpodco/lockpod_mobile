@@ -5,8 +5,7 @@ import { windowHeight, windowWidth } from "../Constants";
 import { useNavigation } from "@react-navigation/native";
 
 import { useUserProfileContext } from "../stores/UserProfileContext";
-// MARK: Styling
-// SCANQR Button Styling
+
 const styles = StyleSheet.create({
   floatingButton: {
     height: windowWidth / 15,
@@ -21,18 +20,19 @@ const styles = StyleSheet.create({
   },
 });
 
-const HomeScreen = () => {
-  const { navigate } = useNavigation();
-
-  // const { userProfile, profileDispatch } = useUserProfileContext();
+const HomeScreen = ({ navigation }: { navigation: any }) => {
+  const { userProfile, profileDispatch } = useUserProfileContext();
 
   return (
     <View style={{ flex: 1 }}>
+      <Text>{userProfile["first_name"] + " " + userProfile["last_name"]}</Text>
       <MapViewComponent />
       <TouchableOpacity
         activeOpacity={0.7}
         style={styles.floatingButton}
-        onPress={() => navigate("ScanQR")}
+        onPress={() => {
+          navigation.navgiate("ScanQR");
+        }}
       >
         <Text>Scan Pod</Text>
       </TouchableOpacity>

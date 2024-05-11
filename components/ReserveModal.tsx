@@ -10,15 +10,35 @@ import {
   Image,
 } from "react-native";
 import { windowWidth, windowHeight } from "../Constants";
-import { useUserProfileContext } from "../stores/UserProfileContext";
-import { updateLockpodStatus } from "../services/LockpodService";
 import { useNavigation } from "@react-navigation/native";
+
+// Services
+import { updateLockPodStatus } from "../services/LockpodService";
 import {
-  checkReservation,
+  createReservation,
   endReservation,
 } from "../services/ReservationService";
 
-const ReserveModal = ({ lockpods, lockpod, visible, onModalClose }) => {
+// Context & Models
+import { UserProfile } from "../Models/UserProfileModel";
+import { LockPod } from "../Models/LockPodModel";
+import { useUserProfileContext } from "../stores/UserProfileContext";
+
+// MARK: Modal
+const ReserveModal = ({
+  lockpods,
+  lockpod,
+  visible,
+  onModalClose,
+  navigation,
+}: {
+  lockpods: LockPod[];
+  lockpod: LockPod;
+  visible: boolean;
+  onModalClose: any;
+  navigation: any;
+}) => {
+  // MARK: Vars
   const sortedLockpods = lockpods.sort((a, b) => a.id - b.id); // Sorted for consistency in ordering for now
 
   const { userProfile, profileDispatch } = useUserProfileContext();
@@ -30,37 +50,38 @@ const ReserveModal = ({ lockpods, lockpod, visible, onModalClose }) => {
   const [selectedPictureIndex, setSelectedPictureIndex] = useState(null);
   const [selectedLockpod, setSelectedLockpod] = useState(lockpod); // Set default as the originally selected lockpod (the pin first pressed on)
 
-  const { navigate } = useNavigation();
-
+  // MARK: Init
   useEffect(() => {
     const fetchReservation = async () => {
       if (selectedLockpod) {
-        const isReserved = await checkReservation(userId, selectedLockpod.id);
+        const isReserved = selectedLockpod.isReserved;
         console.log("Reserved by user:", isReserved);
         setReservedByUser(isReserved);
       }
     };
 
-    const updateReservationStatus = async () => {
-      if (selectedLockpod && selectedLockpod.status) {
-        console.log("userId", userId);
-        console.log("lockpodId", selectedLockpod.id);
-        await fetchReservation();
-        // Change button text
-        if (reservedByUser) {
-          setReserveButtonText("Cancel");
-        } else {
-          setReserveButtonText("Reserve");
-          if (selectedLockpod.status == "unavailable") {
-            setClickable(false);
-          } else {
-            setClickable(true);
-          }
-        }
-      }
-    };
-
-    updateReservationStatus();
+    // MARK: Methods
+    // TODO: rework status system: (update `isReserved` and `inSession` for the selected lockPod)
+    // (update the `activeReservations` list for the currentUser)
+    // const updateReservationStatus = async () => {
+    //   if (selectedLockpod && selectedLockpod.status) {
+    //     console.log("userId", userId);
+    //     console.log("lockpodId", selectedLockpod.id);
+    //     await fetchReservation();
+    //     // Change button text
+    //     if (reservedByUser) {
+    //       setReserveButtonText("Cancel");
+    //     } else {
+    //       setReserveButtonText("Reserve");
+    //       if (selectedLockpod.status == "unavailable") {
+    //         setClickable(false);
+    //       } else {
+    //         setClickable(true);
+    //       }
+    //     }
+    //   }
+    // };
+    // updateReservationStatus();
   }, [selectedLockpod, reservedByUser]);
 
   useEffect(() => {
@@ -71,9 +92,10 @@ const ReserveModal = ({ lockpods, lockpod, visible, onModalClose }) => {
     }
   }, [visible]);
 
+  // MARK: handleReserve
   const handleReserve = () => {
     // Navigate to ReserveScreen with lockpod information
-    navigate("Reserve", {
+    navigation.navigate("Reserve", {
       lockpod: selectedLockpod,
       userId: userId,
     });
@@ -82,12 +104,13 @@ const ReserveModal = ({ lockpods, lockpod, visible, onModalClose }) => {
     handlePictureUnSelect();
   };
 
+  // MARK: handleCancel
   const handleCancel = async () => {
     console.log(
       `Cancelled Reservation for User ${userId} and Lockpod ${selectedLockpod.id}!`
     );
 
-    user = {
+    const user = {
       userId: userId,
       lockpodId: selectedLockpod.id,
     };
@@ -95,7 +118,7 @@ const ReserveModal = ({ lockpods, lockpod, visible, onModalClose }) => {
     await endReservation(user);
 
     // Update lockpod status in database to show updated status in map view
-    await updateLockpodStatus(selectedLockpod.id, "available");
+    await updateLockPodStatus(selectedLockpod.id, false, false);
 
     // Update reserve button text and set reservedByUser state to false
     setReserveButtonText("Reserve");
@@ -105,12 +128,16 @@ const ReserveModal = ({ lockpods, lockpod, visible, onModalClose }) => {
     handlePictureUnSelect();
   };
 
+  // MARK: handleUnlock
   const handleUnlock = () => {
-    // Navigate to ReserveScreen with lockpod information
-    navigate("ScanQR");
-    // Close the modal
-    onModalClose();
-    handlePictureUnSelect();
+    console.log("wow this is finally running!");
+    createReservation(userProfile.user_id, selectedLockpod.id, 45);
+
+    // // Navigate to ReserveScreen with lockpod information
+    // navigation.navigate("ScanQR");
+    // // Close the modal
+    // onModalClose();
+    // handlePictureUnSelect();
   };
 
   const handleDirections = () => {
@@ -120,31 +147,13 @@ const ReserveModal = ({ lockpods, lockpod, visible, onModalClose }) => {
     );
   };
 
-  /* Function with original functionality
-  const handlePictureSelect = (lockpod) => {
-    if (pictureSelected) {
-      // If picture is already selected, unselect it
-      console.log(lockpods);
-      console.log("Unselected: ", lockpod.id);
-      handlePictureUnSelect();
-    } else {
-      // If picture is not selected, select it
-      console.log("Selected: ", lockpod.id);
-      setPictureSelected(true);
-      setSelectedLockpod(lockpod);
-      setSelectedPictureIndex(lockpod.id);
-    // }
-
-    //also returns the name of the lockpod?
-  };
-  */
-
-  const handlePictureSelect = (lockpod) => {
+  // MARK: handlePictureSelect
+  // TODO: rework this function / what does this function do?
+  const handlePictureSelect = (lockpod: LockPod) => {
     console.log("Selected: ", lockpod.id);
     setPictureSelected(true);
     setSelectedLockpod(lockpod);
-    setSelectedPictureIndex(lockpod.id);
-
+    // setSelectedPictureIndex(lockpod.id);
     //also returns the name of the lockpod?
   };
 
@@ -164,6 +173,8 @@ const ReserveModal = ({ lockpods, lockpod, visible, onModalClose }) => {
     ));
   };
 
+  // MARK: Body
+  // TODO: rework conditional button styling based on the current lockPod Status
   return (
     <Modal
       animationType="slide"
@@ -176,10 +187,7 @@ const ReserveModal = ({ lockpods, lockpod, visible, onModalClose }) => {
           {/* Directions Section */}
           <View style={styles.directionContainer}>
             <Text style={styles.directionTitle}>Directions</Text>
-            <Pressable
-              style={[styles.button, styles.directionButton]}
-              onPress={handleDirections}
-            >
+            <Pressable style={[styles.button]} onPress={handleDirections}>
               <Text style={styles.buttonText}>Get Directions</Text>
             </Pressable>
           </View>
@@ -187,7 +195,7 @@ const ReserveModal = ({ lockpods, lockpod, visible, onModalClose }) => {
           {/* Picture List Section */}
           <ScrollView
             horizontal={true}
-            contentContainerStyle={styles.pictureListContainer}
+            // contentContainerStyle={styles.pictureListContainer}
           >
             {renderPictures()}
           </ScrollView>
@@ -209,7 +217,7 @@ const ReserveModal = ({ lockpods, lockpod, visible, onModalClose }) => {
                 onPress={reservedByUser ? handleCancel : handleReserve}
                 disabled={
                   selectedLockpod &&
-                  selectedLockpod.status == "unavailable" &&
+                  // selectedLockpod.status == "unavailable" &&
                   !reservedByUser
                 }
               >
@@ -223,11 +231,11 @@ const ReserveModal = ({ lockpods, lockpod, visible, onModalClose }) => {
                     : styles.nonClickableButton,
                 ]}
                 onPress={handleUnlock}
-                disabled={
-                  selectedLockpod &&
-                  selectedLockpod.status == "unavailable" &&
-                  !reservedByUser
-                }
+                // disabled={
+                // selectedLockpod &&
+                // selectedLockpod.status == "unavailable" &&
+                // !reservedByUser
+                // }
               >
                 <Text style={styles.buttonText}>Unlock</Text>
               </Pressable>
@@ -239,6 +247,7 @@ const ReserveModal = ({ lockpods, lockpod, visible, onModalClose }) => {
   );
 };
 
+// MARK: Styles
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
@@ -272,7 +281,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   buttonContainer: {
-    flexDirection: "col",
+    flexDirection: "column",
     justifyContent: "space-between",
     marginTop: 20,
   },

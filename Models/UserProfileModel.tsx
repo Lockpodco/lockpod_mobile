@@ -7,6 +7,7 @@ export class UserProfile {
   first_name: string;
   last_name: string;
   username: string;
+  activeReservations: number[] = [];
 
   public constructor(
     user_id: number = 0,

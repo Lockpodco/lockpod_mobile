@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import MapViewComponent from "../components/MapViewComponent";
 import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { windowHeight, windowWidth } from "../Constants";
-import { useNavigation } from "@react-navigation/native";
 
 import { useUserProfileContext } from "../stores/UserProfileContext";
 
@@ -25,8 +24,13 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
   return (
     <View style={{ flex: 1 }}>
-      <Text>{userProfile["first_name"] + " " + userProfile["last_name"]}</Text>
-      <MapViewComponent />
+      <Text>
+        {userProfile["first_name"] +
+          " " +
+          userProfile["last_name"] +
+          userProfile.activeReservations[0]}
+      </Text>
+      <MapViewComponent navigation={navigation} />
       <TouchableOpacity
         activeOpacity={0.7}
         style={styles.floatingButton}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { View } from "react-native";
-import ReserveModal from "./ReserveModal.js";
+import ReserveModal from "./ReserveModal";
 
 // services
 import { reserveLockpod, endReservation } from "../services/ReservationService";
@@ -23,7 +23,9 @@ const UCSD_REGION = {
   longitudeDelta: 0.03,
 };
 
-const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
+const MapViewComponent = ({ navigation }: { navigation: any }) => {
+  const initialRegion = UCSD_REGION;
+
   const { lockPods, lockPodsDispatch } = useLockPodsContext();
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -70,8 +72,9 @@ const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
       <ReserveModal
         visible={modalVisible}
         lockpods={lockPods}
-        lockpod={selectedLockpod}
+        lockpod={selectedLockpod!}
         onModalClose={handleModalClose}
+        navigation={navigation}
       />
     </View>
   );

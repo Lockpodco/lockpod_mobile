@@ -3,11 +3,14 @@ import {
   checkResponse,
   handleError,
 } from "../services/ServiceUniversals";
+import { LockpodReservation } from "../Models/ReservationModel";
+import { UserProfile } from "../Models/UserProfileModel";
 
 // MARK: createReservation
 // duration is measured in minutes
 // this adds a new reservation to the database and returns its id
 // it should be added to the current userProfile's 'active Reservation' argument seperatley
+// whenever it is called
 export const createReservation = async (
   user_id: number,
   lockpod_id: number,
@@ -52,39 +55,42 @@ export const createReservation = async (
   }
 };
 
-// MARK: ReserveLockpod
-export const reserveLockpod = async (req: any) => {
-  console.log("data in reserveLockpod: ", JSON.stringify(req));
+// TODO
+// MARK: GetReservation
+// gets the reservation associated with the given id
+// should return an instance of the LockpodReservation object
+export const getReservation = async (
+  id: number
+): Promise<LockpodReservation | undefined> => {
   try {
-    const response = await fetch(`${API_URL}/reservations`, {
-      method: "POST",
-      // This header was necessary for post to work
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(req),
-    });
-    return response;
   } catch (error) {
-    console.error("Error creating reservation:", error);
-    throw error;
+    handleError("Error getting the reservation", error as Error);
+    return undefined;
   }
 };
 
-// MARK: endReservation
-export const endReservation = async (req: any) => {
-  console.log("data in endReservation: ", JSON.stringify(req));
+// TODO
+// MARK: ExtendReservation
+// adds the poassed duration (in minutes) and extends the reservation by that much
+// and sets the var 'hasBeenExtended' to true
+// if the 'hasBeenExtended' is true at the begining, it should not extend the reservation
+export const extendReservation = async (id: number, duration: number) => {
   try {
-    const response = await fetch(`${API_URL}/reservations`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(req),
-    });
-    return response;
   } catch (error) {
-    console.error("Error ending reservation: ", error);
-    throw error;
+    handleError("Error extending the resrevation", error as Error);
+    return undefined;
+  }
+};
+
+// TODO
+// MARK: endReservation
+// this gets called whether the user cancelled their reservation, or
+// arrived and is now attempting to unlock the pod
+// it removes the reservation from the userProfile's active reservations var
+// and adds it to the 'reservation' history var in the UserProfile
+export default async (reservationId: number, userProfile: UserProfile) => {
+  try {
+  } catch (error) {
+    handleError("Error ending the reservation", error as Error);
   }
 };

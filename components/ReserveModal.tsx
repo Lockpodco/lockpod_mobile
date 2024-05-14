@@ -14,9 +14,8 @@ import { useNavigation } from "@react-navigation/native";
 
 // Services
 import { updateLockPodStatus } from "../services/LockpodService";
-import {
+import endReservation, {
   createReservation,
-  endReservation,
 } from "../services/ReservationService";
 
 // Context & Models

@@ -2,6 +2,7 @@ import { API_URL, checkResponse, handleError } from "./ServiceUniversals";
 import { LockpodSession } from "../Models/SessionModel";
 import { UserProfile } from "../Models/UserProfileModel";
 
+// TODO
 // MARK: Create Session
 // this method should simply create a reservation at the current time
 // for the given user and lockpod
@@ -18,6 +19,7 @@ export const createSession = async (
   }
 };
 
+// TODO
 // MARK: get Session
 // this method should return the sessio associated with the given id
 // the return is of type LockpodSession, so you need to convert the JSON data
@@ -37,6 +39,7 @@ export const getSession = async (
   }
 };
 
+// TODO
 // MARK: endSession
 // this method should take in an active session, set the end time to now
 // and then store it in the currentUser's 'sessionHistory' var

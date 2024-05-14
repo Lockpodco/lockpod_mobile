@@ -8,6 +8,7 @@ export class UserProfile {
   last_name: string;
   username: string;
   activeReservations: number[] = [];
+  activeSessions: number[] = [];
 
   public constructor(
     user_id: number = 0,
@@ -21,9 +22,8 @@ export class UserProfile {
     this.username = username;
   }
 
-  // when a user updates the profile using the dispatch function,
-  // this will be called on the new UserProfile
-  // which will 'push the changes' to the remote Database
+  // this pushes the changeson a given userProfile object
+  // to the remote Database
   async saveChangesToDataBase() {
     await updateUserProfile(this);
   }

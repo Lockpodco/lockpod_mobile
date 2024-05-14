@@ -1,5 +1,7 @@
 # lockpod_mobile
 
+This branch's goal is to add multiple UI components to be used throughout the app such as buttons, text, text fields, etc.
+
 ### **GLOBAL STORE**
 
 Global store is a built in react-native way of storing, passing, and updatng data throughout the app. Instead of passing stateObjects like a `userProfile` to each Screen / component individually, you can store one copy of it, and then observe changes within the individual Screens that need access to it.

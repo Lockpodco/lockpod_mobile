@@ -52,7 +52,7 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
       Alert.alert("Error", "Password change unsuccessful");
     }
   };
-	
+
   const styles = StyleSheet.create({
 		inputContainer: {
 			marginTop: 20,

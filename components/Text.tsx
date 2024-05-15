@@ -22,19 +22,25 @@ const getFonts = () => {
 const defaultStyles = StyleSheet.create({
 	regularFont: {
 		fontFamily: "Poppins_400Regular",
-		fontSize: 16,
+		fontSize: Constants.defaultFontSize,
 		color: Constants.baseDark,
 	},
 
 	mediumFont: {
 		fontFamily: "Poppins_500Medium",
-		fontSize: 16,
+		fontSize: Constants.defaultFontSize,
 		color: Constants.baseDark,
 	},
 
 	semiBoldFont: {
 		fontFamily: "Poppins_600SemiBold",
-		fontSize: 24,
+		fontSize: Constants.semiBoldFontSize,
+		color: Constants.baseDark,
+	},
+
+	headingFont: {
+		fontFamily: "Poppins_500Medium",
+		fontSize: Constants.headingFontSize1,
 		color: Constants.baseDark,
 	},
 

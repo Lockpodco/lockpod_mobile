@@ -3,6 +3,7 @@ import { View, TextInput, Button, StyleSheet, Alert, Text, Pressable } from "rea
 import { Constants } from "../../components/constants";
 import { PlainTextField } from "../../components/Forms/FormComponents";
 import { DefaultSubmitButton } from "../../components/Buttons";
+import { RegularText } from "../../components/Text";
 
 const SupportScreen = () => {
 
@@ -18,9 +19,6 @@ const SupportScreen = () => {
 			marginTop: 30,
 			alignItems: "center",
 		},
-		greetText: {
-			fontSize: 15,
-		},
 		inputContainer: {
 			marginTop: 30,
 			marginBottom: 20,
@@ -29,16 +27,25 @@ const SupportScreen = () => {
 			marginLeft: 20,
 			fontSize: 15,
 		},
+		inputTitle: {
+			marginLeft: 20,
+		},
 	})
 
 	return (
 		<View style={styles.container}>
 			<View style={styles.greetContainer}>
-				<Text style={styles.greetText}>Let us know how we can help you!</Text>
+					<RegularText
+						value="Let us know how we can help you!"
+						style={null}
+					/>
 			</View>
 			<View style={styles.inputContainer}>
 				<View>
-					<Text style={styles.text}>Name</Text>
+					<RegularText
+						value="Name"
+						style={styles.inputTitle}
+					/>
 					<PlainTextField 
 						value={name}
 						placeHolder="Enter Name"
@@ -49,7 +56,10 @@ const SupportScreen = () => {
 					/>
 				</View>
 				<View>
-					<Text style={styles.text}>Email</Text>
+					<RegularText
+						value="Email"
+						style={styles.inputTitle}
+					/>
 					<PlainTextField 
 						value={email}
 						placeHolder="example@gmail.com"
@@ -60,7 +70,10 @@ const SupportScreen = () => {
 					/>
 				</View>
 				<View>
-					<Text style={styles.text}>Report Issue</Text>
+					<RegularText
+						value="Report Issue"
+						style={styles.inputTitle}
+					/>
 					<PlainTextField 
 						value={issue}
 						placeHolder="Type here..."

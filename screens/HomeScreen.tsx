@@ -35,7 +35,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         activeOpacity={0.7}
         style={styles.floatingButton}
         onPress={() => {
-          navigation.navgiate("ScanQR");
+          navigation.navigate("ScanQR");
         }}
       >
         <Text>Scan Pod</Text>

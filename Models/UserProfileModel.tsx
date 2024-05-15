@@ -9,6 +9,7 @@ export class UserProfile {
   username: string;
   activeReservations: number[] = [];
   activeSessions: number[] = [];
+  // reservationHis: number[] = [];
 
   public constructor(
     user_id: number = 0,

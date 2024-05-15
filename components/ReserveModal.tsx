@@ -14,13 +14,12 @@ import { useNavigation } from "@react-navigation/native";
 
 // Services
 import { updateLockPodStatus } from "../services/LockpodService";
-import endReservation, {
-  createReservation,
-} from "../services/ReservationService";
+import { createReservation, endReservation, getReservation } from "../services/ReservationService";
 
 // Context & Models
 import { UserProfile } from "../Models/UserProfileModel";
 import { LockPod } from "../Models/LockPodModel";
+import { LockpodReservation } from "../Models/ReservationModel";
 import { useUserProfileContext } from "../stores/UserProfileContext";
 
 // MARK: Modal
@@ -48,7 +47,7 @@ const ReserveModal = ({
   const userId = userProfile["user_id"];
   const [selectedPictureIndex, setSelectedPictureIndex] = useState(null);
   const [selectedLockpod, setSelectedLockpod] = useState(lockpod); // Set default as the originally selected lockpod (the pin first pressed on)
-
+  navigation = useNavigation();
   // MARK: Init
   useEffect(() => {
     const fetchReservation = async () => {
@@ -62,24 +61,24 @@ const ReserveModal = ({
     // MARK: Methods
     // TODO: rework status system: (update `isReserved` and `inSession` for the selected lockPod)
     // (update the `activeReservations` list for the currentUser)
-    // const updateReservationStatus = async () => {
-    //   if (selectedLockpod && selectedLockpod.status) {
-    //     console.log("userId", userId);
-    //     console.log("lockpodId", selectedLockpod.id);
-    //     await fetchReservation();
-    //     // Change button text
-    //     if (reservedByUser) {
-    //       setReserveButtonText("Cancel");
-    //     } else {
-    //       setReserveButtonText("Reserve");
-    //       if (selectedLockpod.status == "unavailable") {
-    //         setClickable(false);
-    //       } else {
-    //         setClickable(true);
-    //       }
-    //     }
-    //   }
-    // };
+    const updateReservationStatus = async () => {
+      if (selectedLockpod && !selectedLockpod.isReserved) {
+        console.log("userId", userId);
+        console.log("lockpodId", selectedLockpod.id);
+        await fetchReservation();
+        // Change button text
+        if (reservedByUser) {
+          setReserveButtonText("Cancel");
+        } else {
+          setReserveButtonText("Reserve");
+          if (selectedLockpod.isReserved) {
+            setClickable(false);
+          } else {
+            setClickable(true);
+          }
+        }
+      }
+    };
     // updateReservationStatus();
   }, [selectedLockpod, reservedByUser]);
 
@@ -114,8 +113,16 @@ const ReserveModal = ({
       lockpodId: selectedLockpod.id,
     };
 
-    await endReservation(user);
 
+    endReservation(userId, selectedLockpod.id)
+    .then(() => {
+      console.log("Reservation ended successfully.");
+      // Optionally, perform additional actions after the reservation is ended
+    })
+    .catch(error => {
+      console.error("Failed to end reservation:", error);
+      // Handle error appropriately
+    });
     // Update lockpod status in database to show updated status in map view
     await updateLockPodStatus(selectedLockpod.id, false, false);
 
@@ -125,6 +132,29 @@ const ReserveModal = ({
 
     onModalClose();
     handlePictureUnSelect();
+    try {
+      endReservation(userId, selectedLockpod.id)
+      .then(() => {
+        console.log("Reservation ended successfully.");
+        lockpod.inSession = false;
+        lockpod.isReserved = false;
+        // Optionally, perform additional actions after the reservation is ended
+      })
+      .catch(error => {
+        console.error("Failed to end reservation:", error);
+        // Handle error appropriately
+      });
+      await updateLockPodStatus(selectedLockpod.id, false, false);
+
+      // Update reserve button text and set reservedByUser state to false
+      setReserveButtonText("Reserve");
+      setReservedByUser(false);
+
+      onModalClose();
+      handlePictureUnSelect();
+    } catch (error) {
+      console.error("Failed to cancel reservation:", error);
+    }
   };
 
   // MARK: handleUnlock

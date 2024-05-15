@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   API_URL,
   checkResponse,
@@ -59,13 +60,13 @@ export const createReservation = async (
 // MARK: GetReservation
 // gets the reservation associated with the given id
 // should return an instance of the LockpodReservation object
-export const getReservation = async (
-  id: number
-): Promise<LockpodReservation | undefined> => {
+export const getReservation = async (reservationId: number): Promise<LockpodReservation | null> => {
   try {
+    const response = await axios.get<LockpodReservation>(`${API_URL}/reservations/${reservationId}`);
+    return response.data;
   } catch (error) {
-    handleError("Error getting the reservation", error as Error);
-    return undefined;
+    handleError("Failed to fetch reservation", error as Error);
+    return null;
   }
 };
 
@@ -88,6 +89,82 @@ export const extendReservation = async (id: number, duration: number) => {
 // arrived and is now attempting to unlock the pod
 // it removes the reservation from the userProfile's active reservations var
 // and adds it to the 'reservation' history var in the UserProfile
+// export const endReservation = async (reservationId: number, user: UserProfile): Promise<void> => {
+//   try {
+//     // Delete reservation from the database
+//     await axios.delete(`${API_URL}/reservations/${reservationId}`, {
+//       data: { userId: user.user_id },
+//     });
+
+//     // Remove reservation from active reservations and add to reservation history
+//     const activeIndex = user.activeReservations.indexOf(reservationId);
+//     if (activeIndex > -1) {
+//       user.activeReservations.splice(activeIndex, 1);
+//     }
+//     // user.reservationHistory.push(reservationId); // (add to history)
+
+//     // Save changes to user profile
+//     await user.saveChangesToDataBase();
+
+
+//     console.log(`Successfully ended reservation ID: ${reservationId}`);
+//   } catch (error) {
+//     handleError("Failed to end reservation", error as Error);
+//     throw error;
+//   }
+// };
+
+
+// Function to get reservations by user ID
+const getUserReservations = async (userId: number): Promise<LockpodReservation[]> => {
+  try {
+    const response = await axios.get(`${API_URL}/reservations`, { params: { userId } });
+    return response.data;
+  } catch (error) {
+    console.error("Failed to fetch user reservations:", error);
+    throw error;
+  }
+};
+
+// Function to end a reservation
+export const endReservation = async (userId: number, lockpodId: number): Promise<void> => {
+  try {
+    // Fetch the user's reservations
+    const reservations = await getUserReservations(userId);
+
+    // Find the reservation with the matching lockpodId
+    const reservation = reservations.find(res => res.lockpod_id === lockpodId);
+    
+    if (reservation) {
+      const reservationId = reservation.id;
+
+      // Delete the reservation
+      await axios.delete(`${API_URL}/reservations/${reservationId}`);
+
+      // Fetch user profile
+      const response = await axios.get(`${API_URL}/userProfiles/${userId}`);
+      const userProfile = response.data as UserProfile;
+
+      // Update the user profile
+      userProfile.activeReservations = userProfile.activeReservations.filter(id => id !== reservationId);
+      // userProfile.reservationHistory.push(reservationId);
+
+      // Save changes to the user profile
+      // await updateUserProfile(userProfile);
+
+      console.log(`Successfully ended reservation with ID: ${reservationId}`);
+    } else {
+      console.log(`No active reservation found for lockpodId: ${lockpodId}`);
+    }
+  } catch (error) {
+    console.error("Failed to end reservation:", error);
+    throw error;
+  }
+};
+
+
+
+
 export default async (reservationId: number, userProfile: UserProfile) => {
   try {
   } catch (error) {

@@ -88,8 +88,26 @@ export const getReservation = async (
 // adds the poassed duration (in minutes) and extends the reservation by that much
 // and sets the var 'hasBeenExtended' to true
 // if the 'hasBeenExtended' is true at the begining, it should not extend the reservation
-export const extendReservation = async (id: number, duration: number) => {
+export const extendReservation = async (
+  id: number,
+  initialEndTime: Date,
+  duration: number
+) => {
   try {
+    console.log("\n");
+    console.log(`attempting to extend reservation: ${id}`);
+
+    const hourTime = 60 * 60 * 1000;
+    const minuteTime = 60 * 1000;
+    const newEndTime: Date = new Date(
+      initialEndTime.getTime() + 7 * hourTime + minuteTime * duration
+    );
+
+    const route = `${API_URL}/reservations/extend?reservationId=${id}&endTime=${newEndTime}`;
+
+    const _ = await axios.post(route);
+
+    console.log("successfully extended the reservatin");
   } catch (error) {
     handleError("Error extending the resrevation", error as Error);
     return undefined;

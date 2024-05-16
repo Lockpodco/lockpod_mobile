@@ -3,8 +3,10 @@ import { Text, View, StyleSheet, Button } from "react-native";
 import { Constants } from "../../components/constants";
 
 // services
-import { getReservation } from "../../services/ReservationService";
-import { updateLockPodStatus } from "../../services/LockpodService";
+import {
+  getReservation,
+  extendReservation,
+} from "../../services/ReservationService";
 
 // context
 import { useUserProfileContext } from "../../stores/UserProfileContext";
@@ -59,7 +61,7 @@ const ReservationsScreen = () => {
 
     const styles = StyleSheet.create({
       reservationContainer: {
-        flex: 0.2,
+        flex: 0.35,
         flexDirection: "row",
         padding: 7,
         margin: 7,
@@ -92,6 +94,17 @@ const ReservationsScreen = () => {
                 reservation.cancelReservation(userProfile, "cancel");
               }}
               title={"Cancel Reservation"}
+            />
+
+            <Button
+              onPress={() => {
+                extendReservation(
+                  reservation.id,
+                  reservation.expected_arrival,
+                  30
+                );
+              }}
+              title={"Extend Reservation"}
             />
           </View>
         )}

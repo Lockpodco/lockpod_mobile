@@ -71,7 +71,11 @@ export const getReservation = async (
     if (Object.values(data).length == 0) {
       return null;
     }
+
     const reservation = Object.assign(new LockpodReservation(), data);
+
+    reservation.updateDates();
+
     return reservation;
   } catch (error) {
     handleError("Failed to fetch reservation", error as Error);

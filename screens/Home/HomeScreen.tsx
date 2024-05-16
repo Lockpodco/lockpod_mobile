@@ -15,7 +15,7 @@ import ReservationsScreen from "./ReservationsScreen";
 const HomeScreen = ({ navigation }: { navigation: any }) => {
   const { userProfile, profileDispatch } = useUserProfileContext();
 
-  const [onMapScreen, setOnMapScreen] = useState(true);
+  const [onMapScreen, setOnMapScreen] = useState(false);
 
   // MARK: Styles
   const styles = StyleSheet.create({

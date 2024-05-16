@@ -23,10 +23,6 @@ const SupportScreen = () => {
 			marginTop: 30,
 			marginBottom: 20,
 		},
-		text: {
-			marginLeft: 20,
-			fontSize: 15,
-		},
 		inputTitle: {
 			marginLeft: 20,
 		},

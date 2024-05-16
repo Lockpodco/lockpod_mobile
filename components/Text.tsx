@@ -43,8 +43,6 @@ const defaultStyles = StyleSheet.create({
 		fontSize: Constants.headingFontSize1,
 		color: Constants.baseDark,
 	},
-
-	text: {},
 });
 
 export const RegularText = ({
@@ -58,7 +56,7 @@ export const RegularText = ({
 		<Text
 			style={[
 				defaultStyles.regularFont,
-				style === null ? defaultStyles.text : style,
+				style === null ? {} : style,
 			]}
 		>
 			{value}
@@ -77,7 +75,7 @@ export const MediumText = ({
 		<Text
 			style={[
 				defaultStyles.mediumFont,
-				style === null ? defaultStyles.text : style,
+				style === null ? {} : style,
 			]}
 		>
 			{value}
@@ -96,7 +94,26 @@ export const SemiBoldText = ({
 		<Text
 			style={[
 				defaultStyles.semiBoldFont,
-				style === null ? defaultStyles.text : style,
+				style === null ? {} : style,
+			]}
+		>
+			{value}
+		</Text>
+	);
+};
+
+export const RegularHeading = ({
+	value,
+	style,
+}: {
+	value: string;
+	style: Object | null;
+}) => {
+	return (
+		<Text
+			style={[
+				defaultStyles.headingFont,
+				style === null ? {} : style,
 			]}
 		>
 			{value}

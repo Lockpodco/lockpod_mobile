@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from "axios";
 import {
   API_URL,
   checkResponse,
@@ -26,8 +26,6 @@ export const createReservation = async (
     const startTime: Date = new Date();
     const minutesInms = duration * 60 * 1000;
     const expectedArrival: Date = new Date(startTime.getTime() + minutesInms);
-
-    // console.
 
     const response = await fetch(`${API_URL}/reservations`, {
       method: "POST",
@@ -60,10 +58,21 @@ export const createReservation = async (
 // MARK: GetReservation
 // gets the reservation associated with the given id
 // should return an instance of the LockpodReservation object
-export const getReservation = async (reservationId: number): Promise<LockpodReservation | null> => {
+export const getReservation = async (
+  reservationId: number
+): Promise<LockpodReservation | null> => {
   try {
-    const response = await axios.get<LockpodReservation>(`${API_URL}/reservations/${reservationId}`);
-    return response.data;
+    const response = await axios.get<JSON>(
+      `${API_URL}/reservations?reservationId=${reservationId}`
+    );
+
+    const data = response.data;
+
+    if (Object.values(data).length == 0) {
+      return null;
+    }
+    const reservation = Object.assign(new LockpodReservation(), data);
+    return reservation;
   } catch (error) {
     handleError("Failed to fetch reservation", error as Error);
     return null;
@@ -106,7 +115,6 @@ export const extendReservation = async (id: number, duration: number) => {
 //     // Save changes to user profile
 //     await user.saveChangesToDataBase();
 
-
 //     console.log(`Successfully ended reservation ID: ${reservationId}`);
 //   } catch (error) {
 //     handleError("Failed to end reservation", error as Error);
@@ -114,11 +122,14 @@ export const extendReservation = async (id: number, duration: number) => {
 //   }
 // };
 
-
 // Function to get reservations by user ID
-const getUserReservations = async (userId: number): Promise<LockpodReservation[]> => {
+const getUserReservations = async (
+  userId: number
+): Promise<LockpodReservation[]> => {
   try {
-    const response = await axios.get(`${API_URL}/reservations`, { params: { userId } });
+    const response = await axios.get(`${API_URL}/reservations`, {
+      params: { userId },
+    });
     return response.data;
   } catch (error) {
     console.error("Failed to fetch user reservations:", error);
@@ -127,14 +138,19 @@ const getUserReservations = async (userId: number): Promise<LockpodReservation[]
 };
 
 // Function to end a reservation
-export const endReservation = async (userId: number, lockpodId: number): Promise<void> => {
+export const endReservation = async (
+  userId: number,
+  lockpodId: number
+): Promise<void> => {
   try {
     // Fetch the user's reservations
     const reservations = await getUserReservations(userId);
 
     // Find the reservation with the matching lockpodId
-    const reservation = reservations.find(res => res.lockpod_id === lockpodId);
-    
+    const reservation = reservations.find(
+      (res) => res.lockpod_id === lockpodId
+    );
+
     if (reservation) {
       const reservationId = reservation.id;
 
@@ -146,7 +162,9 @@ export const endReservation = async (userId: number, lockpodId: number): Promise
       const userProfile = response.data as UserProfile;
 
       // Update the user profile
-      userProfile.activeReservations = userProfile.activeReservations.filter(id => id !== reservationId);
+      userProfile.activeReservations = userProfile.activeReservations.filter(
+        (id) => id !== reservationId
+      );
       // userProfile.reservationHistory.push(reservationId);
 
       // Save changes to the user profile
@@ -161,9 +179,6 @@ export const endReservation = async (userId: number, lockpodId: number): Promise
     throw error;
   }
 };
-
-
-
 
 export default async (reservationId: number, userProfile: UserProfile) => {
   try {

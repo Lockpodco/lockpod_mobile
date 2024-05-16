@@ -40,17 +40,20 @@ const updateUserProfile = async (updatedProfile: UserProfile) => {
     "attempting to update userProfile with id: " + updatedProfile.user_id
   );
 
+  const body = JSON.stringify({
+    user_id: updatedProfile.user_id,
+    firstName: updatedProfile.first_name,
+    lastName: updatedProfile.last_name,
+    userName: updatedProfile.username,
+    activeReservations: updatedProfile.activeReservations.toString(),
+  });
+
   const response = await fetch(`${API_URL}/userProfiles/update`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      user_id: updatedProfile.user_id,
-      firstName: updatedProfile.first_name,
-      lastName: updatedProfile.last_name,
-      userName: updatedProfile.username,
-    }),
+    body: body,
   });
 
   checkResponse(

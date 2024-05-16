@@ -12,9 +12,8 @@ import { LockPodsProvider } from "./stores/LockPodsContext";
 // pages
 import AuthScreen from "./screens/Authentication/AuthScreen";
 import ProfileCreationScreen from "./screens/Authentication/ProfileCreationScreen";
-import HomeScreen from "./screens/HomeScreen";
+import HomeScreen from "./screens/Home/HomeScreen";
 import ScanQR from "./screens/ScanQR";
-import ReserveScreen from "./screens/ReserveScreen";
 import ProfileScreen from "./screens/MyAccount/ProfileScreen";
 import ActivityScreen from "./screens/MyAccount/ActivityScreen";
 import Wallet from "./screens/Payment/WalletScreen";
@@ -112,11 +111,6 @@ export default function App() {
                 title: "Change Password",
                 headerBackTitle: "Back",
               }}
-            />
-            <Stack.Screen
-              name="Reserve"
-              component={ReserveScreen}
-              options={{ title: "Reserve a Pod" }}
             />
           </Stack.Navigator>
         </UserProfileProvider>

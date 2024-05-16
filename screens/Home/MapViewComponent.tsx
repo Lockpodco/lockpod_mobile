@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { View } from "react-native";
-import ReserveModal from "./ReserveModal";
+import ReserveModal from "../../components/ReserveModal";
 
 // services
-import endReservation, { reserveLockpod } from "../services/ReservationService";
-import { fetchLockpods, updateLockPodStatus } from "../services/LockpodService";
+import endReservation from "../../services/ReservationService";
+import {
+  fetchLockpods,
+  updateLockPodStatus,
+} from "../../services/LockpodService";
 
 // models
 import {
   useLockPodsContext,
   UpdateLockPodsActionType,
-} from "../stores/LockPodsContext";
+} from "../../stores/LockPodsContext";
 
-import { LockPod } from "../Models/LockPodModel";
+import { LockPod } from "../../Models/LockPodModel";
 
 const UCSD_REGION = {
   latitude: 32.8801,
-  //longitude: -117.234,
   longitude: -117.227, // focused display of ucsd campus
   latitudeDelta: 0.03, // great zoom level
   longitudeDelta: 0.03,
@@ -40,7 +42,10 @@ const MapViewComponent = ({ navigation }: { navigation: any }) => {
         updatedLockPod: undefined,
       });
     }
-    fetch();
+
+    if (lockPods.length == 0) {
+      fetch();
+    }
   }, []);
 
   const handleCalloutPressed = (lockpod: LockPod) => {

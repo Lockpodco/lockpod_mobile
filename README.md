@@ -86,11 +86,3 @@ To check the backend is running, use [postman](https://web.postman.co/workspace/
 `http://localhost:3000/lockpods`
 
 For further assistance on running the backend from the GUI application, check the [setup docs](https://docs.google.com/document/d/1p3ZJFpEFAl-a8mAdTrjhQ3hbEYJSQLrv5l4eS-d9EvQ/edit)
-
-# Branch `reserve-and-unlock`
- - Run with backend branch `type_reservations`
- - Features: Once the user clicks the red location button, the popup window will display the availability of different pods in that location
- - Click any pods, it will display the `reserve` and `unlock` button
- - Need to do more on features ...
-
-

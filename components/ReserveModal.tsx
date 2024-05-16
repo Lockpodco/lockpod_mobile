@@ -141,58 +141,12 @@ const ReserveModal = ({
       // update the userProfile object
       userProfile.activeReservations.push(reservationId);
       await userProfile.saveChangesToDataBase();
+
+      // update the status of the lockpod
+      updateLockPodStatus(selectedLockpod!.id, true, false);
     }
 
     onModalClose();
-  };
-
-  // MARK: handleCancel
-  const handleCancel = async () => {
-    console.log(
-      `Cancelled Reservation for User ${userId} and Lockpod ${selectedLockpod!.id}!`
-    );
-
-    // endReservation(userId, selectedLockpod.id)
-    //   .then(() => {
-    //     console.log("Reservation ended successfully.");
-    //     // Optionally, perform additional actions after the reservation is ended
-    //   })
-    //   .catch((error) => {
-    //     console.error("Failed to end reservation:", error);
-    //     // Handle error appropriately
-    //   });
-    // Update lockpod status in database to show updated status in map view
-    // await updateLockPodStatus(selectedLockpod.id, false, false);
-
-    // Update reserve button text and set reservedByUser state to false
-    // setReserveButtonText("Reserve");
-    // setReservedByUser(false);
-
-    // onModalClose();
-    // handlePictureUnSelect();
-    // try {
-    //   endReservation(userId, selectedLockpod.id)
-    //     .then(() => {
-    //       console.log("Reservation ended successfully.");
-    //       lockpod.inSession = false;
-    //       lockpod.isReserved = false;
-    //       // Optionally, perform additional actions after the reservation is ended
-    //     })
-    //     .catch((error) => {
-    //       console.error("Failed to end reservation:", error);
-    //       // Handle error appropriately
-    //     });
-    //   await updateLockPodStatus(selectedLockpod.id, false, false);
-
-    //   // Update reserve button text and set reservedByUser state to false
-    //   setReserveButtonText("Reserve");
-    //   setReservedByUser(false);
-
-    //   onModalClose();
-    //   handlePictureUnSelect();
-    // } catch (error) {
-    //   console.error("Failed to cancel reservation:", error);
-    // }
   };
 
   // MARK: handleUnlock

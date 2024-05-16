@@ -34,6 +34,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     },
   });
 
+  // MARK: ViewBuilders
   const TabBarElement = ({
     isMap,
     title,
@@ -49,6 +50,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
         borderBottomColor: onMapScreen == isMap ? "black" : "transparent",
         borderBottomWidth: 4,
+
+        marginHorizontal: 5,
 
         backgroundColor: Constants.baseLight,
       },

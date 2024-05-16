@@ -9,7 +9,7 @@ export class UserProfile {
   username: string;
   activeReservations: number[] = [];
   activeSessions: number[] = [];
-  // reservationHistory: number[] = [];
+  reservationHistory: number[] = [];
 
   public constructor(
     user_id: number = 0,
@@ -46,6 +46,7 @@ const updateUserProfile = async (updatedProfile: UserProfile) => {
     lastName: updatedProfile.last_name,
     userName: updatedProfile.username,
     activeReservations: updatedProfile.activeReservations.toString(),
+    reservationHistory: updatedProfile.reservationHistory.toString(),
   });
 
   const response = await fetch(`${API_URL}/userProfiles/update`, {

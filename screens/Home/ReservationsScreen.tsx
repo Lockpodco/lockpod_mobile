@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Button } from "react-native";
 import { Constants } from "../../components/constants";
 
 // services
 import { getReservation } from "../../services/ReservationService";
+import { updateLockPodStatus } from "../../services/LockpodService";
 
 // context
 import { useUserProfileContext } from "../../stores/UserProfileContext";
@@ -38,6 +39,8 @@ const ReservationsScreen = () => {
     }
   }, []);
 
+  //   MARK: Methods
+
   // MARK: Components
   const ReservationView = ({
     reservation,
@@ -56,7 +59,7 @@ const ReservationsScreen = () => {
 
     const styles = StyleSheet.create({
       reservationContainer: {
-        flex: 0.1,
+        flex: 0.2,
         flexDirection: "row",
         padding: 7,
         margin: 7,
@@ -83,6 +86,13 @@ const ReservationsScreen = () => {
 
             <Text>{`Start time: ${reservation.formatStartTime()}`}</Text>
             <Text>{`Expected Arrival: ${reservation.formatArrivalTime()}`}</Text>
+
+            <Button
+              onPress={() => {
+                reservation.cancelReservation(userProfile, "cancel");
+              }}
+              title={"Cancel Reservation"}
+            />
           </View>
         )}
       </View>

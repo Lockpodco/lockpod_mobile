@@ -1,5 +1,9 @@
 // MARK: ReservationModel
 
+import { UserProfile } from "./UserProfileModel";
+import { endReservation } from "../services/ReservationService";
+import { updateLockPodStatus } from "../services/LockpodService";
+
 export class LockpodReservation {
   id: number;
   user_id: number;
@@ -21,6 +25,7 @@ export class LockpodReservation {
     this.expected_arrival = new Date(expectedArrival);
   }
 
+  // MARK: Convenience Functinos
   formatArrivalTime(): string {
     var pstDate = this.expected_arrival.toLocaleString("en-US", {
       timeZone: "America/Los_Angeles",
@@ -54,4 +59,24 @@ export class LockpodReservation {
     const minuteTime = 60 * 1000;
     return difference / minuteTime;
   }
+
+  // MARK: Methods
+  cancelReservation = async (userProfile: UserProfile, method: string) => {
+    // cancel the reservation object
+    await endReservation(this.id, method);
+
+    // remove it from active reservations in the userProfile
+    const removingIndex = userProfile.activeReservations.indexOf(this.id);
+    userProfile.activeReservations.splice(removingIndex, removingIndex);
+
+    if (userProfile.activeReservations.length == 1) {
+      userProfile.activeReservations = [];
+    }
+
+    userProfile.reservationHistory.push(this.id);
+    await userProfile.saveChangesToDataBase();
+
+    // updates the status of the lockpod
+    updateLockPodStatus(this.lockpod_id, false, false);
+  };
 }

@@ -4,7 +4,6 @@ import { View } from "react-native";
 import ReserveModal from "../../components/ReserveModal";
 
 // services
-import endReservation from "../../services/ReservationService";
 import {
   fetchLockpods,
   updateLockPodStatus,

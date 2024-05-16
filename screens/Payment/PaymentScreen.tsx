@@ -37,6 +37,7 @@ export const CheckoutScreen = () => {
     const { error } = await initPaymentSheet({
       merchantDisplayName: "Lock Pod Co.",
       paymentIntentClientSecret: paymentIntent,
+      returnURL: "/",
       allowsDelayedPaymentMethods: false,
       defaultBillingDetails: {
         name: "Steve Jobs",

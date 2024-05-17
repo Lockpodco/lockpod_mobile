@@ -73,16 +73,17 @@ const ReserveModal = ({
     // Gets all the active reservations associated with the current user and stores them
     // in activeReservations
     const fetchUserReservations = async () => {
-      const fetchedReservations: LockpodReservation[] =
-        await getUserReservations(userId);
+      setActiveReservations([]);
 
-      setActiveReservations(fetchedReservations);
+      for (let i = 0; i < userProfile.activeReservations.length; i++) {
+        const reservationId = userProfile.activeReservations[i];
+        const reservation: LockpodReservation | null =
+          await getReservation(reservationId);
 
-      if (selectedLockpod) {
-        setReservedByUser(checkUserHasReservation(selectedLockpod.id));
+        if (reservation) {
+          setActiveReservations((oldArray) => [...oldArray, reservation]);
+        }
       }
-
-      console.log("User's active reservations: ", activeReservations);
     };
 
     fetchUserReservations();

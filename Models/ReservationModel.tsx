@@ -67,11 +67,7 @@ export class LockpodReservation {
 
     // remove it from active reservations in the userProfile
     const removingIndex = userProfile.activeReservations.indexOf(this.id);
-    userProfile.activeReservations.splice(removingIndex, removingIndex);
-
-    if (userProfile.activeReservations.length == 1) {
-      userProfile.activeReservations = [];
-    }
+    userProfile.activeReservations.splice(removingIndex, 1);
 
     userProfile.reservationHistory.push(this.id);
     await userProfile.saveChangesToDataBase();

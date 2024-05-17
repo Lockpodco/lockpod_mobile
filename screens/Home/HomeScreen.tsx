@@ -6,6 +6,13 @@ import { Constants } from "../../components/constants";
 
 // context
 import { useUserProfileContext } from "../../stores/UserProfileContext";
+import {
+  useLockPodsContext,
+  UpdateLockPodsActionType,
+} from "../../stores/LockPodsContext";
+
+// services
+import { fetchLockpods } from "../../services/LockpodService";
 
 // screens
 import MapViewComponent from "./MapViewComponent";
@@ -14,8 +21,25 @@ import ReservationsScreen from "./ReservationsScreen";
 // MARK: HomeScreen
 const HomeScreen = ({ navigation }: { navigation: any }) => {
   const { userProfile, profileDispatch } = useUserProfileContext();
+  const { lockPods, lockPodsDispatch } = useLockPodsContext();
 
   const [onMapScreen, setOnMapScreen] = useState(false);
+
+  // MARK: Init
+  useEffect(() => {
+    async function fetch() {
+      const pods = await fetchLockpods();
+      lockPodsDispatch!({
+        type: UpdateLockPodsActionType.setLockPods,
+        updatedLockPods: pods,
+        updatedLockPod: undefined,
+      });
+    }
+
+    if (lockPods.length == 0) {
+      fetch();
+    }
+  }, [lockPods]);
 
   // MARK: Styles
   const styles = StyleSheet.create({

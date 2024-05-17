@@ -9,8 +9,14 @@ import {
 } from "../../services/ReservationService";
 
 // context
-import { useUserProfileContext } from "../../stores/UserProfileContext";
-import { useLockPodsContext } from "../../stores/LockPodsContext";
+import {
+  UpdateUserProfileActionType,
+  useUserProfileContext,
+} from "../../stores/UserProfileContext";
+import {
+  UpdateLockPodsActionType,
+  useLockPodsContext,
+} from "../../stores/LockPodsContext";
 import { LockpodReservation } from "../../Models/ReservationModel";
 import { LockPod } from "../../Models/LockPodModel";
 
@@ -39,9 +45,26 @@ const ReservationsScreen = () => {
     if (activeReservations.length == 0) {
       fetchReservations();
     }
-  }, []);
+  }, [userProfile]);
 
   //   MARK: Methods
+  async function handleCancel(reservation: LockpodReservation) {
+    await reservation.cancelReservation(userProfile, "cancel");
+    // refresh the app state
+
+    const filter = lockPods.filter((lockpod) => {
+      return lockpod.id == reservation.lockpod_id;
+    });
+
+    const updatedLockpod = filter[0];
+    updatedLockpod.isReserved = false;
+
+    lockPodsDispatch!({
+      type: UpdateLockPodsActionType.updateLockPod,
+      updatedLockPods: undefined,
+      updatedLockPod: updatedLockpod,
+    });
+  }
 
   // MARK: Components
   const ReservationView = ({
@@ -57,7 +80,7 @@ const ReservationsScreen = () => {
           setLockpod(pod);
         }
       }
-    });
+    }, []);
 
     const styles = StyleSheet.create({
       reservationContainer: {
@@ -91,7 +114,7 @@ const ReservationsScreen = () => {
 
             <Button
               onPress={() => {
-                reservation.cancelReservation(userProfile, "cancel");
+                handleCancel(reservation);
               }}
               title={"Cancel Reservation"}
             />

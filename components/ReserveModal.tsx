@@ -18,6 +18,7 @@ import {
   createReservation,
   endReservation,
   getReservation,
+  getUserReservations,
 } from "../services/ReservationService";
 
 // Context & Models
@@ -55,37 +56,34 @@ const ReserveModal = ({
   const [activeReservations, setActiveReservations] = useState<
     LockpodReservation[]
   >([]);
-  const [selectedLockpod, setSelectedLockpod] = useState<LockPod | null>(
-    lockpod
-  );
+  const [selectedLockpod, setSelectedLockpod] = useState<LockPod>(lockpod);
 
   // MARK: Init
   useEffect(() => {
-    // this gets all the active reservations associated with the currentUser
-    // and stores them in the activeReservations variable
+    // Gets all the active reservations associated with the current user and stores them
+    // in activeReservations
     const fetchUserReservations = async () => {
-      setActiveReservations([]);
+      const fetchedReservations: LockpodReservation[] =
+        await getUserReservations(userId);
 
-      for (let i = 0; i < userProfile.activeReservations.length; i++) {
-        const reservationId = userProfile.activeReservations[i];
-        const reservation: LockpodReservation | null =
-          await getReservation(reservationId);
+      setActiveReservations(fetchedReservations);
 
-        if (reservation) {
-          setActiveReservations((oldArray) => [...oldArray, reservation]);
-        }
+      if (selectedLockpod) {
+        setReservedByUser(checkUserHasReservation(selectedLockpod.id));
       }
-    };
 
-    fetchUserReservations();
+      console.log("User's active reservations: ", activeReservations);
+    };
 
     // TODO: rework status system: (update `isReserved` and `inSession` for the selected lockPod)
     // (update the `activeReservations` list for the currentUser)
-    const updateReservationStatus = async () => {
-      if (selectedLockpod && !selectedLockpod.isReserved) {
+
+    // Updates the reserve button text for the selected lockpod depending on reservation status
+    const updateReserveButton = async () => {
+      if (selectedLockpod) {
         console.log("userId", userId);
         console.log("lockpodId", selectedLockpod.id);
-        // await fetchReservation();
+
         // Change button text
         if (reservedByUser) {
           setReserveButtonText("Cancel");
@@ -99,7 +97,8 @@ const ReserveModal = ({
         }
       }
     };
-    // updateReservationStatus();
+    fetchUserReservations();
+    updateReserveButton();
   }, [selectedLockpod, reservedByUser]);
 
   useEffect(() => {
@@ -113,7 +112,7 @@ const ReserveModal = ({
   }, [visible]);
 
   // MARK: Convenience Functions
-  function checkUserHasReservation(lockpodId: number): Boolean {
+  function checkUserHasReservation(lockpodId: number): boolean {
     const filtered = activeReservations.filter((reservation) => {
       return reservation.lockpod_id == lockpodId;
     });
@@ -130,11 +129,11 @@ const ReserveModal = ({
       );
       return;
     }
-    // create the reservation
+    // create the reservation (15 minutes by default)
     const reservationId: number | undefined = await createReservation(
       userProfile.user_id,
       selectedLockpod!.id,
-      45
+      15
     );
 
     if (reservationId) {
@@ -145,6 +144,8 @@ const ReserveModal = ({
       // update the status of the lockpod
       updateLockPodStatus(selectedLockpod!.id, true, false);
     }
+
+    // Should navigate to a reservation screen with the timer (TODO later)
 
     onModalClose();
   };
@@ -159,6 +160,29 @@ const ReserveModal = ({
     // handlePictureUnSelect();
   };
 
+  // MARK: handleCancel
+  const handleCancel = async () => {
+    const reservation = activeReservations.find(
+      (reservation) => reservation.lockpod_id === selectedLockpod.id
+    );
+
+    if (reservation) {
+      // TODO: Call cancelReservation to cancel the reservation with the currently selected lockpod
+      // reservation.cancelReservation(userProfile, );
+      console.log("Reservation: ", reservation);
+      console.log(
+        `Cancelled Reservation for User ${userId} and Lockpod ${selectedLockpod.id}!`
+      );
+
+      // // Update reserve button text and set reservedByUser state to false
+      // setReserveButtonText("Reserve");
+      // setReservedByUser(false);
+    }
+
+    onModalClose();
+    handlePictureUnSelect();
+  };
+
   const handleDirections = () => {
     if (selectedLockpod) {
       const destination = `${selectedLockpod.latitude},${selectedLockpod.longitude}`;
@@ -168,8 +192,7 @@ const ReserveModal = ({
     }
   };
 
-  // MARK: handlePictureSelect
-  // TODO: rework this function / what does this function do?
+  // MARK: handlePictureSelect - set selectedLockpod to be the picture clicked on in the carousel
   const handlePictureSelect = (lockpod: LockPod) => {
     setSelectedLockpod(lockpod);
 
@@ -236,7 +259,7 @@ const ReserveModal = ({
                     ? styles.button
                     : styles.nonClickableButton,
                 ]}
-                onPress={handleReserve}
+                onPress={reservedByUser ? handleCancel : handleReserve}
                 disabled={selectedLockpod.isReserved}
               >
                 <Text style={styles.buttonText}>{reserveButtonText}</Text>

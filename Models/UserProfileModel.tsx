@@ -10,6 +10,7 @@ export class UserProfile {
   activeReservations: number[] = [];
   activeSessions: number[] = [];
   reservationHistory: number[] = [];
+  sessionHistory: number[] = [];
 
   public constructor(
     user_id: number = 0,

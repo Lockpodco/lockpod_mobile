@@ -141,13 +141,14 @@ export const endReservation = async (
   }
 };
 
-const getUserReservations = async (
+// Get all active reservations given an user id
+export const getUserReservations = async (
   userId: number
 ): Promise<LockpodReservation[]> => {
   try {
-    const response = await axios.get(`${API_URL}/reservations`, {
-      params: { userId },
-    });
+    const response = await axios.get(
+      `${API_URL}/reservations?user_id=${userId}`
+    );
     return response.data;
   } catch (error) {
     console.error("Failed to fetch user reservations:", error);

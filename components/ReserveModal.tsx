@@ -20,6 +20,7 @@ import {
   createReservation,
   endReservation,
   getReservation,
+  getUserReservations,
 } from "../services/ReservationService";
 
 // Context & Models
@@ -69,20 +70,19 @@ const ReserveModal = ({
 
   // MARK: Init
   useEffect(() => {
-    // this gets all the active reservations associated with the currentUser
-    // and stores them in the activeReservations variable
+    // Gets all the active reservations associated with the current user and stores them
+    // in activeReservations
     const fetchUserReservations = async () => {
-      setActiveReservations([]);
+      const fetchedReservations: LockpodReservation[] =
+        await getUserReservations(userId);
 
-      for (let i = 0; i < userProfile.activeReservations.length; i++) {
-        const reservationId = userProfile.activeReservations[i];
-        const reservation: LockpodReservation | null =
-          await getReservation(reservationId);
+      setActiveReservations(fetchedReservations);
 
-        if (reservation) {
-          setActiveReservations((oldArray) => [...oldArray, reservation]);
-        }
+      if (selectedLockpod) {
+        setReservedByUser(checkUserHasReservation(selectedLockpod.id));
       }
+
+      console.log("User's active reservations: ", activeReservations);
     };
 
     fetchUserReservations();
@@ -96,7 +96,7 @@ const ReserveModal = ({
   }, [visible]);
 
   // MARK: Convenience Functions
-  function checkUserHasReservation(lockpodId: number): Boolean {
+  function checkUserHasReservation(lockpodId: number): boolean {
     const filtered = activeReservations.filter((reservation) => {
       return reservation.lockpod_id == lockpodId;
     });
@@ -117,11 +117,11 @@ const ReserveModal = ({
       );
       return;
     }
-    // create the reservation
+    // create the reservation (15 minutes by default)
     const reservationId: number | undefined = await createReservation(
       userProfile.user_id,
       selectedLockpod!.id,
-      45
+      15
     );
 
     if (reservationId) {

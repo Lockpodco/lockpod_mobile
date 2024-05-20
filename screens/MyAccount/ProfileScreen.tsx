@@ -61,18 +61,16 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 			marginLeft: 20,
 			flexDirection: "row",
 			gap: 10,
+			alignItems: "center"
 		},
 		right: {
-			marginRight: 10,
+			marginRight: 20,
 			flexDirection: "row",
-		},
-		switch: {
-			width: 44,
-			marginRight: 22,
+			alignItems: "center",
+			gap: 20
 		},
 		arrow: {
-			height: 17,
-			alignSelf: "center",
+			height: 14,
 		},
 		logOutButton: {
 			paddingBottom: Constants.bottomOfPagePadding,
@@ -158,7 +156,6 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 								trackColor={{ false: Constants.secondaryDark, true: Constants.lightAccent }}
 								onValueChange={toggleSwitch}
 								value={isEnabled}
-								style={styles.switch}
 							/>
 						</View>
 					</View>

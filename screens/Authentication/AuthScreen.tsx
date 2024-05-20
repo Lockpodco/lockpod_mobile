@@ -23,7 +23,7 @@ import {
 } from "../../components/Buttons";
 import { useFonts } from "expo-font";
 import AppLoading from "expo-app-loading";
-import { RegularText, SemiBoldText } from "../../components/Text";
+import { MediumText, RegularText, SemiBoldText } from "../../components/Text";
 
 const AuthScreen = ({ navigation }: { navigation: any }) => {
 	// MARK: Vars
@@ -267,7 +267,7 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
 							setSignIn(true);
 						}}
 					/>
-					<SemiBoldText 
+					<SemiBoldText
 						value="-or-"
 						style={styles.center}
 					/>

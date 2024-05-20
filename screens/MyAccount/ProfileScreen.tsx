@@ -49,8 +49,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 			justifyContent: "space-between",
 		},
 		icon: {
-			height: 17,
-			widdth: 17,
+			height: 23,
 			alignSelf: "center",
 		},
 		left: {
@@ -106,7 +105,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 						<View style={styles.left}>
 							<Image 
 								style={styles.icon}
-								source={require("../../assets/mail.png")}
+								source={require("../../assets/lock.png")}
 							/>
 							<MediumText value="Password" style={null} />
 						</View>
@@ -121,7 +120,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 						<View style={styles.left}>
 							<Image 
 								style={styles.icon}
-								source={require("../../assets/mail.png")}
+								source={require("../../assets/phone.png")}
 							/>
 							<MediumText value="Phone" style={null} />
 						</View>
@@ -137,7 +136,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 						<View style={styles.left}>
 							<Image 
 								style={styles.icon}
-								source={require("../../assets/mail.png")}
+								source={require("../../assets/bell.png")}
 							/>
 							<MediumText value="Notifications" style={null} />
 						</View>
@@ -152,7 +151,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 						<View style={styles.left}>
 							<Image 
 								style={styles.icon}
-								source={require("../../assets/mail.png")}
+								source={require("../../assets/legal.png")}
 							/>
 							<MediumText value="Privacy & Legal" style={null} />
 						</View>

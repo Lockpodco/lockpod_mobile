@@ -70,6 +70,10 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 			width: 44,
 			marginRight: 22,
 		},
+		arrow: {
+			height: 17,
+			alignSelf: "center",
+		},
 		logOutButton: {
 			paddingBottom: Constants.bottomOfPagePadding,
 		},
@@ -100,7 +104,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 						<View style={styles.right}>
 							<MediumText value="name@gmail.com" style={null} />
 							<Image
-								style={styles.icon}
+								style={styles.arrow}
 								source={require("../../assets/arrowRight.png")}
 							/>
 						</View>
@@ -120,7 +124,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 						</View>
 						<View style={styles.right}>
 							<Image
-								style={styles.icon}
+								style={styles.arrow}
 								source={require("../../assets/arrowRight.png")}
 							/>
 						</View>
@@ -136,7 +140,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 						<View style={styles.right}>
 							<MediumText value="000-000-0000" style={null} />
 							<Image
-								style={styles.icon}
+								style={styles.arrow}
 								source={require("../../assets/arrowRight.png")}
 							/>
 						</View>
@@ -168,7 +172,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 						</View>
 						<View style={styles.right}>
 							<Image
-								style={styles.icon}
+								style={styles.arrow}
 								source={require("../../assets/arrowRight.png")}
 							/>
 						</View>

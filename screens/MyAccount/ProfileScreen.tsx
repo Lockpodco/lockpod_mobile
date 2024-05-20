@@ -8,6 +8,7 @@ import {
 	Button,
 	Alert,
 	Pressable,
+	Switch,
 } from "react-native";
 
 import { windowHeight, windowWidth } from "../../Constants";
@@ -24,6 +25,10 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 	const [confirmNewPass, setConfirmNewPass] = React.useState("");
 
 	const { userProfile, profileDispatch } = useUserProfileContext();
+
+	const [isEnabled, setIsEnabled] = React.useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
 
 	const styles = StyleSheet.create({
 		container: {
@@ -61,6 +66,10 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 			marginRight: 10,
 			flexDirection: "row",
 		},
+		switch: {
+			width: 44,
+			marginRight: 22,
+		},
 		logOutButton: {
 			paddingBottom: Constants.bottomOfPagePadding,
 		},
@@ -82,7 +91,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 				<View style={styles.userDetailsContainer}>
 					<Pressable style={styles.userDetails}>
 						<View style={styles.left}>
-							<Image 
+							<Image
 								style={styles.icon}
 								source={require("../../assets/mail.png")}
 							/>
@@ -103,7 +112,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 						}}
 					>
 						<View style={styles.left}>
-							<Image 
+							<Image
 								style={styles.icon}
 								source={require("../../assets/lock.png")}
 							/>
@@ -118,7 +127,7 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 					</Pressable>
 					<Pressable style={styles.userDetails}>
 						<View style={styles.left}>
-							<Image 
+							<Image
 								style={styles.icon}
 								source={require("../../assets/phone.png")}
 							/>
@@ -134,22 +143,24 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 					</Pressable>
 					<View style={styles.userDetails}>
 						<View style={styles.left}>
-							<Image 
+							<Image
 								style={styles.icon}
 								source={require("../../assets/bell.png")}
 							/>
 							<MediumText value="Notifications" style={null} />
 						</View>
 						<View style={styles.right}>
-							<Image
-								style={styles.icon}
-								source={require("../../assets/arrowRight.png")}
+							<Switch
+								trackColor={{ false: Constants.secondaryDark, true: Constants.lightAccent }}
+								onValueChange={toggleSwitch}
+								value={isEnabled}
+								style={styles.switch}
 							/>
 						</View>
 					</View>
 					<Pressable style={styles.userDetails}>
 						<View style={styles.left}>
-							<Image 
+							<Image
 								style={styles.icon}
 								source={require("../../assets/legal.png")}
 							/>

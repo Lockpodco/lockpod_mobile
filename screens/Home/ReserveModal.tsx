@@ -11,27 +11,26 @@ import {
   Alert,
   Button,
 } from "react-native";
-import { Constants } from "./constants";
-import images from "./images";
+import { CheckoutScreen } from "../Payment/PaymentScreen";
+import { Constants } from "../../components/constants";
+import images from "../../components/images";
 
 // Services
-import { updateLockPodStatus } from "../services/LockpodService";
+import { updateLockPodStatus } from "../../services/LockpodService";
 import {
   createReservation,
-  endReservation,
   getReservation,
-  getUserReservations,
-} from "../services/ReservationService";
+} from "../../services/ReservationService";
 
 // Context & Models
-import { UserProfile } from "../Models/UserProfileModel";
-import { LockPod } from "../Models/LockPodModel";
-import { LockpodReservation } from "../Models/ReservationModel";
-import { useUserProfileContext } from "../stores/UserProfileContext";
+import { UserProfile } from "../../Models/UserProfileModel";
+import { LockPod } from "../../Models/LockPodModel";
+import { LockpodReservation } from "../../Models/ReservationModel";
+import { useUserProfileContext } from "../../stores/UserProfileContext";
 import {
   UpdateLockPodsActionType,
   useLockPodsContext,
-} from "../stores/LockPodsContext";
+} from "../../stores/LockPodsContext";
 
 // MARK: Modal
 const ReserveModal = ({
@@ -269,6 +268,7 @@ const ReserveModal = ({
             />
           </View>
         </View>
+        <CheckoutScreen />
       </View>
     );
   };
@@ -293,22 +293,6 @@ const ReserveModal = ({
           <View style={styles.reservationPreviewContainer}>
             {selectedLockpod && (
               <ReservationPreview lockpod={selectedLockpod} />
-              // <View style={styles.buttonContainer}>
-
-              //   <Text>{`${selectedLockpod.name} (${selectedLockpod.id})`}</Text>
-              //   <Pressable
-              //     style={[
-              //       styles.button,
-              //       clickable || reservedByUser
-              //         ? styles.button
-              //         : styles.nonClickableButton,
-              //     ]}
-              //     onPress={handleReserve}
-              //     disabled={selectedLockpod.isReserved}
-              //   >
-              //     <Text style={styles.buttonText}>{reserveButtonText}</Text>
-              //   </Pressable>
-              // </View>
             )}
           </View>
         </View>

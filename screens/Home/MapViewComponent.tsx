@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { View, Text } from "react-native";
-import ReserveModal from "../../components/ReserveModal";
+import ReserveModal from "./ReserveModal";
 
 // models
 import { useLockPodsContext } from "../../stores/LockPodsContext";

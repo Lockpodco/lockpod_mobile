@@ -23,7 +23,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
   const { userProfile, profileDispatch } = useUserProfileContext();
   const { lockPods, lockPodsDispatch } = useLockPodsContext();
 
-  const [onMapScreen, setOnMapScreen] = useState(false);
+  const [onMapScreen, setOnMapScreen] = useState(true);
 
   // MARK: Init
   useEffect(() => {

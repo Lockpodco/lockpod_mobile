@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
-import { reserveLockpod, endReservation } from "../services/ReservationService";
+import { View } from "react-native";
+import ReserveModal from "./ReserveModal";
 
+// services
 import { fetchLockpods, updateLockPodStatus } from "../services/LockpodService";
 
+// models
 import {
   useLockPodsContext,
   UpdateLockPodsActionType,
@@ -19,8 +22,13 @@ const UCSD_REGION = {
   longitudeDelta: 0.03,
 };
 
-const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
+const MapViewComponent = ({ navigation }: { navigation: any }) => {
+  const initialRegion = UCSD_REGION;
+
   const { lockPods, lockPodsDispatch } = useLockPodsContext();
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedLockpod, setSelectedLockpod] = useState<LockPod | null>(null);
 
   useEffect(() => {
     async function fetch() {
@@ -31,49 +39,43 @@ const MapViewComponent = ({ initialRegion = UCSD_REGION }) => {
         updatedLockPod: undefined,
       });
     }
-
     fetch();
   }, []);
 
-  const handleCalloutpressed = async (lockPod: LockPod) => {
-    await updateLockPodStatus(lockPod.id, true, false);
+  const handleCalloutPressed = (lockpod: LockPod) => {
+    setSelectedLockpod(lockpod);
+    setModalVisible(true);
+  };
 
-    // // chagning the status of the pod since its now reserved/unreserved
-    // if (lockpod.status == "available") {
-    //   lockpod.status = "unavailable";
-    // } else {
-    //   lockpod.status = "available";
-    // }
-    // const fakeUser = {
-    //   userId: 2,
-    //   lockpodId: lockpod.id,
-    //   status: lockpod.status,
-    // };
-    // //this is reversed cause we changed status at the top
-    // if (lockpod.status == "available") {
-    //   endReservation(fakeUser);
-    // } else {
-    //   reserveLockpod(fakeUser);
-    // }
-    // //setting the lockpods again after changeing the status to rerender map
-    // setLockpods([...lockpods]);
+  const handleModalClose = () => {
+    setModalVisible(false);
+    setSelectedLockpod(null);
   };
 
   return (
-    <MapView initialRegion={initialRegion} style={{ flex: 1 }}>
-      {lockPods.map((lockpod) => (
-        <Marker
-          key={lockpod.id}
-          coordinate={{
-            latitude: lockpod.latitude,
-            longitude: lockpod.longitude,
-          }}
-          title={`Lockpod ${lockpod.id}`}
-          description={lockpod.name}
-          onCalloutPress={() => handleCalloutpressed(lockpod)}
-        ></Marker>
-      ))}
-    </MapView>
+    <View style={{ flex: 1 }}>
+      <MapView initialRegion={initialRegion} style={{ flex: 1 }}>
+        {lockPods.map((lockpod) => (
+          <Marker
+            key={lockpod.id}
+            coordinate={{
+              latitude: lockpod.latitude,
+              longitude: lockpod.longitude,
+            }}
+            title={lockpod.name}
+            description={"" + lockpod.id}
+            onPress={() => handleCalloutPressed(lockpod)}
+          />
+        ))}
+      </MapView>
+      <ReserveModal
+        visible={modalVisible}
+        lockpods={lockPods}
+        lockpod={selectedLockpod!}
+        onModalClose={handleModalClose}
+        navigation={navigation}
+      />
+    </View>
   );
 };
 

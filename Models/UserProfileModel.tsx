@@ -7,6 +7,10 @@ export class UserProfile {
   first_name: string;
   last_name: string;
   username: string;
+  activeReservations: number[] = [];
+  activeSessions: number[] = [];
+  reservationHistory: number[] = [];
+  sessionHistory: number[] = [];
 
   public constructor(
     user_id: number = 0,
@@ -20,9 +24,8 @@ export class UserProfile {
     this.username = username;
   }
 
-  // when a user updates the profile using the dispatch function,
-  // this will be called on the new UserProfile
-  // which will 'push the changes' to the remote Database
+  // this pushes the changeson a given userProfile object
+  // to the remote Database
   async saveChangesToDataBase() {
     await updateUserProfile(this);
   }
@@ -38,17 +41,21 @@ const updateUserProfile = async (updatedProfile: UserProfile) => {
     "attempting to update userProfile with id: " + updatedProfile.user_id
   );
 
+  const body = JSON.stringify({
+    user_id: updatedProfile.user_id,
+    firstName: updatedProfile.first_name,
+    lastName: updatedProfile.last_name,
+    userName: updatedProfile.username,
+    activeReservations: updatedProfile.activeReservations.toString(),
+    reservationHistory: updatedProfile.reservationHistory.toString(),
+  });
+
   const response = await fetch(`${API_URL}/userProfiles/update`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      user_id: updatedProfile.user_id,
-      firstName: updatedProfile.first_name,
-      lastName: updatedProfile.last_name,
-      userName: updatedProfile.username,
-    }),
+    body: body,
   });
 
   checkResponse(

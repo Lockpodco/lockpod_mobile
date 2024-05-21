@@ -8,20 +8,30 @@ import {
   Linking,
   ScrollView,
   Image,
+  Alert,
+  Button,
 } from "react-native";
-import { windowWidth, windowHeight } from "../Constants";
-import { useNavigation } from "@react-navigation/native";
+import { Constants } from "./constants";
+import images from "./images";
 
 // Services
 import { updateLockPodStatus } from "../services/LockpodService";
-// import endReservation, {
-//   createReservation,
-// } from "../services/ReservationService";
+import {
+  createReservation,
+  endReservation,
+  getReservation,
+  getUserReservations,
+} from "../services/ReservationService";
 
 // Context & Models
 import { UserProfile } from "../Models/UserProfileModel";
 import { LockPod } from "../Models/LockPodModel";
+import { LockpodReservation } from "../Models/ReservationModel";
 import { useUserProfileContext } from "../stores/UserProfileContext";
+import {
+  UpdateLockPodsActionType,
+  useLockPodsContext,
+} from "../stores/LockPodsContext";
 
 // MARK: Modal
 const ReserveModal = ({
@@ -38,138 +48,229 @@ const ReserveModal = ({
   navigation: any;
 }) => {
   // MARK: Vars
-  const sortedLockpods = lockpods.sort((a, b) => a.id - b.id); // Sorted for consistency in ordering for now
-
   const { userProfile, profileDispatch } = useUserProfileContext();
+  const { lockPods, lockPodsDispatch } = useLockPodsContext();
+
   const [clickable, setClickable] = useState(true);
-  const [pictureSelected, setPictureSelected] = useState(false);
   const [reservedByUser, setReservedByUser] = useState(false);
   const [reserveButtonText, setReserveButtonText] = useState("Reserve");
   const userId = userProfile["user_id"];
-  const [selectedPictureIndex, setSelectedPictureIndex] = useState(null);
-  const [selectedLockpod, setSelectedLockpod] = useState(lockpod); // Set default as the originally selected lockpod (the pin first pressed on)
+
+  // const [pictureSelected, setPictureSelected] = useState(false);
+
+  const [activeReservations, setActiveReservations] = useState<
+    LockpodReservation[]
+  >([]);
+  const [selectedLockpod, setSelectedLockpod] = useState<LockPod | null>(
+    lockpod
+  );
+  const [selectedLockpodIndex, setSelectedLockpodIndex] = useState<
+    number | null
+  >(null);
 
   // MARK: Init
   useEffect(() => {
-    const fetchReservation = async () => {
-      if (selectedLockpod) {
-        const isReserved = selectedLockpod.isReserved;
-        console.log("Reserved by user:", isReserved);
-        setReservedByUser(isReserved);
+    // Gets all the active reservations associated with the current user and stores them
+    // in activeReservations
+    const fetchUserReservations = async () => {
+      setActiveReservations([]);
+
+      for (let i = 0; i < userProfile.activeReservations.length; i++) {
+        const reservationId = userProfile.activeReservations[i];
+        const reservation: LockpodReservation | null =
+          await getReservation(reservationId);
+
+        if (reservation) {
+          setActiveReservations((oldArray) => [...oldArray, reservation]);
+        }
       }
     };
 
-    // MARK: Methods
-    // TODO: rework status system: (update `isReserved` and `inSession` for the selected lockPod)
-    // (update the `activeReservations` list for the currentUser)
-    // const updateReservationStatus = async () => {
-    //   if (selectedLockpod && selectedLockpod.status) {
-    //     console.log("userId", userId);
-    //     console.log("lockpodId", selectedLockpod.id);
-    //     await fetchReservation();
-    //     // Change button text
-    //     if (reservedByUser) {
-    //       setReserveButtonText("Cancel");
-    //     } else {
-    //       setReserveButtonText("Reserve");
-    //       if (selectedLockpod.status == "unavailable") {
-    //         setClickable(false);
-    //       } else {
-    //         setClickable(true);
-    //       }
-    //     }
-    //   }
-    // };
-    // updateReservationStatus();
-  }, [selectedLockpod, reservedByUser]);
+    fetchUserReservations();
+  }, []);
 
   useEffect(() => {
     if (!visible) {
-      // Reset picture selection when modal is closed
-      setPictureSelected(false);
-      setSelectedPictureIndex(null);
+      setSelectedLockpod(null);
+      setSelectedLockpodIndex(null);
     }
   }, [visible]);
 
-  // MARK: handleReserve
-  const handleReserve = () => {
-    // Navigate to ReserveScreen with lockpod information
-    navigation.navigate("Reserve", {
-      lockpod: selectedLockpod,
-      userId: userId,
+  // MARK: Convenience Functions
+  function checkUserHasReservation(lockpodId: number): boolean {
+    const filtered = activeReservations.filter((reservation) => {
+      return reservation.lockpod_id == lockpodId;
     });
-    // Close the modal
-    onModalClose();
-    handlePictureUnSelect();
-  };
+    return filtered.length != 0;
+  }
 
-  // MARK: handleCancel
-  const handleCancel = async () => {
-    console.log(
-      `Cancelled Reservation for User ${userId} and Lockpod ${selectedLockpod.id}!`
+  function checkUserHasSession(lockpodId: number): Boolean {
+    return false;
+  }
+
+  // MARK: handleReserve
+  const handleReserve = async () => {
+    const reservedByUser = checkUserHasReservation(selectedLockpod!.id);
+    if (reservedByUser) {
+      Alert.alert(
+        "Already Reserved",
+        "you already have an active reservation for this pod!"
+      );
+      return;
+    }
+    // create the reservation (15 minutes by default)
+    const reservationId: number | undefined = await createReservation(
+      userProfile.user_id,
+      selectedLockpod!.id,
+      15
     );
 
-    const user = {
-      userId: userId,
-      lockpodId: selectedLockpod.id,
-    };
+    if (reservationId) {
+      // update the userProfile object
+      userProfile.activeReservations.push(reservationId);
+      await userProfile.saveChangesToDataBase();
 
-    // await endReservation(user);
-
-    // Update lockpod status in database to show updated status in map view
-    await updateLockPodStatus(selectedLockpod.id, false, false);
-
-    // Update reserve button text and set reservedByUser state to false
-    setReserveButtonText("Reserve");
-    setReservedByUser(false);
+      // update the status of the lockpod
+      selectedLockpod!.isReserved = true;
+      selectedLockpod!.inSession = false;
+      updateLockPodStatus(selectedLockpod!.id, true, false);
+      // trigger a UI update
+      lockPodsDispatch!({
+        type: UpdateLockPodsActionType.updateLockPod,
+        updatedLockPods: undefined,
+        updatedLockPod: selectedLockpod!,
+      });
+    }
 
     onModalClose();
-    handlePictureUnSelect();
-  };
-
-  // MARK: handleUnlock
-  const handleUnlock = () => {
-    console.log("wow this is finally running!");
-    // createReservation(userProfile.user_id, selectedLockpod.id, 45);
-
-    // // Navigate to ReserveScreen with lockpod information
-    // navigation.navigate("ScanQR");
-    // // Close the modal
-    // onModalClose();
-    // handlePictureUnSelect();
   };
 
   const handleDirections = () => {
-    const destination = `${selectedLockpod.latitude},${selectedLockpod.longitude}`;
-    Linking.openURL(
-      `https://www.google.com/maps/dir/?api=1&destination=${destination}`
-    );
-  };
-
-  // MARK: handlePictureSelect
-  // TODO: rework this function / what does this function do?
-  const handlePictureSelect = (lockpod: LockPod) => {
-    console.log("Selected: ", lockpod.id);
-    setPictureSelected(true);
-    setSelectedLockpod(lockpod);
-    // setSelectedPictureIndex(lockpod.id);
-    //also returns the name of the lockpod?
+    if (selectedLockpod) {
+      const destination = `${selectedLockpod.latitude},${selectedLockpod.longitude}`;
+      Linking.openURL(
+        `https://www.google.com/maps/dir/?api=1&destination=${destination}`
+      );
+    }
   };
 
   const handlePictureUnSelect = () => {
-    setPictureSelected(false);
-    setSelectedPictureIndex(null);
+    // setPictureSelected(false);
+    // setSelectedPictureIndex(null);
+    setSelectedLockpod(null);
   };
 
-  const renderPictures = () => {
-    return sortedLockpods.map((lockpod, index) => (
-      <Pressable key={lockpod.id} onPress={() => handlePictureSelect(lockpod)}>
-        <Image
-          source={require("../assets/adaptive-icon.png")}
-          style={styles.picture}
-        />
+  // MARK: LockPodPreviews
+  const LockPodPreview = ({
+    lockpod,
+    index,
+  }: {
+    lockpod: LockPod;
+    index: number;
+  }) => {
+    function selectLockpod() {
+      setSelectedLockpod(lockpod);
+      setSelectedLockpodIndex(index);
+    }
+
+    const localStyles = StyleSheet.create({
+      container: {
+        flex: 1,
+        alignContent: "space-evenly",
+        alignItems: "center",
+        justifyContent: "space-evenly",
+        backgroundColor:
+          index == selectedLockpodIndex ? Constants.secondaryLight : "clear",
+        borderRadius: Constants.defaultCornerRadius,
+        padding: 7,
+        margin: 5,
+      },
+    });
+
+    const icon =
+      lockpod.isReserved || lockpod.inSession
+        ? images.lockpodPreviews.unavailable
+        : images.lockpodPreviews.available;
+
+    return (
+      <Pressable style={localStyles.container} onPress={() => selectLockpod()}>
+        <Image source={icon} style={styles.picture} />
+        <Text>{lockpod.name}</Text>
       </Pressable>
+    );
+  };
+
+  const LockPodPreviews = () => {
+    return lockpods.map((lockpod, index) => (
+      <LockPodPreview key={index} lockpod={lockpod} index={index} />
     ));
+  };
+
+  // MARK: ReservationPreview
+  const ReservationPreview = ({ lockpod }: { lockpod: LockPod }) => {
+    function getMessage(): string {
+      if (checkUserHasReservation(lockpod.id)) {
+        return "You already have an active reservation for this pod";
+      } else if (checkUserHasSession(lockpod.id)) {
+        return "You are in an active session with this pod";
+      } else if (lockpod.inSession || lockpod.isReserved) {
+        return "this lockPod is in use";
+      }
+      return "";
+    }
+
+    const localStyles = StyleSheet.create({
+      directionContainer: {
+        width: "100%",
+        flexDirection: "column",
+        alignItems: "flex-start",
+        marginBottom: 20,
+      },
+      warningText: {
+        color: "red",
+        fontSize: 15,
+        marginBottom: 10,
+      },
+      horizontalContainer: {
+        flexDirection: "row",
+      },
+      primaryButton: {
+        flex: 1,
+        backgroundColor: Constants.secondaryLight,
+        borderRadius: Constants.defaultCornerRadius,
+        color: Constants.baseDark,
+        margin: 5,
+      },
+    });
+
+    return (
+      <View style={localStyles.directionContainer}>
+        <View>
+          <Text style={localStyles.warningText}>{getMessage()}</Text>
+        </View>
+        {/* <Pressable style={[styles.button]} onPress={handleDirections}>
+          <Text style={styles.buttonText}>Get Directions</Text>
+        </Pressable> */}
+        <View style={localStyles.horizontalContainer}>
+          <View style={localStyles.primaryButton}>
+            <Button
+              title={"reserve"}
+              onPress={() => {
+                handleReserve();
+              }}
+            />
+          </View>
+          <View style={localStyles.primaryButton}>
+            <Button
+              title={"unlock"}
+              onPress={() => {
+                handleReserve();
+              }}
+            />
+          </View>
+        </View>
+      </View>
+    );
   };
 
   // MARK: Body
@@ -183,63 +284,33 @@ const ReserveModal = ({
     >
       <Pressable onPress={onModalClose} style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
-          {/* Directions Section */}
-          <View style={styles.directionContainer}>
-            <Text style={styles.directionTitle}>Directions</Text>
-            <Pressable style={[styles.button]} onPress={handleDirections}>
-              <Text style={styles.buttonText}>Get Directions</Text>
-            </Pressable>
+          <Text style={styles.modalTitle}>Reserve & Unlock Lockpod</Text>
+
+          <View style={styles.scrollContainer}>
+            <ScrollView horizontal={true}>{LockPodPreviews()}</ScrollView>
           </View>
 
-          {/* Picture List Section */}
-          <ScrollView
-            horizontal={true}
-            // contentContainerStyle={styles.pictureListContainer}
-          >
-            {renderPictures()}
-          </ScrollView>
+          <View style={styles.reservationPreviewContainer}>
+            {selectedLockpod && (
+              <ReservationPreview lockpod={selectedLockpod} />
+              // <View style={styles.buttonContainer}>
 
-          {/* Reserve and Unlock buttons (conditionally rendered) */}
-          {pictureSelected && (
-            <View style={styles.buttonContainer}>
-              <Image
-                source={require("../assets/adaptive-icon.png")}
-                style={styles.picture}
-              />
-              <Pressable
-                style={[
-                  styles.button,
-                  clickable || reservedByUser
-                    ? styles.button
-                    : styles.nonClickableButton,
-                ]}
-                onPress={reservedByUser ? handleCancel : handleReserve}
-                disabled={
-                  selectedLockpod &&
-                  // selectedLockpod.status == "unavailable" &&
-                  !reservedByUser
-                }
-              >
-                <Text style={styles.buttonText}>{reserveButtonText}</Text>
-              </Pressable>
-              <Pressable
-                style={[
-                  styles.button,
-                  clickable || reservedByUser
-                    ? styles.button
-                    : styles.nonClickableButton,
-                ]}
-                onPress={handleUnlock}
-                // disabled={
-                // selectedLockpod &&
-                // selectedLockpod.status == "unavailable" &&
-                // !reservedByUser
-                // }
-              >
-                <Text style={styles.buttonText}>Unlock</Text>
-              </Pressable>
-            </View>
-          )}
+              //   <Text>{`${selectedLockpod.name} (${selectedLockpod.id})`}</Text>
+              //   <Pressable
+              //     style={[
+              //       styles.button,
+              //       clickable || reservedByUser
+              //         ? styles.button
+              //         : styles.nonClickableButton,
+              //     ]}
+              //     onPress={handleReserve}
+              //     disabled={selectedLockpod.isReserved}
+              //   >
+              //     <Text style={styles.buttonText}>{reserveButtonText}</Text>
+              //   </Pressable>
+              // </View>
+            )}
+          </View>
         </View>
       </Pressable>
     </Modal>
@@ -255,31 +326,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContainer: {
-    width: windowWidth * 0.5,
-    height: windowHeight * 0.5, // Adjust the height to cover half of the screen
-    paddingHorizontal: 20,
+    flex: 0.55,
+    width: "100%",
+    flexDirection: "column",
+    paddingLeft: 10,
     paddingTop: 20,
     paddingBottom: 20,
-    borderRadius: 20,
-    backgroundColor: "white",
-    alignItems: "center",
-  },
-  directionContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  directionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginRight: 10,
+    borderRadius: Constants.defaultCornerRadius,
+    backgroundColor: Constants.baseLight,
+    alignItems: "flex-start",
   },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
+    paddingLeft: 10,
   },
-  buttonContainer: {
+  scrollContainer: {
+    flex: 0.45,
+  },
+  reservationPreviewContainer: {
+    flex: 0.55,
     flexDirection: "column",
     justifyContent: "space-between",
     marginTop: 20,

@@ -13,7 +13,7 @@ import { StripeProvider } from "@stripe/stripe-react-native";
 // pages
 import AuthScreen from "./screens/Authentication/AuthScreen";
 import ProfileCreationScreen from "./screens/Authentication/ProfileCreationScreen";
-import HomeScreen from "./screens/HomeScreen";
+import HomeScreen from "./screens/Home/HomeScreen";
 import ScanQR from "./screens/ScanQR";
 import ProfileScreen from "./screens/MyAccount/ProfileScreen";
 import ActivityScreen from "./screens/MyAccount/ActivityScreen";
@@ -22,7 +22,6 @@ import SubscriptionsScreen from "./screens/Payment/SubscriptionsScreen";
 import UserGuide from "./screens/Help/UserGuideScreen";
 import SupportScreen from "./screens/Help/SupportScreen";
 import ChangePasswordScreen from "./screens/MyAccount/ChangePasswordScreen";
-import { Button } from "react-native";
 
 import { CheckoutScreen } from "./screens/Payment/PaymentScreen";
 

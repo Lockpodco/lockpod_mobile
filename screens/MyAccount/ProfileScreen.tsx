@@ -42,12 +42,12 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
       fontSize: 30,
     },
     userDetailsContainer: {
-			marginTop: 40,
+      marginTop: 40,
       gap: 15,
     },
     userDetails: {
       flexDirection: "row",
-			justifyContent: "space-between",
+      justifyContent: "space-between",
     },
     left: {
       fontSize: 20,

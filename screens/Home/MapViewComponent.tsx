@@ -1,28 +1,18 @@
 import React, { useEffect, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
-import { View } from "react-native";
-import ReserveModal from "./ReserveModal";
-
-// services
-import {
-  fetchLockpods,
-  updateLockPodStatus,
-} from "../../services/LockpodService";
+import { View, Text } from "react-native";
+import ReserveModal from "../../components/ReserveModal";
 
 // models
-import {
-  useLockPodsContext,
-  UpdateLockPodsActionType,
-} from "../../stores/LockPodsContext";
+import { useLockPodsContext } from "../../stores/LockPodsContext";
 
 import { LockPod } from "../../Models/LockPodModel";
 
 const UCSD_REGION = {
   latitude: 32.8801,
-  //longitude: -117.234,
-  longitude: -117.227, // focused display of ucsd campus
-  latitudeDelta: 0.03, // great zoom level
-  longitudeDelta: 0.03,
+  longitude: -117.237, // focused display of ucsd campus
+  latitudeDelta: 0.02, // great zoom level
+  longitudeDelta: 0.02,
 };
 
 const MapViewComponent = ({ navigation }: { navigation: any }) => {
@@ -32,18 +22,6 @@ const MapViewComponent = ({ navigation }: { navigation: any }) => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedLockpod, setSelectedLockpod] = useState<LockPod | null>(null);
-
-  useEffect(() => {
-    async function fetch() {
-      const pods = await fetchLockpods();
-      lockPodsDispatch!({
-        type: UpdateLockPodsActionType.setLockPods,
-        updatedLockPods: pods,
-        updatedLockPod: undefined,
-      });
-    }
-    fetch();
-  }, []);
 
   const handleCalloutPressed = (lockpod: LockPod) => {
     setSelectedLockpod(lockpod);
@@ -65,8 +43,6 @@ const MapViewComponent = ({ navigation }: { navigation: any }) => {
               latitude: lockpod.latitude,
               longitude: lockpod.longitude,
             }}
-            title={lockpod.name}
-            description={"" + lockpod.id}
             onPress={() => handleCalloutPressed(lockpod)}
           />
         ))}

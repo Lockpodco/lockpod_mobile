@@ -15,7 +15,7 @@ import {
 import { fetchLockpods } from "../../services/LockpodService";
 
 // screens
-import MapViewComponent from "../Authentication/MapViewComponent";
+import MapViewComponent from "./MapViewComponent";
 import ReservationsScreen from "./ReservationsScreen";
 
 // MARK: HomeScreen

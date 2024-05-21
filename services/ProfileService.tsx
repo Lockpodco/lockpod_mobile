@@ -1,9 +1,5 @@
 import { UserProfile } from "../Models/UserProfileModel";
-import {
-  API_URL,
-  checkResponse,
-  handleError,
-} from "../services/ServiceUniversals";
+import { API_URL, checkResponse, handleError } from "./ServiceUniversals";
 
 // MARK: Profile Registration
 // this creates a new, blank user profile, linked to a specific user_id

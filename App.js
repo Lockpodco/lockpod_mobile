@@ -86,7 +86,7 @@ export default function App() {
       <NavigationContainer theme={MyTheme}>
         <LockPodsProvider>
           <UserProfileProvider>
-            <Stack.Navigator initialRouteName="Auth">
+            <Stack.Navigator initialRouteName="Payment">
               <Stack.Screen
                 name="Payment"
                 component={CheckoutScreen}

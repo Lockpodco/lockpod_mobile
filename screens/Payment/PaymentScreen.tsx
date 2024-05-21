@@ -4,10 +4,12 @@ import { WebView } from "react-native-webview";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, PaymentElement, useElements } from "@stripe/react-stripe-js";
 
+import { Constants } from "../../components/constants";
 import { Button, Alert, Text, StyleSheet, View } from "react-native";
 import { Screen } from "react-native-screens";
 
 import { PaymentIntent, useStripe } from "@stripe/stripe-react-native";
+import { TouchableHighlight } from "react-native-gesture-handler";
 
 export const CheckoutScreen = () => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
@@ -75,22 +77,33 @@ export const CheckoutScreen = () => {
     },
 
     button: {
-      flex: 1,
-      // backgroundColor: "red",
+      position: "absolute",
+      top: "50%",
+      width: "100%",
+      height: 75,
+      justifyContent: "center",
+      alignItems: "center",
+
+      color: Constants.baseDark,
+      backgroundColor: Constants.lightAccent,
+      borderRadius: Constants.defaultCornerRadius,
+    },
+
+    buttonText: {
+      fontWeight: "bold",
+      fontSize: 18,
+      textTransform: "uppercase",
     },
   });
 
   // MARK: Body
   return (
-    <Screen style={styles.container}>
-      <Text style={styles.button}>hello!</Text>
-      <View style={styles.button}>
-        <Button
-          disabled={!loading}
-          title="Checkout"
-          onPress={openPaymentSheet}
-        />
-      </View>
-    </Screen>
+    <TouchableHighlight
+      style={styles.button}
+      disabled={!loading}
+      onPress={openPaymentSheet}
+    >
+      <Text style={styles.buttonText}>Checkout</Text>
+    </TouchableHighlight>
   );
 };

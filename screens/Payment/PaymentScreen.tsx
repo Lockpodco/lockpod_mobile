@@ -79,6 +79,8 @@ export const CheckoutScreen = () => {
       justifyContent: "center",
       alignItems: "center",
 
+      marginTop: 7,
+
       color: Constants.baseDark,
       backgroundColor: Constants.lightAccent,
       borderRadius: Constants.defaultCornerRadius,

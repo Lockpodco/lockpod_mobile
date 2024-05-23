@@ -72,9 +72,6 @@ function DrawerNav() {
     </Drawer.Navigator>
   );
 }
-
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 // MARK: Body
 export default function App() {
   return (

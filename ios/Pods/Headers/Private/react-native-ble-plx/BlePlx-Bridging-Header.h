@@ -1,0 +1,1 @@
+../../../../../node_modules/react-native-ble-plx/ios/BlePlx-Bridging-Header.h

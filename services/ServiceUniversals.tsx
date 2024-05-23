@@ -1,4 +1,7 @@
-export const API_URL = "http://localhost:3000";
+const localHostURL = "http://localhost:3000";
+const developmentDeploymentURL = "https://4b5d-128-54-189-155.ngrok-free.app";
+
+export const API_URL = localHostURL;
 
 export const checkResponse = (
   response: Response,

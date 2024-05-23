@@ -1,6 +1,6 @@
 export const Constants = {
   baseDark: "#000000",
-  secondaryDark: "#4948C",
+  secondaryDark: "#262626",
   darkAccent: "#1CB91B",
   baseLight: "#FFFFFF",
   secondaryLight: "#f0f0f0",

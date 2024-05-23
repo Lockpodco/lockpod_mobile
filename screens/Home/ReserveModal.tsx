@@ -50,6 +50,9 @@ const ReserveModal = ({
   const { userProfile, profileDispatch } = useUserProfileContext();
   const { lockPods, lockPodsDispatch } = useLockPodsContext();
 
+  const [isReserving, setIsReserving] = useState(false);
+  const [isUnlocking, setIsUnlocking] = useState(false);
+
   const [clickable, setClickable] = useState(true);
   const [reservedByUser, setReservedByUser] = useState(false);
   const [reserveButtonText, setReserveButtonText] = useState("Reserve");
@@ -92,6 +95,8 @@ const ReserveModal = ({
     if (!visible) {
       setSelectedLockpod(null);
       setSelectedLockpodIndex(null);
+      setIsReserving(false);
+      setIsUnlocking(false);
     }
   }, [visible]);
 
@@ -108,7 +113,7 @@ const ReserveModal = ({
   }
 
   // MARK: handleReserve
-  const handleReserve = async () => {
+  const handleReserve = async (duration: number) => {
     const reservedByUser = checkUserHasReservation(selectedLockpod!.id);
     if (reservedByUser) {
       Alert.alert(
@@ -121,7 +126,7 @@ const ReserveModal = ({
     const reservationId: number | undefined = await createReservation(
       userProfile.user_id,
       selectedLockpod!.id,
-      15
+      duration
     );
 
     if (reservationId) {
@@ -151,12 +156,6 @@ const ReserveModal = ({
         `https://www.google.com/maps/dir/?api=1&destination=${destination}`
       );
     }
-  };
-
-  const handlePictureUnSelect = () => {
-    // setPictureSelected(false);
-    // setSelectedPictureIndex(null);
-    setSelectedLockpod(null);
   };
 
   // MARK: LockPodPreviews
@@ -221,9 +220,13 @@ const ReserveModal = ({
     const localStyles = StyleSheet.create({
       directionContainer: {
         width: "100%",
+        flex: 1,
+        flexGrow: 1,
         flexDirection: "column",
         alignItems: "flex-start",
+        justifyContent: "flex-start",
         marginBottom: 20,
+        paddingEnd: 7,
       },
       warningText: {
         color: "red",
@@ -244,9 +247,9 @@ const ReserveModal = ({
 
     return (
       <View style={localStyles.directionContainer}>
-        <View>
+        {getMessage() !== "" && (
           <Text style={localStyles.warningText}>{getMessage()}</Text>
-        </View>
+        )}
         {/* <Pressable style={[styles.button]} onPress={handleDirections}>
           <Text style={styles.buttonText}>Get Directions</Text>
         </Pressable> */}
@@ -255,7 +258,7 @@ const ReserveModal = ({
             <Button
               title={"reserve"}
               onPress={() => {
-                handleReserve();
+                setIsReserving(true);
               }}
             />
           </View>
@@ -263,15 +266,160 @@ const ReserveModal = ({
             <Button
               title={"unlock"}
               onPress={() => {
-                handleReserve();
+                // handleReserve();
               }}
             />
           </View>
         </View>
-        <CheckoutScreen />
+        {/* <CheckoutScreen /> */}
+        {isReserving && <ReservationOptions></ReservationOptions>}
       </View>
     );
   };
+
+  // MARK: ReservationOptions
+  const ReservationOptions = () => {
+    const localStyles = StyleSheet.create({
+      container: {
+        flex: 1,
+        marginVertical: 7,
+        alignSelf: "stretch",
+      },
+
+      title: {
+        fontWeight: "bold",
+        fontSize: 18,
+        marginVertical: 10,
+      },
+
+      mainText: {
+        marginHorizontal: 10,
+        marginTop: 10,
+      },
+
+      durationButton: {
+        width: "100%",
+        height: 50,
+        justifyContent: "center",
+        alignItems: "center",
+
+        backgroundColor: Constants.secondaryDark,
+        borderRadius: Constants.defaultCornerRadius,
+        marginVertical: 2,
+      },
+      durationButtonText: {
+        color: Constants.baseLight,
+        fontSize: 15,
+      },
+    });
+
+    const [duration, setDuration] = useState(30);
+
+    function getReservationConfirmationMessage(): string {
+      return `You're attempting to reserve lockpod ${selectedLockpod?.name}. You'll arrive in ${duration} minutes. \n\nIf you need more time you can extend your reservation.
+      `;
+    }
+
+    const DurationButton = ({ duration }: { duration: number }) => {
+      function getTitle(): string {
+        return `${duration} minutes`;
+      }
+
+      return (
+        <Pressable
+          onPress={() => {
+            setDuration(duration);
+          }}
+          style={localStyles.durationButton}
+        >
+          <Text style={localStyles.durationButtonText}>{getTitle()}</Text>
+        </Pressable>
+      );
+    };
+
+    return (
+      <View style={localStyles.container}>
+        <Text style={localStyles.title}>Reserve Lockpod</Text>
+
+        <DurationButton duration={15} />
+        <DurationButton duration={30} />
+        <DurationButton duration={45} />
+
+        <Text style={localStyles.mainText}>
+          {getReservationConfirmationMessage()}
+        </Text>
+
+        <Pressable
+          onPress={() => handleReserve(duration)}
+          style={localStyles.durationButton}
+        >
+          <Text style={(localStyles.title, { color: Constants.baseLight })}>
+            Reserve Lockpod
+          </Text>
+        </Pressable>
+      </View>
+    );
+  };
+
+  // MARK: Styles
+  const styles = StyleSheet.create({
+    modalOverlay: {
+      flex: 1,
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      justifyContent: "flex-end",
+      alignItems: "center",
+    },
+    modalContainer: {
+      flex: isReserving ? 0.85 : 0.45,
+      width: "100%",
+      flexDirection: "column",
+      paddingLeft: 10,
+      paddingTop: 20,
+      paddingBottom: 20,
+      borderRadius: Constants.defaultCornerRadius,
+      backgroundColor: Constants.baseLight,
+      alignItems: "flex-start",
+      justifyContent: "flex-start",
+    },
+    modalTitle: {
+      fontSize: 18,
+      fontWeight: "bold",
+      marginBottom: 10,
+      paddingLeft: 10,
+    },
+    scrollContainer: {
+      height: 175,
+    },
+    reservationPreviewContainer: {
+      flex: 0.55,
+      flexDirection: "column",
+      justifyContent: "space-between",
+    },
+    button: {
+      textAlign: "center",
+      backgroundColor: "grey",
+      paddingVertical: 10,
+      paddingHorizontal: 30,
+      borderRadius: 5,
+      marginBottom: 10,
+    },
+    nonClickableButton: {
+      backgroundColor: "#ccc",
+      paddingVertical: 10,
+      paddingHorizontal: 30,
+      borderRadius: 5,
+    },
+    buttonText: {
+      color: "white",
+    },
+
+    picture: {
+      width: 100,
+      height: 100,
+      marginHorizontal: 10,
+      borderRadius: 10,
+    },
+  });
 
   // MARK: Body
   // TODO: rework conditional button styling based on the current lockPod Status
@@ -300,65 +448,5 @@ const ReserveModal = ({
     </Modal>
   );
 };
-
-// MARK: Styles
-const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
-  modalContainer: {
-    flex: 0.55,
-    width: "100%",
-    flexDirection: "column",
-    paddingLeft: 10,
-    paddingTop: 20,
-    paddingBottom: 20,
-    borderRadius: Constants.defaultCornerRadius,
-    backgroundColor: Constants.baseLight,
-    alignItems: "flex-start",
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-    paddingLeft: 10,
-  },
-  scrollContainer: {
-    flex: 0.45,
-  },
-  reservationPreviewContainer: {
-    flex: 0.55,
-    flexDirection: "column",
-    justifyContent: "space-between",
-    marginTop: 20,
-  },
-  button: {
-    textAlign: "center",
-    backgroundColor: "grey",
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  nonClickableButton: {
-    backgroundColor: "#ccc",
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: "white",
-  },
-
-  picture: {
-    width: 100,
-    height: 100,
-    marginHorizontal: 10,
-    borderRadius: 10,
-  },
-});
 
 export default ReserveModal;

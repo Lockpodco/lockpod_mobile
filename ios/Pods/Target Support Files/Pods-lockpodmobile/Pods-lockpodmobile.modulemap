@@ -1,6 +1,0 @@
-module Pods_lockpodmobile {
-  umbrella header "Pods-lockpodmobile-umbrella.h"
-
-  export *
-  module * { export * }
-}

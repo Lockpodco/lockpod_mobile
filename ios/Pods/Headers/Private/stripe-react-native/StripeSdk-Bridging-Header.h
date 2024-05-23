@@ -1,1 +1,0 @@
-../../../../../node_modules/@stripe/stripe-react-native/ios/StripeSdk-Bridging-Header.h

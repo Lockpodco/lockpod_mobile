@@ -1,1 +1,0 @@
-../../../MultiplatformBleAdapter/iOS/classes/BleClientManager.h

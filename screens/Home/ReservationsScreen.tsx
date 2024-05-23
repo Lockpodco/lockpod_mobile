@@ -361,6 +361,15 @@ const ReservationsScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView>
+        {activeSessions.length > 0 && (
+          <View>
+            <Text style={styles.sectionHeaders}>Sessions</Text>
+            {activeSessions.map((session) => (
+              <SessionView key={session.id} session={session}></SessionView>
+            ))}
+          </View>
+        )}
+
         {activeReservations.length > 0 && (
           <View>
             <Text style={styles.sectionHeaders}>Reservations</Text>
@@ -369,15 +378,6 @@ const ReservationsScreen = () => {
                 key={reservation.id}
                 reservation={reservation}
               ></ReservationView>
-            ))}
-          </View>
-        )}
-
-        {activeSessions.length > 0 && (
-          <View>
-            <Text style={styles.sectionHeaders}>Sessions</Text>
-            {activeSessions.map((session) => (
-              <SessionView key={session.id} session={session}></SessionView>
             ))}
           </View>
         )}

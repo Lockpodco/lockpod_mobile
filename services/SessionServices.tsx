@@ -13,6 +13,7 @@ export const createSession = async (
   lockpod_id: number
 ): Promise<number | undefined> => {
   try {
+    console.log("attempting to create a new seession");
     const response = await axios.post(
       `${API_URL}/sessions`,
       {
@@ -27,19 +28,9 @@ export const createSession = async (
     );
 
     const data = response.data;
-    const lockpodSession: LockpodSession = Object.assign(
-      new LockpodSession(),
-      data
-    );
+    console.log("Successfully created a new session");
 
-    // Fetch user profile
-    const userResponse = await axios.get(`${API_URL}/userProfiles/${user_id}`);
-    const userProfile = userResponse.data as UserProfile;
-
-    userProfile.activeSessions.push(lockpodSession.id); // Add the session id to the user's activeSessions
-    await userProfile.saveChangesToDataBase(); // Save changes to the user's profile
-
-    return lockpodSession.id;
+    return data["id"];
   } catch (error) {
     handleError("Error creating session", error as Error);
     return undefined;
@@ -65,6 +56,8 @@ export const getSession = async (
       new LockpodSession(),
       data
     );
+
+    lockpodSession.updateDates();
     return lockpodSession;
   } catch (error) {
     handleError("Error creating session", error as Error);
@@ -76,16 +69,13 @@ export const getSession = async (
 // MARK: endSession
 // this method should take in an active session, set the end time to now
 // and then store it in the currentUser's 'sessionHistory' var
-export const endSession = async (
-  activeSession: LockpodSession,
-  profile: UserProfile
-) => {
+export const endSession = async (id: number) => {
   try {
     // Set end_time of activeSession
     const response = await axios.put(
       `${API_URL}/sessions`,
       {
-        sessionId: activeSession.id,
+        sessionId: id,
       },
       {
         headers: {
@@ -94,14 +84,6 @@ export const endSession = async (
       }
     );
     const sessionId = response.data;
-
-    profile.activeSessions = profile.activeSessions.filter(
-      (id) => id !== sessionId
-    );
-
-    // Add the id of the active session to the userProfile's session history
-    profile.sessionHistory.push(sessionId);
-    await profile.saveChangesToDataBase();
 
     console.log(`Successfully ended session with ID: ${sessionId}`);
     return sessionId;

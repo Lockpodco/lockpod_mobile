@@ -31,6 +31,8 @@ import {
   UpdateLockPodsActionType,
   useLockPodsContext,
 } from "../../stores/LockPodsContext";
+import { createSession, getSession } from "../../services/SessionServices";
+import { LockpodSession } from "../../Models/SessionModel";
 
 // MARK: Modal
 const ReserveModal = ({
@@ -63,6 +65,7 @@ const ReserveModal = ({
   const [activeReservations, setActiveReservations] = useState<
     LockpodReservation[]
   >([]);
+  const [activeSessions, setActiveSessions] = useState<LockpodSession[]>([]);
   const [selectedLockpod, setSelectedLockpod] = useState<LockPod | null>(
     lockpod
   );
@@ -88,6 +91,19 @@ const ReserveModal = ({
       }
     };
 
+    const fetchUserSessions = async () => {
+      setActiveSessions([]);
+      for (let i = 0; i < userProfile.activeSessions.length; i++) {
+        const sessionId = userProfile.activeSessions[i];
+        const session: LockpodSession | undefined = await getSession(sessionId);
+
+        if (session) {
+          setActiveSessions((oldArray) => [...oldArray, session]);
+        }
+      }
+    };
+
+    fetchUserSessions();
     fetchUserReservations();
   }, []);
 
@@ -101,6 +117,71 @@ const ReserveModal = ({
   }, [visible]);
 
   // MARK: Convenience Functions
+  function getModalHeight(): number {
+    if (isReserving) {
+      return 0.85;
+    }
+    if (selectedLockpod) {
+      return 0.45;
+    }
+    return 0.3;
+  }
+
+  function showLockpodUnavailableAlert() {
+    Alert.alert(
+      "Lockpod unavailable",
+      "Select another lockpod to reserve or unlock"
+    );
+  }
+
+  function checkLockPodHasAvailability(): boolean {
+    if (selectedLockpod) {
+      return !selectedLockpod.inSession && !selectedLockpod.isReserved;
+    }
+    return false;
+  }
+
+  // MARK: handleUnlock
+  function checkUserHasSession(lockpodId: number): boolean {
+    const filtered = activeSessions.filter((session) => {
+      return session.lockpod_id == lockpodId;
+    });
+    return filtered.length != 0;
+  }
+
+  const handleUnlock = async () => {
+    const inSessionByUser = checkUserHasSession(selectedLockpod!.id);
+    const availability = checkLockPodHasAvailability();
+
+    if (!inSessionByUser && !availability) {
+      showLockpodUnavailableAlert;
+      return;
+    }
+
+    const sessionId: number | undefined = await createSession(
+      userProfile.user_id,
+      selectedLockpod!.id
+    );
+
+    if (sessionId) {
+      // update the userProfile object
+      userProfile.activeSessions.push(sessionId);
+      await userProfile.saveChangesToDataBase();
+
+      // update the status of the lockpod
+      selectedLockpod!.isReserved = false;
+      selectedLockpod!.inSession = true;
+      updateLockPodStatus(selectedLockpod!.id, false, true);
+      // trigger a UI update
+      lockPodsDispatch!({
+        type: UpdateLockPodsActionType.updateLockPod,
+        updatedLockPods: undefined,
+        updatedLockPod: selectedLockpod!,
+      });
+    }
+  };
+
+  // MARK: handleReserve
   function checkUserHasReservation(lockpodId: number): boolean {
     const filtered = activeReservations.filter((reservation) => {
       return reservation.lockpod_id == lockpodId;
@@ -108,11 +189,6 @@ const ReserveModal = ({
     return filtered.length != 0;
   }
 
-  function checkUserHasSession(lockpodId: number): Boolean {
-    return false;
-  }
-
-  // MARK: handleReserve
   const handleReserve = async (duration: number) => {
     const reservedByUser = checkUserHasReservation(selectedLockpod!.id);
     if (reservedByUser) {
@@ -120,6 +196,11 @@ const ReserveModal = ({
         "Already Reserved",
         "you already have an active reservation for this pod!"
       );
+      return;
+    }
+    const available = checkLockPodHasAvailability();
+    if (!available) {
+      showLockpodUnavailableAlert();
       return;
     }
     // create the reservation (15 minutes by default)
@@ -205,7 +286,7 @@ const ReserveModal = ({
   };
 
   // MARK: ReservationPreview
-  const ReservationPreview = ({ lockpod }: { lockpod: LockPod }) => {
+  const SelectionPreview = ({ lockpod }: { lockpod: LockPod }) => {
     function getMessage(): string {
       if (checkUserHasReservation(lockpod.id)) {
         return "You already have an active reservation for this pod";
@@ -215,6 +296,15 @@ const ReserveModal = ({
         return "this lockPod is in use";
       }
       return "";
+    }
+
+    function showReservationButton() {
+      return !lockpod.inSession && !lockpod.isReserved;
+    }
+
+    function showUnlockButton() {
+      const hasReservation = checkUserHasReservation(lockpod.id);
+      return !lockpod.inSession && (!lockpod.isReserved || hasReservation);
     }
 
     const localStyles = StyleSheet.create({
@@ -250,26 +340,27 @@ const ReserveModal = ({
         {getMessage() !== "" && (
           <Text style={localStyles.warningText}>{getMessage()}</Text>
         )}
-        {/* <Pressable style={[styles.button]} onPress={handleDirections}>
-          <Text style={styles.buttonText}>Get Directions</Text>
-        </Pressable> */}
         <View style={localStyles.horizontalContainer}>
-          <View style={localStyles.primaryButton}>
-            <Button
-              title={"reserve"}
-              onPress={() => {
-                setIsReserving(true);
-              }}
-            />
-          </View>
-          <View style={localStyles.primaryButton}>
-            <Button
-              title={"unlock"}
-              onPress={() => {
-                // handleReserve();
-              }}
-            />
-          </View>
+          {showReservationButton() && (
+            <View style={localStyles.primaryButton}>
+              <Button
+                title={"reserve"}
+                onPress={() => {
+                  setIsReserving(true);
+                }}
+              />
+            </View>
+          )}
+          {showUnlockButton() && (
+            <View style={localStyles.primaryButton}>
+              <Button
+                title={"unlock"}
+                onPress={() => {
+                  handleUnlock();
+                }}
+              />
+            </View>
+          )}
         </View>
         {/* <CheckoutScreen /> */}
         {isReserving && <ReservationOptions></ReservationOptions>}
@@ -316,7 +407,7 @@ const ReserveModal = ({
     const [duration, setDuration] = useState(30);
 
     function getReservationConfirmationMessage(): string {
-      return `You're attempting to reserve lockpod ${selectedLockpod?.name}. You'll arrive in ${duration} minutes. \n\nIf you need more time you can extend your reservation.
+      return `You'll arrive at ${selectedLockpod!.name} in ${duration} minutes. \n\nIf you need more time you can extend your reservation.
       `;
     }
 
@@ -339,7 +430,9 @@ const ReserveModal = ({
 
     return (
       <View style={localStyles.container}>
-        <Text style={localStyles.title}>Reserve Lockpod</Text>
+        <Text
+          style={localStyles.title}
+        >{`Reserve ${selectedLockpod!.name}`}</Text>
 
         <DurationButton duration={15} />
         <DurationButton duration={30} />
@@ -370,7 +463,7 @@ const ReserveModal = ({
       alignItems: "center",
     },
     modalContainer: {
-      flex: isReserving ? 0.85 : 0.45,
+      flex: getModalHeight(),
       width: "100%",
       flexDirection: "column",
       paddingLeft: 10,
@@ -439,9 +532,7 @@ const ReserveModal = ({
           </View>
 
           <View style={styles.reservationPreviewContainer}>
-            {selectedLockpod && (
-              <ReservationPreview lockpod={selectedLockpod} />
-            )}
+            {selectedLockpod && <SelectionPreview lockpod={selectedLockpod} />}
           </View>
         </View>
       </Pressable>

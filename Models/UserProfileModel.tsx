@@ -48,6 +48,8 @@ const updateUserProfile = async (updatedProfile: UserProfile) => {
     userName: updatedProfile.username,
     activeReservations: updatedProfile.activeReservations.toString(),
     reservationHistory: updatedProfile.reservationHistory.toString(),
+    activeSessions: updatedProfile.activeSessions.toString(),
+    sessionHistory: updatedProfile.sessionHistory.toString(),
   });
 
   const response = await fetch(`${API_URL}/userProfiles/update`, {

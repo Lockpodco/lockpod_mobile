@@ -179,6 +179,8 @@ const ReserveModal = ({
         updatedLockPod: selectedLockpod!,
       });
     }
+
+    onModalClose();
   };
 
   // MARK: handleReserve

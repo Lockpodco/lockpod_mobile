@@ -10,6 +10,7 @@ export class LockpodReservation {
   lockpod_id: number;
   start_time: Date;
   expected_arrival: Date;
+  hasBeenExtended: boolean = false;
 
   public constructor(
     id: number = 0,
@@ -26,15 +27,8 @@ export class LockpodReservation {
   }
 
   // MARK: Convenience Functinos
-  formatArrivalTime(): string {
-    var pstDate = this.expected_arrival.toLocaleString("en-US", {
-      timeZone: "America/Los_Angeles",
-    });
-    return pstDate;
-  }
-
-  formatStartTime(): string {
-    var pstDate = this.start_time.toLocaleString("en-US", {
+  static formatTime(time: Date): string {
+    var pstDate = time.toLocaleString("en-US", {
       timeZone: "America/Los_Angeles",
     });
     return pstDate;
@@ -58,6 +52,11 @@ export class LockpodReservation {
     const difference: number = this.expected_arrival.getTime() - now.getTime();
     const minuteTime = 60 * 1000;
     return difference / minuteTime;
+  }
+
+  getTimeRemainingMessage(): string {
+    const timeRemaining = this.getTimeRemaining();
+    return `${Math.round(timeRemaining)} minutes left.`;
   }
 
   // MARK: Methods

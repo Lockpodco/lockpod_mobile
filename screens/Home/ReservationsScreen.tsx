@@ -113,6 +113,30 @@ const ReservationsScreen = () => {
     });
   }
 
+  // MARK: handleExtend
+  async function handleExtendReservation(reservation: LockpodReservation) {
+    reservation.hasBeenExtended = true;
+    await extendReservation(reservation.id, reservation.expected_arrival, 30);
+  }
+
+  // MARK: ViewBuilders
+  const HorizontalLabel = ({ label, msg }: { label: string; msg: string }) => {
+    const localStyles = StyleSheet.create({
+      hoirzontalLabelHorizontalContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginHorizontal: 20,
+      },
+    });
+
+    return (
+      <View style={localStyles.hoirzontalLabelHorizontalContainer}>
+        <Text>{label}</Text>
+        <Text>{msg}</Text>
+      </View>
+    );
+  };
+
   // MARK: ReservationView
   const ReservationView = ({
     reservation,
@@ -120,6 +144,13 @@ const ReservationsScreen = () => {
     reservation: LockpodReservation;
   }) => {
     const [lockpod, setLockpod] = useState<LockPod | null>(null);
+    const description =
+      "You have an upcoming \nreservation. If you need \nmore time, you can exten \nthe reservation.";
+    const icon = images.lockpodPreviews.unavailable;
+
+    const startTime = LockpodReservation.formatTime(reservation.start_time);
+    const endTime = LockpodReservation.formatTime(reservation.expected_arrival);
+    const timeRemaining = reservation.getTimeRemainingMessage();
 
     useEffect(() => {
       for (let pod of lockPods) {
@@ -129,53 +160,85 @@ const ReservationsScreen = () => {
       }
     }, []);
 
-    const styles = StyleSheet.create({
+    const localStyles = StyleSheet.create({
       reservationContainer: {
-        flex: 0.35,
-        flexDirection: "row",
-        padding: 7,
+        flex: 1,
+        padding: 10,
         margin: 7,
         backgroundColor: Constants.secondaryLight,
         borderRadius: Constants.defaultCornerRadius,
       },
 
+      horizontalContainer: {
+        flexDirection: "row",
+      },
+
+      titleContainer: {
+        margin: 20,
+      },
+
       reservationTitle: {
         flex: 1,
+      },
+
+      picture: {
+        width: 130,
+        height: 130,
+        margin: 10,
+      },
+
+      cancelButton: {
+        width: "96%",
+        height: 50,
+        margin: 2,
+
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: Constants.secondaryDark,
+        borderRadius: Constants.defaultCornerRadius,
+      },
+
+      cancelButtonText: {
+        color: Constants.baseLight,
+        fontSize: 18,
       },
     });
 
     return (
-      <View style={styles.reservationContainer}>
+      <View style={localStyles.reservationContainer}>
         {lockpod && (
           <View>
-            <Text
-              style={styles.reservationTitle}
-            >{`You have an upcoming reservation for ${lockpod.name}`}</Text>
+            <View style={localStyles.horizontalContainer}>
+              <Image source={icon} style={localStyles.picture} />
+              <View style={localStyles.titleContainer}>
+                <Text style={styles.titleText}>{`${lockpod.name}`}</Text>
+                <Text style={styles.smallText}>{description}</Text>
+              </View>
+            </View>
 
-            <Text
-              style={styles.reservationTitle}
-            >{`There are ${reservation.getTimeRemaining()} minutes left in your reservation`}</Text>
+            <HorizontalLabel label={"created"} msg={startTime} />
+            <HorizontalLabel label={"expected arrival"} msg={endTime} />
+            <HorizontalLabel label={"Time remaining"} msg={timeRemaining} />
 
-            <Text>{`Start time: ${reservation.formatStartTime()}`}</Text>
-            <Text>{`Expected Arrival: ${reservation.formatArrivalTime()}`}</Text>
+            {!reservation.hasBeenExtended && (
+              <Pressable
+                onPress={() => handleExtendReservation(reservation)}
+                style={localStyles.cancelButton}
+              >
+                <Text style={localStyles.cancelButtonText}>
+                  Extend Reservation
+                </Text>
+              </Pressable>
+            )}
 
-            <Button
-              onPress={() => {
-                handleCancel(reservation);
-              }}
-              title={"Cancel Reservation"}
-            />
-
-            <Button
-              onPress={() => {
-                extendReservation(
-                  reservation.id,
-                  reservation.expected_arrival,
-                  30
-                );
-              }}
-              title={"Extend Reservation"}
-            />
+            <Pressable
+              onPress={() => handleCancel(reservation)}
+              style={localStyles.cancelButton}
+            >
+              <Text style={localStyles.cancelButtonText}>
+                Cancel Reservation
+              </Text>
+            </Pressable>
           </View>
         )}
       </View>
@@ -220,16 +283,6 @@ const ReservationsScreen = () => {
         margin: 20,
       },
 
-      titleText: {
-        fontWeight: "bold",
-        fontSize: 22,
-        marginVertical: 7,
-      },
-
-      smallText: {
-        fontSize: 12,
-      },
-
       picture: {
         width: 130,
         height: 130,
@@ -252,36 +305,15 @@ const ReservationsScreen = () => {
         color: Constants.baseLight,
         fontSize: 18,
       },
-
-      hoirzontalLabelHorizontalContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginHorizontal: 20,
-      },
     });
-
-    const HorizontalLabel = ({
-      label,
-      msg,
-    }: {
-      label: string;
-      msg: string;
-    }) => {
-      return (
-        <View style={localStyles.hoirzontalLabelHorizontalContainer}>
-          <Text>{label}</Text>
-          <Text>{msg}</Text>
-        </View>
-      );
-    };
 
     return (
       <View style={localStyles.container}>
         <View style={localStyles.hoirzontalContainer}>
           <Image source={icon} style={localStyles.picture} />
           <View style={localStyles.titleContainer}>
-            <Text style={localStyles.titleText}>{lockpod?.name}</Text>
-            <Text style={localStyles.smallText}>{feeMessage}</Text>
+            <Text style={styles.titleText}>{lockpod?.name}</Text>
+            <Text style={styles.smallText}>{feeMessage}</Text>
           </View>
         </View>
 
@@ -308,26 +340,47 @@ const ReservationsScreen = () => {
       flex: 1,
       marginHorizontal: 7,
     },
+
+    sectionHeaders: {
+      fontSize: 22,
+      fontWeight: "bold",
+    },
+
+    titleText: {
+      fontWeight: "bold",
+      fontSize: 22,
+      marginVertical: 7,
+    },
+
+    smallText: {
+      fontSize: 12,
+    },
   });
 
   // MARK: Body
   return (
     <View style={styles.container}>
       <ScrollView>
-        <Text>Reservations</Text>
-        {activeReservations.length > 0 &&
-          activeReservations.map((reservation) => (
-            <ReservationView
-              key={reservation.id}
-              reservation={reservation}
-            ></ReservationView>
-          ))}
+        {activeReservations.length > 0 && (
+          <View>
+            <Text style={styles.sectionHeaders}>Reservations</Text>
+            {activeReservations.map((reservation) => (
+              <ReservationView
+                key={reservation.id}
+                reservation={reservation}
+              ></ReservationView>
+            ))}
+          </View>
+        )}
 
-        <Text>Sessions</Text>
-        {activeSessions.length > 0 &&
-          activeSessions.map((session) => (
-            <SessionView key={session.id} session={session}></SessionView>
-          ))}
+        {activeSessions.length > 0 && (
+          <View>
+            <Text style={styles.sectionHeaders}>Sessions</Text>
+            {activeSessions.map((session) => (
+              <SessionView key={session.id} session={session}></SessionView>
+            ))}
+          </View>
+        )}
       </ScrollView>
     </View>
   );

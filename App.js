@@ -3,7 +3,7 @@ import React from "react";
 // Navigation
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { DrawerContentScrollView, DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
 import { Constants } from "./components/constants";
 
 import { UserProfileProvider } from "./stores/UserProfileContext";
@@ -20,14 +20,17 @@ import SubscriptionsScreen from "./screens/Payment/SubscriptionsScreen";
 import UserGuide from "./screens/Help/UserGuideScreen";
 import SupportScreen from "./screens/Help/SupportScreen";
 import ChangePasswordScreen from "./screens/MyAccount/ChangePasswordScreen";
-import { Button } from "react-native";
+import { Button, Pressable, StyleSheet, View } from "react-native";
+import { MediumText, RegularHeading } from "./components/Text";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function DrawerNav() {
   return (
-    <Drawer.Navigator>
+    <Drawer.Navigator
+			drawerContent={CustomDrawerContent}
+		>
       <Drawer.Screen
         name="Lockpod"
         component={HomeScreen}
@@ -117,6 +120,65 @@ export default function App() {
   );
 }
 
+function CustomDrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props}>
+			<View style={styles.container}>
+				<Pressable
+					onPress={() => props.navigation.navigate("Lockpod")}
+				>
+					<RegularHeading value="Lockpod" style={{color: Constants.darkAccent}}/>
+				</Pressable>
+				<View style={styles.drawerSection}>
+					<MediumText value="Account" style={null} />
+					<View style={styles.drawerItems}>
+						<Pressable
+							onPress={() => props.navigation.navigate("Profile")}
+							>
+							<MediumText value="Profile" style={null} />
+						</Pressable>
+						<Pressable
+							onPress={() => props.navigation.navigate("Activity")}
+							>
+							<MediumText value="Activity" style={null} />
+						</Pressable>
+					</View>
+				</View>
+				<View style={styles.drawerSection}>
+					<MediumText value="Payment & Plans" style={null} />
+					<View style={styles.drawerItems}>
+						<Pressable
+							onPress={() => props.navigation.navigate("Wallet")}
+							>
+							<MediumText value="Wallet" style={null} />
+						</Pressable>
+						<Pressable
+							onPress={() => props.navigation.navigate("Subscriptions")}
+							>
+							<MediumText value="Subscriptions" style={null} />
+						</Pressable>
+					</View>
+				</View>
+				<View style={styles.drawerSection}>
+					<MediumText value="Help" style={null} />
+					<View style={styles.drawerItems}>
+						<Pressable
+							onPress={() => props.navigation.navigate("UserGuide")}
+							>
+							<MediumText value="User Guide" style={null} />
+						</Pressable>
+						<Pressable
+							onPress={() => props.navigation.navigate("Support")}
+							>
+							<MediumText value="Support" style={null} />
+						</Pressable>
+					</View>
+				</View>
+			</View>
+    </DrawerContentScrollView>
+  );
+}
+
 // MARK: Styles
 const MyTheme = {
   ...DefaultTheme,
@@ -126,3 +188,21 @@ const MyTheme = {
     background: Constants.baseLight,
   },
 };
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		paddingVertical: Constants.bottomOfPagePadding,	
+		paddingLeft: 16,
+		gap: 40,
+	},
+	drawerSection: {
+		gap: 10,
+	},
+	drawerItems: {
+		paddingLeft: 16,
+		gap: 10,
+	}
+});
+
+

@@ -104,12 +104,23 @@ export default function App() {
   return (
     <NavigationContainer theme={MyTheme}>
       <UserProfileProvider>
-        <Stack.Navigator initialRouteName="Auth">
+        <Stack.Navigator 
+					initialRouteName="Auth"
+					screenOptions={{
+						headerStyle: styles.header,
+						headerShadowVisible: false,
+						headerBackTitleVisible: false,
+						headerBackImage: () => (
+							<View style={{paddingLeft: 35, paddingRight: 20}}>
+								<Image source={require("./assets/arrowLeft.png")}  />
+							</View>
+						),
+					}}
+				>
           <Stack.Screen
             name="Home"
             component={DrawerNav}
             options={{
-              title: "Welcome",
               headerShown: false,
             }}
           />
@@ -117,28 +128,28 @@ export default function App() {
             name="Auth"
             component={AuthScreen}
             options={{
-              title: "Login",
+							headerTitle: () => <Header title="Welcome" />,
             }}
           />
           <Stack.Screen
             name="ProfileCreation"
             component={ProfileCreationScreen}
-            options={{ title: "Create Profile" }}
+            options={{
+							headerTitle: () => <Header title="Create Profile" />,
+            }}
           />
           <Stack.Screen
             name="ScanQR"
             component={ScanQR}
             options={{
-              title: "Scan Your Pod",
-              headerBackTitle: "Back",
+							headerTitle: () => <Header title="Scan Your Pod" />,
             }}
           />
           <Stack.Screen
             name="ChangePassword"
             component={ChangePasswordScreen}
             options={{
-              title: "Change Password",
-              headerBackTitle: "Back",
+							headerTitle: () => <Header title="Change Password" />,
             }}
           />
         </Stack.Navigator>

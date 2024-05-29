@@ -148,6 +148,12 @@ export default function App() {
 }
 
 function CustomDrawerContent(props) {
+	const profileIcon = require("./assets/profile.png")
+	const activityIcon = require("./assets/activity.png")
+	const walletIcon = require("./assets/wallet.png")
+	const subsIcon = require("./assets/subs.png")
+	const userGuideIcon = require("./assets/info.png")
+	const supportIcon = require("./assets/support.png")
   return (
     <DrawerContentScrollView {...props}>
 			<View style={styles.container}>
@@ -159,46 +165,22 @@ function CustomDrawerContent(props) {
 				<View style={styles.drawerSection}>
 					<MediumText value="Account" style={null} />
 					<View style={styles.drawerItems}>
-						<Pressable
-							onPress={() => props.navigation.navigate("Profile")}
-							>
-							<MediumText value="Profile" style={null} />
-						</Pressable>
-						<Pressable
-							onPress={() => props.navigation.navigate("Activity")}
-							>
-							<MediumText value="Activity" style={null} />
-						</Pressable>
+						<CustomDrawerItem props={props} goTo="Profile" title="Profile" icon={profileIcon}/>
+						<CustomDrawerItem props={props} goTo="Activity" title="Activity" icon={activityIcon}/>
 					</View>
 				</View>
 				<View style={styles.drawerSection}>
 					<MediumText value="Payment & Plans" style={null} />
 					<View style={styles.drawerItems}>
-						<Pressable
-							onPress={() => props.navigation.navigate("Wallet")}
-							>
-							<MediumText value="Wallet" style={null} />
-						</Pressable>
-						<Pressable
-							onPress={() => props.navigation.navigate("Subscriptions")}
-							>
-							<MediumText value="Subscriptions" style={null} />
-						</Pressable>
+						<CustomDrawerItem props={props} goTo="Wallet" title="Wallet" icon={walletIcon}/>
+						<CustomDrawerItem props={props} goTo="Subscriptions" title="Subscriptions" icon={subsIcon}/>
 					</View>
 				</View>
 				<View style={styles.drawerSection}>
 					<MediumText value="Help" style={null} />
 					<View style={styles.drawerItems}>
-						<Pressable
-							onPress={() => props.navigation.navigate("UserGuide")}
-							>
-							<MediumText value="User Guide" style={null} />
-						</Pressable>
-						<Pressable
-							onPress={() => props.navigation.navigate("Support")}
-							>
-							<MediumText value="Support" style={null} />
-						</Pressable>
+						<CustomDrawerItem props={props} goTo="UserGuide" title="User Guide" icon={userGuideIcon}/>
+						<CustomDrawerItem props={props} goTo="Support" title="Support" icon={supportIcon}/>
 					</View>
 				</View>
 			</View>
@@ -212,6 +194,21 @@ function Header({title}) {
 			value={title}
 			style={null}
 		/>
+	);
+}
+
+function CustomDrawerItem({props, goTo, title, icon}) {
+	return (
+		<View>
+			<Pressable
+				onPress={() => props.navigation.navigate(goTo)}
+			>
+				<View style={{flexDirection: "row", gap: 10}}>
+					<Image source={icon}/>
+					<MediumText value={title} style={null} />
+				</View>
+			</Pressable>
+		</View>
 	);
 }
 

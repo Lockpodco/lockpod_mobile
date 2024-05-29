@@ -1,7 +1,7 @@
 import React from "react";
 
 // Navigation
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DrawerActions, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { DrawerContentScrollView, DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
 import { Constants } from "./components/constants";
@@ -20,53 +20,80 @@ import SubscriptionsScreen from "./screens/Payment/SubscriptionsScreen";
 import UserGuide from "./screens/Help/UserGuideScreen";
 import SupportScreen from "./screens/Help/SupportScreen";
 import ChangePasswordScreen from "./screens/MyAccount/ChangePasswordScreen";
-import { Button, Pressable, StyleSheet, View } from "react-native";
+import { Button, Image, Pressable, StyleSheet, View } from "react-native";
 import { MediumText, RegularHeading } from "./components/Text";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function DrawerNav() {
+	const navigation = useNavigation()
   return (
     <Drawer.Navigator
 			drawerContent={CustomDrawerContent}
+			screenOptions={{
+				headerStyle: styles.header,
+				headerShadowVisible: false,
+				headerLeft: () => (
+					<Pressable 
+						onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+						style={{ paddingLeft: 35, paddingRight: 20 }}
+						>
+						<Image 
+							source={require("./assets/arrowLeft.png")}
+						/>
+					</Pressable>
+				)
+			}}
 		>
       <Drawer.Screen
         name="Lockpod"
         component={HomeScreen}
         options={{
-          title: "Lockpod",
+					headerTitle: () => <Header title="Lockpod" />,
         }}
       />
       <Drawer.Screen
         name="Profile"
         component={ProfileScreen}
-        options={{ title: "Profile" }}
+        options={{ 
+					headerTitle: () => <Header title="Profile" />,
+				}}
       />
       <Drawer.Screen
         name="Activity"
         component={ActivityScreen}
-        options={{ title: "Activity" }}
+        options={{ 
+					headerTitle: () => <Header title="Activity" />,
+				}}
       />
       <Drawer.Screen
         name="Wallet"
         component={Wallet}
-        options={{ title: "Wallet" }}
+        options={{ 
+					headerTitle: () => <Header title="Wallet" />,
+				}}
       />
       <Drawer.Screen
         name="Subscriptions"
         component={SubscriptionsScreen}
-        options={{ title: "Subscriptions" }}
+        options={{ 
+					headerTitle: () => <Header title="Subscriptions" />,
+				}}
       />
       <Drawer.Screen
         name="UserGuide"
         component={UserGuide}
-        options={{ title: "User Guide" }}
+        options={{ 
+					headerTitle: () => <Header title="User Guide" />,
+				}}
       />
       <Drawer.Screen
         name="Support"
         component={SupportScreen}
-        options={{ title: "Support" }}
+        options={{ 
+					headerTitle: () => <Header title="Support" />,
+				}}
       />
     </Drawer.Navigator>
   );
@@ -179,6 +206,15 @@ function CustomDrawerContent(props) {
   );
 }
 
+function Header({title}) {
+	return (
+		<MediumText 
+			value={title}
+			style={null}
+		/>
+	);
+}
+
 // MARK: Styles
 const MyTheme = {
   ...DefaultTheme,
@@ -190,6 +226,9 @@ const MyTheme = {
 };
 
 const styles = StyleSheet.create({
+	header: {
+		backgroundColor: Constants.baseLight,
+	},
 	container: {
 		flex: 1,
 		paddingVertical: Constants.bottomOfPagePadding,	

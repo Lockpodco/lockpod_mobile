@@ -19,7 +19,7 @@ export const PlainTextField = ({
 }: {
 	value: string;
 	placeHolder: string;
-	height: number;
+	height: number | null;
 	multiline: boolean;
 	secureTextEntry: boolean;
 	setValue: Dispatch<SetStateAction<string>>;
@@ -36,7 +36,7 @@ export const PlainTextField = ({
 		return <AppLoading />;
 	}
 
-	const h: number = height == 0 ? 55 : height;
+	const h: number | null = height == null ? 55 : height;
 
 	const styles = StyleSheet.create({
 		container: {

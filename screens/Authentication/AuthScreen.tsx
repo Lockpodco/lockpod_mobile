@@ -174,7 +174,7 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
 						<PlainTextField
 							value={email}
 							placeHolder="example@gmail.com"
-							height={0}
+							height={null}
 							multiline={false}
 							secureTextEntry={false}
 							setValue={setEmail}
@@ -186,7 +186,7 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
 						<PlainTextField
 							value={password}
 							placeHolder="Enter password"
-							height={0}
+							height={null}
 							multiline={false}
 							secureTextEntry={true}
 							setValue={setPassword}
@@ -212,7 +212,7 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
 						<PlainTextField
 							value={email}
 							placeHolder="example@gmail.com"
-							height={0}
+							height={null}
 							multiline={false}
 							secureTextEntry={false}
 							setValue={setEmail}
@@ -224,7 +224,7 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
 						<PlainTextField
 							value={password}
 							placeHolder="Enter password"
-							height={0}
+							height={null}
 							multiline={false}
 							secureTextEntry={true}
 							setValue={setPassword}
@@ -236,7 +236,7 @@ const AuthScreen = ({ navigation }: { navigation: any }) => {
 						<PlainTextField
 							value={confirmPassword}
 							placeHolder="Confirm password"
-							height={0}
+							height={null}
 							multiline={false}
 							secureTextEntry={true}
 							setValue={setConfirmPassword}

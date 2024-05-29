@@ -45,7 +45,7 @@ const SupportScreen = () => {
 					<PlainTextField 
 						value={name}
 						placeHolder="Enter Name"
-						height={0}
+						height={null}
 						multiline= { false }
 						secureTextEntry= { false }
 						setValue={setName}
@@ -59,7 +59,7 @@ const SupportScreen = () => {
 					<PlainTextField 
 						value={email}
 						placeHolder="example@gmail.com"
-						height={0}
+						height={null}
 						multiline={false}
 						secureTextEntry={false}
 						setValue={setEmail}

@@ -10,8 +10,8 @@ import {
 import { updateProfileInformation } from "../../services/ProfileService";
 
 import { Constants } from "../../components/constants";
-import { StyledTextField } from "../../components/Forms/FormComponents";
-import { StyledSubmitButton } from "../../components/Buttons";
+import { PlainTextField } from "../../components/Forms/FormComponents";
+import { DefaultSubmitButton } from "../../components/Buttons";
 
 const ProfileCreationScreen = ({ navigation }: { navigation: any }) => {
   // MARK: Vars
@@ -58,35 +58,42 @@ const ProfileCreationScreen = ({ navigation }: { navigation: any }) => {
   return (
     <View style={styles.container}>
       <View style={styles.container}>
-        <StyledTextField
+				<PlainTextField
           value={firstName}
           placeHolder={"first Name"}
+					height={null}
+					multiline={false}
           secureTextEntry={false}
           setValue={setFirstName}
-        />
+				/>
 
-        <StyledTextField
+				<PlainTextField
           value={lastName}
-          placeHolder={"last Name"}
+          placeHolder={"last name"}
+					height={null}
+					multiline={false}
           secureTextEntry={false}
           setValue={setLastName}
-        />
+				/>
 
-        <StyledTextField
+				<PlainTextField
           value={userName}
           placeHolder={"username"}
+					height={null}
+					multiline={false}
           secureTextEntry={false}
           setValue={setUserName}
-        />
+				/>
       </View>
 
       <View style={styles.bottom}>
-        <StyledSubmitButton
-          title="continue"
+				<DefaultSubmitButton 
+          title="Continue"
           isActive={checkFormCompletion()}
+					activeColor={Constants.darkAccent}
           horizontalLayout={false}
           onSubmit={submitInformation}
-        />
+				/>
       </View>
     </View>
   );

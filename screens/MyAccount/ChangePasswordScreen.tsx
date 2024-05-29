@@ -67,7 +67,7 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
 					<PlainTextField 
 						value={currentPass}
 						placeHolder="Current Password"
-						height={0}
+						height={null}
 						multiline= { false }
 						secureTextEntry= { false }
 						setValue={setCurrentPass}
@@ -75,7 +75,7 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
 					<PlainTextField 
 						value={newPass}
 						placeHolder="New Password"
-						height={0}
+						height={null}
 						multiline= { false }
 						secureTextEntry= { false }
 						setValue={setNewPass}
@@ -83,7 +83,7 @@ const ChangePasswordScreen = ({ navigation }: { navigation: any }) => {
 					<PlainTextField 
 						value={confirmNewPass}
 						placeHolder="Confirm New Password"
-						height={0}
+						height={null}
 						multiline= { false }
 						secureTextEntry= { false }
 						setValue={setConfirmNewPass}

@@ -90,7 +90,7 @@ const ProfileCreationScreen = ({ navigation }: { navigation: any }) => {
 				<DefaultSubmitButton 
           title="Continue"
           isActive={checkFormCompletion()}
-					activeColor={Constants.darkAccent}
+					activeColor={Constants.lightAccent}
           horizontalLayout={false}
           onSubmit={submitInformation}
 				/>

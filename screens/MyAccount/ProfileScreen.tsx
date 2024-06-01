@@ -93,18 +93,12 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 				<View style={styles.userDetailsContainer}>
 					<Pressable style={styles.userDetails}>
 						<View style={styles.left}>
-							<Image
-								style={styles.icon}
-								source={require("../../assets/mail.png")}
-							/>
+
 							<MediumText value="Email" style={null} />
 						</View>
 						<View style={styles.right}>
 							<MediumText value="name@gmail.com" style={null} />
-							<Image
-								style={styles.arrow}
-								source={require("../../assets/arrowRight.png")}
-							/>
+
 						</View>
 					</Pressable>
 					<Pressable
@@ -114,41 +108,26 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 						}}
 					>
 						<View style={styles.left}>
-							<Image
-								style={styles.icon}
-								source={require("../../assets/lock.png")}
-							/>
+
 							<MediumText value="Password" style={null} />
 						</View>
 						<View style={styles.right}>
-							<Image
-								style={styles.arrow}
-								source={require("../../assets/arrowRight.png")}
-							/>
+
 						</View>
 					</Pressable>
 					<Pressable style={styles.userDetails}>
 						<View style={styles.left}>
-							<Image
-								style={styles.icon}
-								source={require("../../assets/phone.png")}
-							/>
+
 							<MediumText value="Phone" style={null} />
 						</View>
 						<View style={styles.right}>
 							<MediumText value="000-000-0000" style={null} />
-							<Image
-								style={styles.arrow}
-								source={require("../../assets/arrowRight.png")}
-							/>
+
 						</View>
 					</Pressable>
 					<View style={styles.userDetails}>
 						<View style={styles.left}>
-							<Image
-								style={styles.icon}
-								source={require("../../assets/bell.png")}
-							/>
+
 							<MediumText value="Notifications" style={null} />
 						</View>
 						<View style={styles.right}>
@@ -161,17 +140,11 @@ const ProfileScreen = ({ navigation }: { navigation: any }) => {
 					</View>
 					<Pressable style={styles.userDetails}>
 						<View style={styles.left}>
-							<Image
-								style={styles.icon}
-								source={require("../../assets/legal.png")}
-							/>
+
 							<MediumText value="Privacy & Legal" style={null} />
 						</View>
 						<View style={styles.right}>
-							<Image
-								style={styles.arrow}
-								source={require("../../assets/arrowRight.png")}
-							/>
+
 						</View>
 					</Pressable>
 				</View>

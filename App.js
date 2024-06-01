@@ -1,9 +1,19 @@
 import React from "react";
 
 // Navigation
-import { NavigationContainer, DefaultTheme, DrawerActions, useNavigation } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DrawerActions,
+  useNavigation,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { DrawerContentScrollView, DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
+  createDrawerNavigator,
+} from "@react-navigation/drawer";
 import { Constants } from "./components/constants";
 
 import { UserProfileProvider } from "./stores/UserProfileContext";
@@ -23,83 +33,83 @@ import ChangePasswordScreen from "./screens/MyAccount/ChangePasswordScreen";
 import { Button, Image, Pressable, StyleSheet, View } from "react-native";
 import { MediumText, RegularHeading } from "./components/Text";
 
-import ArrowLeft from "./assets/arrowLeft.svg"
-import ProfileIcon from "./assets/drawerIcons/profile.svg"
-import ActivityIcon from "./assets/drawerIcons/activity.svg"
-import WalletIcon from "./assets/drawerIcons/wallet.svg" 
-import CalendarIcon from "./assets/drawerIcons/calendar.svg"
-import InfoIcon from "./assets/drawerIcons/info.svg"
-import SupportIcon from "./assets/drawerIcons/support.svg"
+import ArrowLeft from "./assets/arrowLeft.svg";
+import ProfileIcon from "./assets/drawerIcons/profile.svg";
+import ActivityIcon from "./assets/drawerIcons/activity.svg";
+import WalletIcon from "./assets/drawerIcons/wallet.svg";
+import CalendarIcon from "./assets/drawerIcons/calendar.svg";
+import InfoIcon from "./assets/drawerIcons/info.svg";
+import SupportIcon from "./assets/drawerIcons/support.svg";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function DrawerNav() {
-	const navigation = useNavigation()
+  const navigation = useNavigation();
   return (
     <Drawer.Navigator
-			drawerContent={CustomDrawerContent}
-			screenOptions={{
-				headerStyle: styles.header,
-				headerShadowVisible: false,
-				headerLeft: () => (
-					<Pressable 
-						onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
-						style={{ paddingLeft: 35, paddingRight: 20 }}
-						>
-						<ArrowLeft width={24} height={24}/>
-					</Pressable>
-				)
-			}}
-		>
+      drawerContent={CustomDrawerContent}
+      screenOptions={{
+        headerStyle: styles.header,
+        headerShadowVisible: false,
+        headerLeft: () => (
+          <Pressable
+            onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
+            style={{ paddingLeft: 35, paddingRight: 20 }}
+          >
+            <ArrowLeft width={24} height={24} />
+          </Pressable>
+        ),
+      }}
+    >
       <Drawer.Screen
         name="Lockpod"
         component={HomeScreen}
         options={{
-					headerTitle: () => <Header title="Lockpod" />,
+          headerTitle: () => <Header title="Lockpod" />,
         }}
       />
       <Drawer.Screen
         name="Profile"
         component={ProfileScreen}
-        options={{ 
-					headerTitle: () => <Header title="Profile" />,
-				}}
+        options={{
+          headerTitle: () => <Header title="Profile" />,
+        }}
       />
       <Drawer.Screen
         name="Activity"
         component={ActivityScreen}
-        options={{ 
-					headerTitle: () => <Header title="Activity" />,
-				}}
+        options={{
+          headerTitle: () => <Header title="Activity" />,
+        }}
       />
       <Drawer.Screen
         name="Wallet"
         component={Wallet}
-        options={{ 
-					headerTitle: () => <Header title="Wallet" />,
-				}}
+        options={{
+          headerTitle: () => <Header title="Wallet" />,
+        }}
       />
       <Drawer.Screen
         name="Subscriptions"
         component={SubscriptionsScreen}
-        options={{ 
-					headerTitle: () => <Header title="Subscriptions" />,
-				}}
+        options={{
+          headerTitle: () => <Header title="Subscriptions" />,
+        }}
       />
       <Drawer.Screen
         name="UserGuide"
         component={UserGuide}
-        options={{ 
-					headerTitle: () => <Header title="User Guide" />,
-				}}
+        options={{
+          headerTitle: () => <Header title="User Guide" />,
+        }}
       />
       <Drawer.Screen
         name="Support"
         component={SupportScreen}
-        options={{ 
-					headerTitle: () => <Header title="Support" />,
-				}}
+        options={{
+          headerTitle: () => <Header title="Support" />,
+        }}
       />
     </Drawer.Navigator>
   );
@@ -110,19 +120,19 @@ export default function App() {
   return (
     <NavigationContainer theme={MyTheme}>
       <UserProfileProvider>
-        <Stack.Navigator 
-					initialRouteName="Auth"
-					screenOptions={{
-						headerStyle: styles.header,
-						headerShadowVisible: false,
-						headerBackTitleVisible: false,
-						headerBackImage: () => (
-							<View style={{paddingLeft: 35, paddingRight: 20}}>
-								<ArrowLeft width={24} height={24}/>
-							</View>
-						),
-					}}
-				>
+        <Stack.Navigator
+          initialRouteName="Auth"
+          screenOptions={{
+            headerStyle: styles.header,
+            headerShadowVisible: false,
+            headerBackTitleVisible: false,
+            headerBackImage: () => (
+              <View style={{ paddingLeft: 35, paddingRight: 20 }}>
+                <ArrowLeft width={24} height={24} />
+              </View>
+            ),
+          }}
+        >
           <Stack.Screen
             name="Home"
             component={DrawerNav}
@@ -134,28 +144,28 @@ export default function App() {
             name="Auth"
             component={AuthScreen}
             options={{
-							headerTitle: () => <Header title="Welcome" />,
+              headerTitle: () => <Header title="Welcome" />,
             }}
           />
           <Stack.Screen
             name="ProfileCreation"
             component={ProfileCreationScreen}
             options={{
-							headerTitle: () => <Header title="Create Profile" />,
+              headerTitle: () => <Header title="Create Profile" />,
             }}
           />
           <Stack.Screen
             name="ScanQR"
             component={ScanQR}
             options={{
-							headerTitle: () => <Header title="Scan Your Pod" />,
+              headerTitle: () => <Header title="Scan Your Pod" />,
             }}
           />
           <Stack.Screen
             name="ChangePassword"
             component={ChangePasswordScreen}
             options={{
-							headerTitle: () => <Header title="Change Password" />,
+              headerTitle: () => <Header title="Change Password" />,
             }}
           />
         </Stack.Navigator>
@@ -167,60 +177,84 @@ export default function App() {
 function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
-			<View style={styles.container}>
-				<Pressable
-					onPress={() => props.navigation.navigate("Lockpod")}
-				>
-					<RegularHeading value="Lockpod" style={{color: Constants.darkAccent}}/>
-				</Pressable>
-				<View style={styles.drawerSection}>
-					<MediumText value="Account" style={null} />
-					<View style={styles.drawerItems}>
-						<CustomDrawerItem props={props} goTo="Profile" title="Profile" Icon={ProfileIcon}/>
-						<CustomDrawerItem props={props} goTo="Activity" title="Activity" Icon={ActivityIcon}/>
-					</View>
-				</View>
-				<View style={styles.drawerSection}>
-					<MediumText value="Payment & Plans" style={null} />
-					<View style={styles.drawerItems}>
-						<CustomDrawerItem props={props} goTo="Wallet" title="Wallet" Icon={WalletIcon}/>
-						<CustomDrawerItem props={props} goTo="Subscriptions" title="Subscriptions" Icon={CalendarIcon}/>
-					</View>
-				</View>
-				<View style={styles.drawerSection}>
-					<MediumText value="Help" style={null} />
-					<View style={styles.drawerItems}>
-						<CustomDrawerItem props={props} goTo="UserGuide" title="User Guide" Icon={InfoIcon}/>
-						<CustomDrawerItem props={props} goTo="Support" title="Support" Icon={SupportIcon}/>
-					</View>
-				</View>
-			</View>
+      <View style={styles.container}>
+        <Pressable onPress={() => props.navigation.navigate("Lockpod")}>
+          <RegularHeading
+            value="Lockpod"
+            style={{ color: Constants.darkAccent }}
+          />
+        </Pressable>
+        <View style={styles.drawerSection}>
+          <MediumText value="Account" style={null} />
+          <View style={styles.drawerItems}>
+            <CustomDrawerItem
+              props={props}
+              goTo="Profile"
+              title="Profile"
+              Icon={ProfileIcon}
+            />
+            <CustomDrawerItem
+              props={props}
+              goTo="Activity"
+              title="Activity"
+              Icon={ActivityIcon}
+            />
+          </View>
+        </View>
+        <View style={styles.drawerSection}>
+          <MediumText value="Payment & Plans" style={null} />
+          <View style={styles.drawerItems}>
+            <CustomDrawerItem
+              props={props}
+              goTo="Wallet"
+              title="Wallet"
+              Icon={WalletIcon}
+            />
+            <CustomDrawerItem
+              props={props}
+              goTo="Subscriptions"
+              title="Subscriptions"
+              Icon={CalendarIcon}
+            />
+          </View>
+        </View>
+        <View style={styles.drawerSection}>
+          <MediumText value="Help" style={null} />
+          <View style={styles.drawerItems}>
+            <CustomDrawerItem
+              props={props}
+              goTo="UserGuide"
+              title="User Guide"
+              Icon={InfoIcon}
+            />
+            <CustomDrawerItem
+              props={props}
+              goTo="Support"
+              title="Support"
+              Icon={SupportIcon}
+            />
+          </View>
+        </View>
+      </View>
     </DrawerContentScrollView>
   );
 }
 
-function Header({title}) {
-	return (
-		<MediumText 
-			value={title}
-			style={null}
-		/>
-	);
+function Header({ title }) {
+  return <MediumText value={title} style={null} />;
 }
 
-function CustomDrawerItem({props, goTo, title, Icon}) {
-	return (
-		<View>
-			<Pressable
-				onPress={() => props.navigation.navigate(goTo)}
-			>
-				<View style={{flexDirection: "row", gap: 10}}>
-					<Icon width={24} height={24}/>
-					<MediumText value={title} style={null} />
-				</View>
-			</Pressable>
-		</View>
-	);
+function CustomDrawerItem({ props, goTo, title, Icon }) {
+  return (
+    <View>
+      <Pressable onPress={() => props.navigation.navigate(goTo)}>
+        <View style={{ flexDirection: "row", gap: 10 }}>
+          <Icon width={24} height={24} />
+          <MediumText value={title} style={null} />
+        </View>
+      </Pressable>
+    </View>
+  );
 }
 
 // MARK: Styles
@@ -234,22 +268,20 @@ const MyTheme = {
 };
 
 const styles = StyleSheet.create({
-	header: {
-		backgroundColor: Constants.baseLight,
-	},
-	container: {
-		flex: 1,
-		paddingVertical: Constants.bottomOfPagePadding,	
-		paddingLeft: 16,
-		gap: 40,
-	},
-	drawerSection: {
-		gap: 10,
-	},
-	drawerItems: {
-		paddingLeft: 16,
-		gap: 10,
-	}
+  header: {
+    backgroundColor: Constants.baseLight,
+  },
+  container: {
+    flex: 1,
+    paddingVertical: Constants.bottomOfPagePadding,
+    paddingLeft: 16,
+    gap: 40,
+  },
+  drawerSection: {
+    gap: 10,
+  },
+  drawerItems: {
+    paddingLeft: 16,
+    gap: 10,
+  },
 });
-
-

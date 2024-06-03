@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 // Navigation
 import {
@@ -16,6 +16,12 @@ import {
 } from "@react-navigation/drawer";
 import { Constants } from "./components/constants";
 
+import {
+  Poppins_400Regular,
+  Poppins_500Medium,
+  Poppins_600SemiBold,
+} from "@expo-google-fonts/poppins";
+
 import { UserProfileProvider } from "./stores/UserProfileContext";
 
 // pages
@@ -32,6 +38,8 @@ import SupportScreen from "./screens/Help/SupportScreen";
 import ChangePasswordScreen from "./screens/MyAccount/ChangePasswordScreen";
 import { Button, Image, Pressable, StyleSheet, View } from "react-native";
 import { MediumText, RegularHeading } from "./components/Text";
+import * as SplashScreen from "expo-splash-screen";
+import * as Font from "expo-font";
 
 import ArrowLeft from "./assets/arrowLeft.svg";
 import ProfileIcon from "./assets/drawerIcons/profile.svg";
@@ -43,6 +51,101 @@ import SupportIcon from "./assets/drawerIcons/support.svg";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
+SplashScreen.preventAutoHideAsync();
+
+// MARK: Body
+export default function App() {
+  const [appIsReady, setAppIsReady] = useState(false);
+  useEffect(() => {
+    async function prepare() {
+      try {
+        // Pre-load fonts, make any API calls you need to do here
+        await Font.loadAsync({
+          'Poppins_400Regular': Poppins_400Regular,
+          'Poppins_500Medium': Poppins_500Medium,
+          'Poppins_600SemiBold': Poppins_600SemiBold,
+        });
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        // Tell the application to render
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
+  return (
+    <NavigationContainer theme={MyTheme} onReady={onLayoutRootView}>
+      <UserProfileProvider>
+        <Stack.Navigator
+          initialRouteName="Auth"
+          screenOptions={{
+            headerStyle: styles.header,
+            headerShadowVisible: false,
+            headerBackTitleVisible: false,
+            headerBackImage: () => (
+              <View style={{ paddingLeft: 35, paddingRight: 20 }}>
+                <ArrowLeft width={24} height={24} />
+              </View>
+            ),
+          }}
+        >
+          <Stack.Screen
+            name="Home"
+            component={DrawerNav}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="Auth"
+            component={AuthScreen}
+            options={{
+              headerTitle: () => <Header title="Welcome" />,
+            }}
+          />
+          <Stack.Screen
+            name="ProfileCreation"
+            component={ProfileCreationScreen}
+            options={{
+              headerTitle: () => <Header title="Create Profile" />,
+            }}
+          />
+          <Stack.Screen
+            name="ScanQR"
+            component={ScanQR}
+            options={{
+              headerTitle: () => <Header title="Scan Your Pod" />,
+            }}
+          />
+          <Stack.Screen
+            name="ChangePassword"
+            component={ChangePasswordScreen}
+            options={{
+              headerTitle: () => <Header title="Change Password" />,
+            }}
+          />
+        </Stack.Navigator>
+      </UserProfileProvider>
+    </NavigationContainer>
+  );
+}
 
 function DrawerNav() {
   const navigation = useNavigation();
@@ -112,65 +215,6 @@ function DrawerNav() {
         }}
       />
     </Drawer.Navigator>
-  );
-}
-
-// MARK: Body
-export default function App() {
-  return (
-    <NavigationContainer theme={MyTheme}>
-      <UserProfileProvider>
-        <Stack.Navigator
-          initialRouteName="Auth"
-          screenOptions={{
-            headerStyle: styles.header,
-            headerShadowVisible: false,
-            headerBackTitleVisible: false,
-            headerBackImage: () => (
-              <View style={{ paddingLeft: 35, paddingRight: 20 }}>
-                <ArrowLeft width={24} height={24} />
-              </View>
-            ),
-          }}
-        >
-          <Stack.Screen
-            name="Home"
-            component={DrawerNav}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="Auth"
-            component={AuthScreen}
-            options={{
-              headerTitle: () => <Header title="Welcome" />,
-            }}
-          />
-          <Stack.Screen
-            name="ProfileCreation"
-            component={ProfileCreationScreen}
-            options={{
-              headerTitle: () => <Header title="Create Profile" />,
-            }}
-          />
-          <Stack.Screen
-            name="ScanQR"
-            component={ScanQR}
-            options={{
-              headerTitle: () => <Header title="Scan Your Pod" />,
-            }}
-          />
-          <Stack.Screen
-            name="ChangePassword"
-            component={ChangePasswordScreen}
-            options={{
-              headerTitle: () => <Header title="Change Password" />,
-            }}
-          />
-        </Stack.Navigator>
-      </UserProfileProvider>
-    </NavigationContainer>
   );
 }
 

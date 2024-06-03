@@ -2,12 +2,6 @@ import rn, { StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
 import { Constants } from "../constants";
 import { Dispatch, SetStateAction, useState, useRef, useEffect } from "react";
 import { useFonts } from "expo-font";
-import {
-	Poppins_400Regular,
-	Poppins_500Medium,
-	Poppins_600SemiBold,
-} from "@expo-google-fonts/poppins";
-import AppLoading from "expo-app-loading";
 
 export const PlainTextField = ({
 	value,
@@ -26,15 +20,6 @@ export const PlainTextField = ({
 }) => {
 	// MARK: Vars
 	const touchableFieldRef = useRef(null);
-
-	const [fontsLoaded] = useFonts({
-		Poppins_400Regular,
-		Poppins_500Medium,
-		Poppins_600SemiBold,
-	});
-	if (!fontsLoaded) {
-		return <AppLoading />;
-	}
 
 	const h: number | null = height == null ? 55 : height;
 

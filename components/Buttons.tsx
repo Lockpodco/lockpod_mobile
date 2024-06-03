@@ -2,8 +2,6 @@ import rn, { StyleSheet, TouchableWithoutFeedback } from "react-native";
 import { Constants } from "./constants";
 import { useState, useRef, useEffect } from "react";
 import { useFonts } from "expo-font";
-import AppLoading from "expo-app-loading";
-import { Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold } from "@expo-google-fonts/poppins";
 
 export const DefaultSubmitButton = ({
   title,
@@ -18,14 +16,6 @@ export const DefaultSubmitButton = ({
   horizontalLayout: boolean;
   onSubmit: () => void;
 }) => {
-	const [fontsLoaded] = useFonts ({
-		Poppins_400Regular,
-		Poppins_500Medium,
-		Poppins_600SemiBold
-	});
-	if (!fontsLoaded) {
-		return <AppLoading />
-	}
   const styles = StyleSheet.create({
     spacer: {
       flex: 1,
